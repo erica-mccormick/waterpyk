@@ -1,7 +1,4 @@
 
-import sys
-from unicodedata import name
-from xxlimited import Xxo
 import geopandas as gpd
 import urllib
 import json
@@ -99,26 +96,6 @@ class Watershed(StudyArea):
             
         return df
 
-    
- 
-# Test
-coords1 = [11475560]
-coords2 = [39.7273, -123.6433]
-rivendell = StudyArea(coords2)
-elder = Watershed(coords1)
-#feat = rivendell.get_feature()
-
-#asset_id = 'projects/pml_evapotranspiration/PML/OUTPUT/PML_V2_8day_v016'
-#start_date = '2005-05-31'
-#end_date = '2005-10-01'
-#bands = ['Es', 'Ec', 'Ei']
-#scale = 500
-#bands_to_scale = ['Es', 'Ec']
-#scaling_factor = 0.01
-#file_name = 'test_elder_pml'
-#file_path = ''
-
-
 
 
 def make_combined_df(study_area, layers_csv_path, export_csv_path = None):
@@ -141,18 +118,3 @@ def make_combined_df(study_area, layers_csv_path, export_csv_path = None):
             df.to_csv(f)
         print('Extraction saved to', export_csv_path)             
     return df
-
-
-layers_csv_path = 'layers_short_contemporary_2021.csv'
-export_csv_path = 'test_merged_rivendell.csv'
-
-df = make_combined_df(rivendell, layers_csv_path, export_csv_path)
-print(df.head())
-print(df.tail())
-#reducer_type = ee.Reducer.mean()
-
-#df = elder.extract_asset(asset_id = asset_id, start_date = start_date, end_date = end_date,
-#                       scale = scale, bands = bands, bands_to_scale = bands_to_scale, scaling_factor = scaling_factor, file_path = file_path, file_name = file_name)
-
-#df = elder.extract_asset(asset_id, start_date, end_date, scale, bands, bands_to_scale, scaling_factor, file_path, file_name)
-#df.head()
