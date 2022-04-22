@@ -36,7 +36,7 @@ class StudyArea:
         if bands_to_scale is not None:
             df['value'] = [value * np.where(band_value in bands_to_scale, scaling_factor, 1) for value, band_value in zip(df.value.values, df.band.values)]            
         
-        df['value'] = df['value'].interpolate()
+        #df['value'] = df['value'].interpolate()
         
         if file_name is not None:
             save_path = file_path + file_name + '.csv'
@@ -86,7 +86,7 @@ class Watershed(StudyArea):
         if bands_to_scale is not None:
             df['value'] = [value * np.where(band_value in bands_to_scale, scaling_factor, 1) for value, band_value in zip(df.value.values, df.band.values)]            
         
-        df['value'] = df['value'].interpolate()
+        #df['value'] = df['value'].interpolate()
         
         if file_name is not None:
             save_path = file_path + file_name + '.csv'
