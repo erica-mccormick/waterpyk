@@ -44,7 +44,7 @@ class StudyArea:
         return feature
 
     def extract_asset(self, asset_id, start_date, end_date, scale, bands, bands_to_scale = None, scaling_factor = 1, file_path = '/content/drive/MyDrive', file_name = None, interp = True, reducer_type = ee.Reducer.first(), **reducer_kwargs):
-        #ft = StudyArea.get_feature(self)
+        StudyArea.get_feature(self)
         asset = ee.ImageCollection(asset_id).filterDate(start_date, end_date).select(bands)
         assetband = asset.toBands()
         reducer_dict = assetband.reduceRegion(reducer = reducer_type, geometry = self.site_feature.geometry(), scale = scale, **reducer_kwargs)
@@ -95,6 +95,4 @@ class StudyArea:
                 df.to_csv(f)
             print('Extraction saved to', export_csv_path)             
         return df
-
-
 
