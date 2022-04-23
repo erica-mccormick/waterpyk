@@ -51,7 +51,6 @@ class StudyArea:
         reducer_dict = assetband.reduceRegion(reducer = reducer_type, geometry = self.site_feature.geometry(), scale = scale, **reducer_kwargs)
         # Make df from reducer output, format, and apply scaling factor to specified columns
         df = pd.DataFrame(list(reducer_dict.getInfo().items()), columns = ['variable', 'value'])
-        print(df.head())
         df['date'] = [item.replace('-', '_').split('_')[:-1] for item in df['variable'].values]
         df['date'] = [pd.to_datetime('-'.join(item[0:3])) for item in df['date'].values]
         df['band'] = [item.split('_')[-1] for item in df['variable'].values]
@@ -65,26 +64,31 @@ class StudyArea:
         date_range = date1-date0
         
         if interp == True:
-            print('Values with', date_range, 'day gap have been interpolated.')
-            # Get the maximum # of days in the df and make a date list to gapfill
-            diff_days = (df.date.max() - df.date.min()).days
+            df_interp = pd.DataFrame()
             temp = pd.DataFrame()
+            print('Timestep of', date_range, 'was interpolated to daily.')
+            diff_days = (df.date.max() - df.date.min()).days
             temp['date'] = [df.date.min() + datetime.timedelta(days=x) for x in range(0, diff_days)]
-            df_tointerp = df.copy() #copy df
-            df = pd.DataFrame() #reset df
-            for i in df_tointerp.band.unique():
-                df_singleband = df_tointerp[df_tointerp['band'] == i]
-                df_singleband = temp.merge(df_singleband, how = 'left', on = 'date')
-                df_singleband['value'] = df_singleband['value'].interpolate(method = "linear")
-                df_singleband['band'] = i
-                df = df.append(df_singleband)  
-        else: print('Values have', date_range, 'day gap but were not interpolated.')
+            for i in df.band.unique():
+                df_temp = df[df['band']==i]
+                df_temp = df_temp.merge(temp, how = 'right', on = 'date')
+                df_temp['value'] = df_temp['value'].interpolate(method = "linear")
+                df_temp['band'] = i
+             #   df_singleband = df_tointerp[df_tointerp['band'] == i]
+             #   df_singleband = temp.merge(df_singleband, how = 'left', on = 'date')
+             #   df_singleband['value'] = df_singleband['value'].interpolate(method = "linear")
+             #   df_singleband['band'] = i
+             #   df = df.append(df_singleband)
+                df_interp = df_interp.append(df_temp)
+            df = df_interp
+        else: print('Timestep of', date_range, 'was not interpolated.')
                       
         if file_name is not None:
             save_path = file_path + file_name + '.csv'
             with open(save_path, 'w') as f:
                 df.to_csv(f)
             print('Extraction saved to', save_path)
+        
         return df
     
 
