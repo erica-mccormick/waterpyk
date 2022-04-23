@@ -5,6 +5,7 @@ import json
 import ee
 import pandas as pd
 import numpy as np
+import datetime
 ee.Initialize()
 
 class StudyArea:
@@ -58,10 +59,26 @@ class StudyArea:
         if bands_to_scale is not None:
             df['value'] = [value * np.where(band_value in bands_to_scale, scaling_factor, 1) for value, band_value in zip(df.value.values, df.band.values)]            
         
-       # if interp:
-       #     if df['date'][1] - df['date'][0]
-            
-        #df['value'] = df['value'].interpolate()
+        # Calculate gaps between data
+        date0 = df[df['band'] == df.band.unique()[0]]['date'][0]
+        date1 = df[df['band'] == df.band.unique()[0]]['date'][len(df.band.unique())]
+        date_range = date1-date0
+        
+        if interp:
+            print('Values with', date_range.date, 'day gap have been interpolated.')
+        # Get the maximum # of days in the df and make a date list to gapfill
+            diff_days = (df.date.max() - df.date.min()).days
+            temp = pd.DataFrame()
+            temp['date'] = [df.date.min() + datetime.timedelta(days=x) for x in range(0, diff_days)]
+            df_tointerp = df.copy() #copy df
+            df = pd.DataFrame() #reset df
+            for i in df_tointerp.band.unique():
+                df_singleband = df_tointerp[df_tointerp['band'] == i]
+                df_singleband = temp.merge(df_singleband, how = 'left', on = 'date')
+                df_singleband['value'] = df_singleband['value'].interpolate(method = "linear", limit = 35)
+                df = df.append(df_singleband)  
+        elif date_range.date > 0: print('Values have', date_range.date, 'day gap. Consider interpolating with interp=True.')
+                      
         if file_name is not None:
             save_path = file_path + file_name + '.csv'
             with open(save_path, 'w') as f:
