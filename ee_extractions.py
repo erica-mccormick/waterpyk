@@ -98,10 +98,3 @@ class StudyArea:
 
 
 
-    
-#gage = [11475560]
-#elder = StudyArea(gage, 'watershed')
-#elder.get_feature()
-#print(elder.feature)
-#print(elder.kind)
-#df = elder.make_combined_df(import_assets='layers_short_contemporary_2021.csv', export_csv_path = 'test.csv')
