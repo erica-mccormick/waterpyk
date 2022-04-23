@@ -64,9 +64,9 @@ class StudyArea:
         date1 = df[df['band'] == df.band.unique()[0]]['date'][len(df.band.unique())]
         date_range = date1-date0
         
-        if interp:
+        if interp == True:
             print('Values with', date_range.date, 'day gap have been interpolated.')
-        # Get the maximum # of days in the df and make a date list to gapfill
+            # Get the maximum # of days in the df and make a date list to gapfill
             diff_days = (df.date.max() - df.date.min()).days
             temp = pd.DataFrame()
             temp['date'] = [df.date.min() + datetime.timedelta(days=x) for x in range(0, diff_days)]
