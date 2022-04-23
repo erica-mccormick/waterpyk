@@ -65,7 +65,7 @@ class StudyArea:
         date_range = date1-date0
         
         if interp == True:
-            print('Values with', date_range.date, 'day gap have been interpolated.')
+            print('Values with', date_range, 'day gap have been interpolated.')
             # Get the maximum # of days in the df and make a date list to gapfill
             diff_days = (df.date.max() - df.date.min()).days
             temp = pd.DataFrame()
@@ -78,7 +78,7 @@ class StudyArea:
                 df_singleband['value'] = df_singleband['value'].interpolate(method = "linear")
                 df_singleband['band'] = i
                 df = df.append(df_singleband)  
-        elif date_range.date > 0: print('Values have', date_range.date, 'day gap. Consider interpolating with interp=True.')
+        else: print('Values have', date_range, 'day gap but were not interpolated.')
                       
         if file_name is not None:
             save_path = file_path + file_name + '.csv'
