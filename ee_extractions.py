@@ -43,7 +43,7 @@ class StudyArea:
         setattr(self, "site_feature", feature)
         return feature
 
-    def extract_asset(self, asset_id, start_date, end_date, scale, bands, bands_to_scale = None, scaling_factor = 1, file_path = '/content/drive/MyDrive', file_name = None, reducer_type = ee.Reducer.first(), **reducer_kwargs):
+    def extract_asset(self, asset_id, start_date, end_date, scale, bands, bands_to_scale = None, scaling_factor = 1, file_path = '/content/drive/MyDrive', file_name = None, interp = True, reducer_type = ee.Reducer.first(), **reducer_kwargs):
         #ft = StudyArea.get_feature(self)
         asset = ee.ImageCollection(asset_id).filterDate(start_date, end_date).select(bands)
         assetband = asset.toBands()
@@ -57,6 +57,10 @@ class StudyArea:
         df['value_raw'] = df['value']
         if bands_to_scale is not None:
             df['value'] = [value * np.where(band_value in bands_to_scale, scaling_factor, 1) for value, band_value in zip(df.value.values, df.band.values)]            
+        
+       # if interp:
+       #     if df['date'][1] - df['date'][0]
+            
         #df['value'] = df['value'].interpolate()
         if file_name is not None:
             save_path = file_path + file_name + '.csv'
@@ -85,7 +89,7 @@ class StudyArea:
             single_asset = StudyArea.extract_asset(self, asset_id = row.asset_id, start_date = pd.to_datetime(row.start_date), end_date = pd.to_datetime(row.end_date), scale = row.scale,bands = bands, bands_to_scale = row.bands_to_scale, scaling_factor = row.scaling_factor)#, row.file_path, row.file_name)
             single_asset['asset_name'] = row.name
             single_asset_propogate = single_asset[['asset_name', 'value','date','band']]
-            df = df.append(single_asset_propogate)
+            df = df.append(single_asset_propogate)            
         if export_csv_path is not None:
             with open(export_csv_path, 'w') as f:
                 df.to_csv(f)
@@ -95,9 +99,9 @@ class StudyArea:
 
 
     
-gage = [11475560]
-elder = StudyArea(gage, 'watershed')
-elder.get_feature()
+#gage = [11475560]
+#elder = StudyArea(gage, 'watershed')
+#elder.get_feature()
 #print(elder.feature)
 #print(elder.kind)
-df = elder.make_combined_df(import_assets='layers_short_contemporary_2021.csv', export_csv_path = 'test.csv')
+#df = elder.make_combined_df(import_assets='layers_short_contemporary_2021.csv', export_csv_path = 'test.csv')
