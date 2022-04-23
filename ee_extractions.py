@@ -75,7 +75,8 @@ class StudyArea:
             for i in df_tointerp.band.unique():
                 df_singleband = df_tointerp[df_tointerp['band'] == i]
                 df_singleband = temp.merge(df_singleband, how = 'left', on = 'date')
-                df_singleband['value'] = df_singleband['value'].interpolate(method = "linear", limit = 35)
+                df_singleband['value'] = df_singleband['value'].interpolate(method = "linear")
+                df_singleband['band'] = i
                 df = df.append(df_singleband)  
         elif date_range.date > 0: print('Values have', date_range.date, 'day gap. Consider interpolating with interp=True.')
                       
