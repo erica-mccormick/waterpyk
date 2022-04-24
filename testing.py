@@ -34,35 +34,7 @@ file_name = 'test_merged.csv'
 export_csv_path = dir + file_name
 
 df = rivendell.make_combined_df(layers_csv_path, export_csv_path)
+df = rivendell.combine_bands(df)
 
-# Trying to get a combined df
-
-bands_to_combine = ['Es', 'Ec', 'Ei']
-band_name_combined = 'ET'
-
-to_store = pd.DataFrame()
-for i in bands_to_combine:
-    if i == bands_to_combine[0]:
-        to_store = df[df['band'] == i]
-        to_store['value_raw'] = np.nan
-
-    else:
-        subset = df[df['band']==i][['date', 'value']]
-        to_store = to_store.merge(subset, how = 'inner', on = 'date')
-        
-val_cols = to_store.loc[:,to_store.columns.str.startswith("value")]
-to_store['value'] = val_cols.sum(axis=1)
-to_store['band'] = band_name_combined
-to_store = to_store[['date', 'asset_name', 'value', 'band', 'value_raw']]
-
-df = df.append(to_store)
-df = df.reset_index(drop=True)
-
-
-
-#prinxt(df.tail())
 print(df)
-#df
-#rivendell.get_feature()
-#et = elder.extract_asset(asset_id, start_date, end_date, scale, bands, interp = True)
-#print(et)
+
