@@ -22,7 +22,10 @@ class StudyArea:
         Returns:
             self: self with added attribute self.kind
         """
-        self.kind = str(np.where(len(self.coords)>1, 'point', 'watershed'))
+        if len(self.coords) >1:
+            self.kind = 'point'
+        else: self.kind = 'watershed'
+        #self.kind = str(np.where(len(self.coords)>1, 'point', 'watershed'))
         return self
 
     def get_feature(self):
