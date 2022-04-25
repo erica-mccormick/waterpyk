@@ -139,7 +139,7 @@ class StudyArea:
         return self, df_def
     
     def describe(self):
-        print('\n'+self.description)
+        print('\n'+str(self.description))
         try:
             print('Available data for this site:', self.available_data)
             print('Smax = ' + str(round(self.smax)) + ' mm')
