@@ -13,7 +13,8 @@ ee.Initialize()
 class StudyArea:
 
     def get_kind(self):
-        """Adds attribute of point or watershed to object.
+        """
+        Adds attribute of point or watershed to object.
 
         Args:
             self
@@ -25,7 +26,8 @@ class StudyArea:
         return self
 
     def get_feature(self):
-        """Convert coordinates to GEE feature. For a USGS watershed,
+        """
+        Convert coordinates to GEE feature. For a USGS watershed,
         coordinates are extracted from website using gage ID.
 
         Args:
@@ -60,7 +62,8 @@ class StudyArea:
         return self, feature
 
     def extract_asset(self, asset_id, start_date, end_date, scale, bands = None, bands_to_scale = None, scaling_factor = 1, reducer_type = None):
-        """Extract data from start_date to end_date for an asset_id.
+        """
+        Extract data from start_date to end_date for an asset_id.
 
         Args:
             self
@@ -109,7 +112,8 @@ class StudyArea:
     
 
     def make_combined_df(self, layers, **kwargs):
-        """Extract data at site for several assets at once. Uses extract_asset().
+        """
+        Extract data at site for several assets at once. Uses extract_asset().
 
         Args:
             self
@@ -159,7 +163,8 @@ class StudyArea:
 
 
     def calculate_deficit(self, layers, **kwargs):
-        """Calculate D(t) after McCormick et al., 2021 and Dralle et al., 2020.
+        """
+        Calculate D(t) after McCormick et al., 2021 and Dralle et al., 2020.
         Uses extract_asset() and make_combined_df().
 
         Args:
@@ -216,7 +221,8 @@ class StudyArea:
         return self, df_def
     
     def describe(self):
-        """Print statements describing StudyArea attributes and deficit parameters, if deficit was calculated.
+        """
+        Print statements describing StudyArea attributes and deficit parameters, if deficit was calculated.
 
         Args:
             self
@@ -278,7 +284,8 @@ def interp_columns_daily(df):
     return df_interp
 
 def combine_bands(df, **kwargs) :
-    """Defaults to add together soil and vegetation ET bands (Es and Ec) for PML to create ET band.
+    """
+    Defaults to add together soil and vegetation ET bands (Es and Ec) for PML to create ET band.
     Can be customized to add any bands together to create a new band.
     """
     to_store = pd.DataFrame()

@@ -18,9 +18,11 @@ layers = pd.read_csv('layers_long_contemporary_2021.csv')
 gage = [11475560]
 
 # We can make objects using these coords
-rivendell = ee_tools.StudyArea(coords, layers)
-print(rivendell.smax)
-rivendell.describe()
+rivendell = ee_tools.StudyArea(gage)#, layers)
+rivendell.get_feature()
+print(rivendell.description)
+#print(rivendell.smax)
+#rivendell.describe()
 #elder = ee_tools.StudyArea(coords = gage, kind = 'watershed')
 
 #asset_id = 'projects/pml_evapotranspiration/PML/OUTPUT/PML_V2_8day_v016'
