@@ -157,7 +157,6 @@ class StudyArea:
  
         self.extracted_data = df
         self.available_data = df.band.unique()
-        self.layers_info = layers
         self.start_date = layers.start_date[0]
         self.end_date = layers.end_date[0]
         return self, df
