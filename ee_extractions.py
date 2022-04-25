@@ -26,8 +26,8 @@ class StudyArea:
             long = self.coords[1]
             feature = ee.Feature(ee.Geometry.Point(long, lat))
             url = 'No url for points'
-            #flowlines = None 
-            description = 'Site at coordinates ' + str(lat) + ',' + str(long) + '.'
+            #description = 'Site at coordinates ' + str(lat) + ', ' + str(long) + '.'
+            description = 'Site'
         elif self.kind == 'watershed':
             watershed = self.coords[0]
             url = 'https://labs.waterdata.usgs.gov/api/nldi/linked-data/nwissite/USGS-%s/basin?f=json'%watershed
