@@ -11,15 +11,57 @@ warnings.filterwarnings("ignore")
 ee.Initialize()
 
 class StudyArea:
+    """Extract GEE data and a deficit timeseries for a site.
+
+    Args:
+        self
+        coords: [lat/long] or [USGS_gage_ID] for the site.
+        layers (optional): pandas df with the following columns:
+            asset_id: GEE asset identification string
+            start_date: format mm/dd/yyy or similiar date format
+            end_date: format mm/dd/yyyy or similiar date format
+            scale (int): scale in meters for GEE reducer function
+            bands (list of str): bands of GEE asset to extract
+            bands_to_scale (list of str, optional): bands for which each value will be multiplied by scaling_factor.
+            scaling_factor (float, optional): scaling factor to apply to all values in bands_to_scale
+        **kwargs (optional): 
+            interp: (default: True), currently no option to change to False.
+            combine_ET_bands: (default True) add ET bands to make one ET band.
+            bands_to_combine: (default ['Es', 'Ec']) ET bands to combine
+            band_names_combined: (default 'ET') name of combined ET band
+            et_asset: (default 'pml') ET dataset to use for deficit calculation, if multiple are given
+            et_band: (default 'ET') band from ET dataset to use for deficit calculation, if multiple are given
+            ppt_asset: (default 'prism') precipitation dataset to use for deficit calculation, if multiple are given
+            ppt_band: (default 'ppt') precipitation dataset to use for deficit calculation, if multiple are given
+            snow_correction: (default True) use snow correction factor when calculating deficit
+            snow_frac: (default 10) set all ET when snow is greater than this (%) to 0 if snow_correction = True
+    Returns:
+        self with attributes for all extracted data and summary parameters.
+    """
+    
 
     def get_kind(self):
+        """Adds attribute of point or watershed to object.
+
+        Args:
+            self
+
+        Returns:
+            self: self with added attribute self.kind
+        """
         self.kind = np.where(len(self.coords)>1, 'point', 'watershed')
         return self
 
     def get_feature(self):
-        """Convert coords to GEE feature.
-        For a point, use lat/long. For a watershed, supply one coord equivelant
-        to the USGS gage ID.
+        """Convert coordinates to GEE feature. For a USGS watershed,
+        coordinates are extracted from website using gage ID.
+
+        Args:
+            self
+
+        Returns:
+            self: self with added attributes self.kind, self.url, and self.description
+            feature: GEE feature
         """
         if self.kind == 'point':
             lat = self.coords[0]
@@ -47,7 +89,21 @@ class StudyArea:
         return self, feature
 
     def extract_asset(self, asset_id, start_date, end_date, scale, bands = None, bands_to_scale = None, scaling_factor = 1, reducer_type = None):
-        """Extract data from start_date to end_date for an asset_id."""
+        """Extract data from start_date to end_date for an asset_id.
+
+        Args:
+            self
+            asset_id: GEE asset identification string
+            start_date: format mm/dd/yyy or similiar date format
+            end_date: format mm/dd/yyyy or similiar date format
+            scale (int): scale in meters for GEE reducer function
+            bands (list of str): bands of GEE asset to extract
+            bands_to_scale (list of str, optional): bands for which each value will be multiplied by scaling_factor.
+            scaling_factor (float, optional): scaling factor to apply to all values in bands_to_scale
+            reducer_type (optional): not used at this time. reducer_type defaults to first() for points and mean() for watersheds
+        Returns:
+            df: pandas df of all extracted data
+        """
         StudyArea.get_feature(self)
         asset = ee.ImageCollection(asset_id).filterDate(start_date, end_date)
         if bands is not None: asset = asset.select(bands)
@@ -81,11 +137,33 @@ class StudyArea:
     
 
     def make_combined_df(self, layers, **kwargs):
-        """import_asset requires EITHER the path to a csv or a df.
-        The columns need headings: name, asset_id, start_date, end_date,
-        scale, bands_to_scale, scaling_factor.
+        """Extract data at site for several assets at once. Uses extract_asset().
+
+        Args:
+            self
+            layers: pandas df with the following columns:
+                asset_id: GEE asset identification string
+                start_date: format mm/dd/yyy or similiar date format
+                end_date: format mm/dd/yyyy or similiar date format
+                scale (int): scale in meters for GEE reducer function
+                bands (list of str): bands of GEE asset to extract
+                bands_to_scale (list of str, optional): bands for which each value will be multiplied by scaling_factor.
+                scaling_factor (float, optional): scaling factor to apply to all values in bands_to_scale
+            **kwargs: 
+                interp: (default: True), currently no option to change to False.
+                combine_ET_bands: (default True) add ET bands to make one ET band.
+                bands_to_combine: (default ['Es', 'Ec']) ET bands to combine
+                band_names_combined: (default 'ET') name of combined ET band
+                et_asset: (default 'pml') ET dataset to use for deficit calculation, if multiple are given
+                et_band: (default 'ET') band from ET dataset to use for deficit calculation, if multiple are given
+                ppt_asset: (default 'prism') precipitation dataset to use for deficit calculation, if multiple are given
+                ppt_band: (default 'ppt') precipitation dataset to use for deficit calculation, if multiple are given
+                snow_correction: (default True) use snow correction factor when calculating deficit
+                snow_frac: (default 10) set all ET when snow is greater than this (%) to 0 if snow_correction = True
+        Returns:
+            self: with added attribute self.extracted_data (i.e. df), self.available_data, self.layers_info, self.start_date, self.end_date
+            df: long-style pandas df of extracted df.
         """
-        
         layers = layers.replace({np.nan: None})
         df = pd.DataFrame(columns = ['date'])
         for row in layers.itertuples():
@@ -109,7 +187,34 @@ class StudyArea:
 
 
     def calculate_deficit(self, layers, **kwargs):
-        """Calculate D(t) after McCormick et al., 2021 and Dralle et al., 2020."""
+        """Calculate D(t) after McCormick et al., 2021 and Dralle et al., 2020.
+        Uses extract_asset() and make_combined_df().
+
+        Args:
+            self
+            layers: pandas df with the following columns:
+                asset_id: GEE asset identification string
+                start_date: format mm/dd/yyy or similiar date format
+                end_date: format mm/dd/yyyy or similiar date format
+                scale (int): scale in meters for GEE reducer function
+                bands (list of str): bands of GEE asset to extract
+                bands_to_scale (list of str, optional): bands for which each value will be multiplied by scaling_factor.
+                scaling_factor (float, optional): scaling factor to apply to all values in bands_to_scale
+            **kwargs: 
+                interp: (default: True), currently no option to change to False.
+                combine_ET_bands: (default True) add ET bands to make one ET band.
+                bands_to_combine: (default ['Es', 'Ec']) ET bands to combine
+                band_names_combined: (default 'ET') name of combined ET band
+                et_asset: (default 'pml') ET dataset to use for deficit calculation, if multiple are given
+                et_band: (default 'ET') band from ET dataset to use for deficit calculation, if multiple are given
+                ppt_asset: (default 'prism') precipitation dataset to use for deficit calculation, if multiple are given
+                ppt_band: (default 'ppt') precipitation dataset to use for deficit calculation, if multiple are given
+                snow_correction: (default True) use snow correction factor when calculating deficit
+                snow_frac: (default 10) set all ET when snow is greater than this (%) to 0 if snow_correction = True
+        Returns:
+            self: with added attribute self.smax (defined as max(D)) and self.deficit_timeseries (i.e. df).
+            df: pandas df of deficit data where deficit is column 'D'.
+        """
         
         StudyArea.make_combined_df(self, layers, **kwargs)
         df = self.extracted_data
@@ -139,6 +244,14 @@ class StudyArea:
         return self, df_def
     
     def describe(self):
+        """Print statements describing StudyArea attributes and deficit parameters, if deficit was calculated.
+
+        Args:
+            self
+        Returns:
+            printed statement
+        """
+        
         print('\n'+str(self.description))
         try:
             print('Available data for this site:', self.available_data)
@@ -149,7 +262,6 @@ class StudyArea:
             print('Data has not been extracted for this site.')
 
     def __init__(self, coords, layers = None, **kwargs):
-        """Coords = [lat/long] for Site or [gage] for Watershed."""
         self.coords = coords
         self.get_kind()
         self.get_feature()
