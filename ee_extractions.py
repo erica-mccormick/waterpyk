@@ -27,12 +27,12 @@ class StudyArea:
         **kwargs (optional): 
             interp: (default: True), currently no option to change to False.
             combine_ET_bands: (default True) add ET bands to make one ET band.
-            bands_to_combine: (default ['Es', 'Ec']) ET bands to combine
-            band_names_combined: (default 'ET') name of combined ET band
-            et_asset: (default 'pml') ET dataset to use for deficit calculation, if multiple are given
-            et_band: (default 'ET') band from ET dataset to use for deficit calculation, if multiple are given
-            ppt_asset: (default 'prism') precipitation dataset to use for deficit calculation, if multiple are given
-            ppt_band: (default 'ppt') precipitation dataset to use for deficit calculation, if multiple are given
+            bands_to_combine: (default [Es, Ec]) ET bands to combine
+            band_names_combined: (default ET) name of combined ET band
+            et_asset: (default pml) ET dataset to use for deficit calculation, if multiple are given
+            et_band: (default ET) band from ET dataset to use for deficit calculation, if multiple are given
+            ppt_asset: (default prism) precipitation dataset to use for deficit calculation, if multiple are given
+            ppt_band: (default ppt) precipitation dataset to use for deficit calculation, if multiple are given
             snow_correction: (default True) use snow correction factor when calculating deficit
             snow_frac: (default 10) set all ET when snow is greater than this (%) to 0 if snow_correction = True
     Returns:
@@ -104,6 +104,7 @@ class StudyArea:
         Returns:
             df: pandas df of all extracted data
         """
+        
         StudyArea.get_feature(self)
         asset = ee.ImageCollection(asset_id).filterDate(start_date, end_date)
         if bands is not None: asset = asset.select(bands)
@@ -152,12 +153,12 @@ class StudyArea:
             **kwargs: 
                 interp: (default: True), currently no option to change to False.
                 combine_ET_bands: (default True) add ET bands to make one ET band.
-                bands_to_combine: (default ['Es', 'Ec']) ET bands to combine
+                bands_to_combine: (default [Es, Ec]) ET bands to combine
                 band_names_combined: (default 'ET') name of combined ET band
-                et_asset: (default 'pml') ET dataset to use for deficit calculation, if multiple are given
-                et_band: (default 'ET') band from ET dataset to use for deficit calculation, if multiple are given
-                ppt_asset: (default 'prism') precipitation dataset to use for deficit calculation, if multiple are given
-                ppt_band: (default 'ppt') precipitation dataset to use for deficit calculation, if multiple are given
+                et_asset: (default pml) ET dataset to use for deficit calculation, if multiple are given
+                et_band: (default ET) band from ET dataset to use for deficit calculation, if multiple are given
+                ppt_asset: (default prism) precipitation dataset to use for deficit calculation, if multiple are given
+                ppt_band: (default ppt) precipitation dataset to use for deficit calculation, if multiple are given
                 snow_correction: (default True) use snow correction factor when calculating deficit
                 snow_frac: (default 10) set all ET when snow is greater than this (%) to 0 if snow_correction = True
         Returns:
@@ -203,12 +204,12 @@ class StudyArea:
             **kwargs: 
                 interp: (default: True), currently no option to change to False.
                 combine_ET_bands: (default True) add ET bands to make one ET band.
-                bands_to_combine: (default ['Es', 'Ec']) ET bands to combine
-                band_names_combined: (default 'ET') name of combined ET band
-                et_asset: (default 'pml') ET dataset to use for deficit calculation, if multiple are given
-                et_band: (default 'ET') band from ET dataset to use for deficit calculation, if multiple are given
-                ppt_asset: (default 'prism') precipitation dataset to use for deficit calculation, if multiple are given
-                ppt_band: (default 'ppt') precipitation dataset to use for deficit calculation, if multiple are given
+                bands_to_combine: (default [Es, Ec]) ET bands to combine
+                band_names_combined: (default ET) name of combined ET band
+                et_asset: (default pml) ET dataset to use for deficit calculation, if multiple are given
+                et_band: (default ET) band from ET dataset to use for deficit calculation, if multiple are given
+                ppt_asset: (default prism) precipitation dataset to use for deficit calculation, if multiple are given
+                ppt_band: (default ppt) precipitation dataset to use for deficit calculation, if multiple are given
                 snow_correction: (default True) use snow correction factor when calculating deficit
                 snow_frac: (default 10) set all ET when snow is greater than this (%) to 0 if snow_correction = True
         Returns:
