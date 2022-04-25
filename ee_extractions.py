@@ -37,6 +37,8 @@ class StudyArea:
             self: self with added attributes self.kind, self.url, and self.description
             feature: GEE feature
         """
+        StudyArea.get_kind(self)
+
         if self.kind == 'point':
             lat = self.coords[0]
             long = self.coords[1]
