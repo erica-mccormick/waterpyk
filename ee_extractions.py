@@ -22,7 +22,7 @@ class StudyArea:
         Returns:
             self: self with added attribute self.kind
         """
-        self.kind = np.where(len(self.coords)>1, 'point', 'watershed')
+        self.kind = str(np.where(len(self.coords)>1, 'point', 'watershed'))
         return self
 
     def get_feature(self):
@@ -38,7 +38,6 @@ class StudyArea:
             feature: GEE feature
         """
         StudyArea.get_kind(self)
-
         if self.kind == 'point':
             lat = self.coords[0]
             long = self.coords[1]
@@ -53,11 +52,8 @@ class StudyArea:
             site_name = [json.load(request)['features'][0]['properties']['name'].title()]
             flowlines = gpd.read_file('https://labs.waterdata.usgs.gov/api/nldi/linked-data/nwissite/USGS-%s/navigation/UM/flowlines?f=json&distance=1000'%watershed)
             description = 'USGS Basin (' +str(watershed)+ ') imported at ' + str(site_name[0]) + 'CRS: ' + str(sites.crs)
-            #print('\nGeometry extracted from:\n', url)
             poly_coords = [item for item in sites.geometry[0].exterior.coords]
             feature = ee.Feature(ee.Geometry.Polygon(coords=poly_coords), {'Name': str(site_name[0]), 'Gage':int(watershed)})
-            #flowline_coords = [item for item in flowlines.geometry[0].exterior.coords]
-            #flowine_feature = ee.Feature(ee.Geometry.Polygon(coords = flowline_coords))
         self.site_feature = feature
         self.url = url
         self.description = description

@@ -18,7 +18,7 @@ layers = pd.read_csv('layers_long_contemporary_2021.csv')
 gage = [11475560]
 
 # We can make objects using these coords
-rivendell = ee_tools.StudyArea(gage)#, layers)
+rivendell = ee_tools.StudyArea(coords, layers)
 rivendell.get_feature()
 print(rivendell.description)
 #print(rivendell.smax)
