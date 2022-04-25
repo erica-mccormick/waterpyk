@@ -40,7 +40,7 @@ class StudyArea:
             long = self.coords[1]
             feature = ee.Feature(ee.Geometry.Point(long, lat))
             url = 'No url for points'
-            #description = 'Site at coordinates ' + str(lat) + ', ' + str(long) + '.'
+            description = 'Site at coordinates ' + str(lat) + ', ' + str(long) + '.'
         elif self.kind == 'watershed':
             watershed = self.coords[0]
             url = 'https://labs.waterdata.usgs.gov/api/nldi/linked-data/nwissite/USGS-%s/basin?f=json'%watershed
@@ -48,7 +48,7 @@ class StudyArea:
             request = urllib.request.urlopen("https://labs.waterdata.usgs.gov/api/nldi/linked-data/nwissite/USGS-%s/?f=json"%watershed)
             site_name = [json.load(request)['features'][0]['properties']['name'].title()]
             flowlines = gpd.read_file('https://labs.waterdata.usgs.gov/api/nldi/linked-data/nwissite/USGS-%s/navigation/UM/flowlines?f=json&distance=1000'%watershed)
-            #description = 'USGS Basin (' +str(watershed)+ ') imported at ' + str(site_name[0]) + 'CRS: ' + str(sites.crs)
+            description = 'USGS Basin (' +str(watershed)+ ') imported at ' + str(site_name[0]) + 'CRS: ' + str(sites.crs)
             #print('\nGeometry extracted from:\n', url)
             poly_coords = [item for item in sites.geometry[0].exterior.coords]
             feature = ee.Feature(ee.Geometry.Polygon(coords=poly_coords), {'Name': str(site_name[0]), 'Gage':int(watershed)})
@@ -56,7 +56,7 @@ class StudyArea:
             #flowine_feature = ee.Feature(ee.Geometry.Polygon(coords = flowline_coords))
         self.site_feature = feature
         self.url = url
-        #self.description = description
+        self.description = description
         return self, feature
 
     def extract_asset(self, asset_id, start_date, end_date, scale, bands = None, bands_to_scale = None, scaling_factor = 1, reducer_type = None):
@@ -224,12 +224,12 @@ class StudyArea:
             printed statement
         """
         
-        #print('\n'+ str(self.description))
+        print('\n'+ str(self.description))
         try:
             print('Available data for this site:', self.available_data)
             print('Smax = ' + str(round(self.smax)) + ' mm')
             print('Deficit calculation parameters:\n\tDataset: ' + str(self.et_asset) + '\n\tBands: ' + str(self.et_bands))
-            print('\tStart date: ' + self.start_date + '\n\tEnd date: ' + self.end_date)
+            print('\tStart date: ' + str(self.start_date) + '\n\tEnd date: ' + str(self.end_date))
         except:
             print('Data has not been extracted for this site.')
 
