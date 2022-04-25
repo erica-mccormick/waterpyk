@@ -34,7 +34,14 @@ file_name = 'test_merged.csv'
 export_csv_path = dir + file_name
 
 df = rivendell.make_combined_df(layers_csv_path, export_csv_path)
-df = rivendell.combine_bands(df)
+df = ee_tools.combine_bands(df)
 
-print(df)
+df_def = ee_tools.calculate_deficit(df)
 
+print(df_def)
+
+#snow_gt10 = df_def[df_def['Snow']>10]
+#print(snow_gt10)
+
+smax = ee_tools.get_smax(df)
+print(smax)
