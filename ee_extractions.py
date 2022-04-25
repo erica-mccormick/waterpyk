@@ -243,20 +243,23 @@ class StudyArea:
         self.coords = coords
         self.get_kind()
         self.get_feature()
+        
+        default_kwargs = {
+            'interp': True,
+            'combine_ET_bands': True,
+            'bands_to_combine': ['Es', 'Ec'],
+            'band_names_combined': 'ET',
+            'et_asset': 'pml',
+            'et_band': 'ET',
+            'ppt_asset': 'prism',
+            'ppt_band': 'ppt',
+            'snow_correction': True,
+            'snow_frac': 10
+            }
+        kwargs = { **default_kwargs, **kwargs}
+        
         if layers is not None:
-            default_kwargs = {
-                'interp': True,
-                'combine_ET_bands': True,
-                'bands_to_combine': ['Es', 'Ec'],
-                'band_names_combined': 'ET',
-                'et_asset': 'pml',
-                'et_band': 'ET',
-                'ppt_asset': 'prism',
-                'ppt_band': 'ppt',
-                'snow_correction': True,
-                'snow_frac': 10
-                }
-            kwargs = { **default_kwargs, **kwargs}
+
             self.make_combined_df(layers, **kwargs)
             self.calculate_deficit(layers, **kwargs)
             self.et_asset = kwargs['et_asset']
