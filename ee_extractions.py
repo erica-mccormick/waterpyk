@@ -27,6 +27,7 @@ class StudyArea:
             feature = ee.Feature(ee.Geometry.Point(long, lat))
             url = 'No url for points'
             #flowlines = None 
+            description = 'Site at coordinates ' + lat + ',' + long + '.'
         elif self.kind == 'watershed':
             watershed = self.coords[0]
             url = 'https://labs.waterdata.usgs.gov/api/nldi/linked-data/nwissite/USGS-%s/basin?f=json'%watershed
@@ -34,7 +35,7 @@ class StudyArea:
             request = urllib.request.urlopen("https://labs.waterdata.usgs.gov/api/nldi/linked-data/nwissite/USGS-%s/?f=json"%watershed)
             site_name = [json.load(request)['features'][0]['properties']['name'].title()]
             flowlines = gpd.read_file('https://labs.waterdata.usgs.gov/api/nldi/linked-data/nwissite/USGS-%s/navigation/UM/flowlines?f=json&distance=1000'%watershed)
-            print('USGS Basin imported at ' + site_name[0] + 'CRS: ' + str(sites.crs))
+            description = 'USGS Basin (' +str(watershed)+ ') imported at ' + site_name[0] + 'CRS: ' + str(sites.crs)
             #print('\nGeometry extracted from:\n', url)
             poly_coords = [item for item in sites.geometry[0].exterior.coords]
             feature = ee.Feature(ee.Geometry.Polygon(coords=poly_coords), {'Name': str(site_name[0]), 'Gage':int(watershed)})
@@ -42,8 +43,8 @@ class StudyArea:
             #flowine_feature = ee.Feature(ee.Geometry.Polygon(coords = flowline_coords))
         self.site_feature = feature
         self.url = url
+        self.description = description
         return self, feature
-
 
     def extract_asset(self, asset_id, start_date, end_date, scale, bands = None, bands_to_scale = None, scaling_factor = 1, reducer_type = None):
         """Extract data from start_date to end_date for an asset_id."""
@@ -74,7 +75,7 @@ class StudyArea:
         date_range = date1-date0
         #if interp == None:
         df = interp_columns_daily(df)
-        print('Timestep of', date_range, 'was interpolated to daily.')
+        print('\tTimestep of', date_range.days, 'days was interpolated to daily.')
         #else: print('Timestep of', date_range, 'was not interpolated.')
         return df
     
@@ -102,6 +103,8 @@ class StudyArea:
         self.extracted_data = df
         self.available_data = df.band.unique()
         self.layers_info = layers
+        self.start_date = layers.start_date[0]
+        self.end_date = layers.end_date[0]
         return self, df
 
 
@@ -134,7 +137,16 @@ class StudyArea:
         self.deficit_timeseries = df_def
         self.smax = df_def.D.max()
         return self, df_def
-
+    
+    def describe(self):
+        print('\n'+self.description)
+        try:
+            print('Available data for this site:', self.available_data)
+            print('Smax = ' + str(round(self.smax)) + ' mm')
+            print('Deficit calculation parameters:\n\tDataset: ' + str(self.et_asset) + '\n\tBands: ' + str(self.et_bands))
+            print('\tStart date: ' + self.start_date + '\n\tEnd date: ' + self.end_date)
+        except:
+            print('Data has not been extracted for this site.')
 
     def __init__(self, coords, layers = None, **kwargs):
         """Coords = [lat/long] for Site or [gage] for Watershed."""
@@ -157,6 +169,10 @@ class StudyArea:
             kwargs = { **default_kwargs, **kwargs}
             self.make_combined_df(layers, **kwargs)
             self.calculate_deficit(layers, **kwargs)
+            self.et_asset = kwargs['et_asset']
+            if kwargs['combine_ET_bands'] == True:
+                self.et_bands = kwargs['bands_to_combine']
+            else: self.et_bands = 'Not combined'
         
         
         
