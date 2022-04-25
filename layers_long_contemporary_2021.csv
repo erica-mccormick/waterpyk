@@ -1,0 +1,5 @@
+name,asset_id,date_format,scale,start_date,end_date,bands,bands_to_scale,scaling_factor,Notes
+prism,OREGONSTATE/PRISM/AN81d,%Y%m%d,500,10/1/2003,10/1/2020,ppt,,,
+pml,projects/pml_evapotranspiration/PML/OUTPUT/PML_V2_8day_v016,%Y-%m-%d,500,10/1/2003,10/1/2020,"Es, Ec, Ei","Es, Ec, Ei",0.01,
+modis_et,MODIS/006/MOD16A2,%Y_%m_%d,250,10/1/2003,10/1/2020,ET,ET,0.0125,"/8 for temporal resolution, scaling factor = 0.1"
+modis_snow,MODIS/006/MOD10A1,%Y_%m_%d,500,10/1/2003,10/1/2020,NDSI_Snow_Cover,,,
