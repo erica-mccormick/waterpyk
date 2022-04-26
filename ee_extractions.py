@@ -162,6 +162,18 @@ class StudyArea:
         return self, df
 
     def long_to_wide(self, layers, **kwargs):
+        """
+        Uses ET and P (designated in **kwargs) to return a wide-form dataframe with columns
+        date, ET, and P. Resulting df_wide is used in calculate_deficit() and wateryear().
+        Self is not updated.
+        
+        Args:
+            self
+            layers
+            **kwargs
+        Returns:
+            df_wide: df with columns date, ET and P.
+        """
         try:
             df = self.extracted_data
         except:
@@ -229,6 +241,19 @@ class StudyArea:
     
     
     def wateryear(self, layers, **kwargs):
+        """
+        Calculate the cumulative wateryear ET and P timeseries and the wateryear totals for ET and P.
+        ET and P datasets are designated in the **kwargs.
+
+        Args:
+            self
+            layers
+            **kwargs
+        Returns:
+            df_wide: df with columns date, wateryear, ET, P, ET_cumulative, P_cumulative
+            df_total: df with columns wateryear, ET, and P with wateryear totals
+            self: with added wateryear_timeseries and wateryear_total attributes, corresponding to df_wide and df_total
+        """
         df_wide = StudyArea.long_to_wide(self, layers, **kwargs)
         df_wide = df_wide.set_index(pd.to_datetime(df_wide['date']))
         df_wide['wateryear'] = np.where(~df_wide.index.month.isin([10,11,12]),df_wide.index.year,df_wide.index.year+1)
