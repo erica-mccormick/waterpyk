@@ -19,8 +19,10 @@ gage = [11475560]
 
 # We can make objects using these coords
 rivendell = ee_tools.StudyArea(coords, layers)
-rivendell.get_feature()
+#rivendell.get_feature()
 print(rivendell.description)
+print(rivendell.wateryear_timeseries)
+print(rivendell.wateryear_total)
 #print(rivendell.smax)
 #rivendell.describe()
 #elder = ee_tools.StudyArea(coords = gage, kind = 'watershed')
@@ -57,4 +59,15 @@ print(rivendell.description)
 #    if kwargs['print_a'] == True:
 #        print('print_a was true')
         
-#test(**testkwargs)
+#test(**testkwa
+
+
+#import seaborn as sns
+#import matplotlib.pyplot as plt
+
+#fig = plt.figure(dpi=200)
+#df = df.reset_index(drop=True)
+#sns.lineplot(data=df, x="date", y="value", hue="band")
+#plt.xlabel('Date')
+#plt.ylabel('Daily amount [mm]')
+#plt.title('Rivendell')

@@ -161,6 +161,22 @@ class StudyArea:
         self.end_date = layers.end_date[0]
         return self, df
 
+    def long_to_wide(self, layers, **kwargs):
+        try:
+            df = self.extracted_data
+        except:
+            StudyArea.make_combined_df(self, layers, **kwargs)
+            df = self.extracted_data
+        et_df = df[df['asset_name'] == kwargs['et_asset']]
+        et_df = et_df[et_df['band'] == kwargs['et_band']]
+        et_df['ET'] = et_df['value']
+        ppt_df = df[df['asset_name'] == kwargs['ppt_asset']]
+        ppt_df = ppt_df[ppt_df['band'] == kwargs['ppt_band']]
+        ppt_df['P'] = ppt_df['value']
+        df_wide = et_df.merge(ppt_df, how = 'inner', on = 'date')[['date', 'ET', 'P']]
+        #df_def = df_def.set_index(pd.to_datetime(df_def['date']))
+        #df_def['wateryear'] = np.where(~df_def.index.month.isin([10,11,12]),df_def.index.year,df_def.index.year+1)
+        return df_wide
 
     def calculate_deficit(self, layers, **kwargs):
         """
@@ -192,18 +208,9 @@ class StudyArea:
             self: with added attribute self.smax (defined as max(D)) and self.deficit_timeseries (i.e. df).
             df: pandas df of deficit data where deficit is column 'D'.
         """
-        
-        StudyArea.make_combined_df(self, layers, **kwargs)
+        df_def = StudyArea.long_to_wide(self, layers, **kwargs)
         df = self.extracted_data
-        
-        # Re-organize df
-        et_df = df[df['asset_name'] == kwargs['et_asset']]
-        et_df = et_df[et_df['band'] == kwargs['et_band']]
-        et_df['ET'] = et_df['value']
-        ppt_df = df[df['asset_name'] == kwargs['ppt_asset']]
-        ppt_df = ppt_df[ppt_df['band'] == kwargs['ppt_band']]
-        ppt_df['P'] = ppt_df['value']
-        df_def = et_df.merge(ppt_df, how = 'inner', on = 'date')[['date', 'ET', 'P']]
+
         if kwargs['snow_correction'] == True:
             snow_df = df[df['asset_name'] == 'modis_snow']
             snow_df = snow_df[snow_df['band'] == 'Cover']
@@ -219,6 +226,25 @@ class StudyArea:
         self.deficit_timeseries = df_def
         self.smax = df_def.D.max()
         return self, df_def
+    
+    
+    def wateryear(self, layers, **kwargs):
+        df_wide = StudyArea.long_to_wide(self, layers, **kwargs)
+        df_wide = df_wide.set_index(pd.to_datetime(df_wide['date']))
+        df_wide['wateryear'] = np.where(~df_wide.index.month.isin([10,11,12]),df_wide.index.year,df_wide.index.year+1)
+        
+        df_wide['ET_cumulative'] = df_wide.groupby(['wateryear'])['ET'].cumsum()
+        df_wide['P_cumulative'] = df_wide.groupby(['wateryear'])['P'].cumsum()
+        
+        df_total = pd.DataFrame()
+        df_total['ET'] = df_wide.groupby(['wateryear'])['ET'].sum()
+        df_total['P'] = df_wide.groupby(['wateryear'])['P'].sum()
+        df_total['wateryear'] = df_wide.groupby(['wateryear'])['wateryear'].first()
+        self.wateryear_timeseries = df_wide
+        self.wateryear_total = df_total
+        
+        return self, df_wide, df_total
+    
     
     def describe(self):
         """
@@ -262,6 +288,7 @@ class StudyArea:
 
             self.make_combined_df(layers, **kwargs)
             self.calculate_deficit(layers, **kwargs)
+            self.wateryear(layers, **kwargs)
             self.et_asset = kwargs['et_asset']
             if kwargs['combine_ET_bands'] == True:
                 self.et_bands = kwargs['bands_to_combine']
