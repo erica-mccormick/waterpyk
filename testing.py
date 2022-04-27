@@ -21,8 +21,12 @@ gage = [11475560]
 rivendell = ee_tools.StudyArea(coords, layers)
 #rivendell.get_feature()
 print(rivendell.description)
-print(rivendell.wateryear_timeseries)
-print(rivendell.wateryear_total)
+
+kwargs = {'plot_ET': True}
+fig = rivendell.plot(kind='timeseries', title = 'Rivendell', **kwargs)
+fig.savefig('timeseries.png')
+#print(rivendell.wateryear_timeseries)
+#print(rivendell.wateryear_total)
 #print(rivendell.smax)
 #rivendell.describe()
 #elder = ee_tools.StudyArea(coords = gage, kind = 'watershed')

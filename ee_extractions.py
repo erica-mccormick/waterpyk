@@ -9,6 +9,8 @@ import datetime
 import warnings
 warnings.filterwarnings("ignore")
 ee.Initialize()
+import matplotlib
+import matplotlib.pyplot as plt
 
 class StudyArea:
 
@@ -267,9 +269,58 @@ class StudyArea:
         df_total['wateryear'] = df_wide.groupby(['wateryear'])['wateryear'].first()
         self.wateryear_timeseries = df_wide
         self.wateryear_total = df_total
+        self.map = df_total['P'].mean()
         
         return self, df_wide, df_total
     
+    
+    ########################## PLOTS ##########################
+    def plot(self, kind = 'timeseries', title = '', **plot_kwargs):
+        
+        default_plotting_kwargs = {
+            'plot_P': True,
+            'plot_D': True,
+            'plot_ET': False,
+            'color_P': '#b1d6f0',
+            'color_D': 'black',
+            'color_ET': 'purple',
+            'linestyle_D': '-',
+            'linestyle_ET': '-',
+            'xmin': '2003-10-01',
+            'xmax': '2020-10-01',
+            'legend': True,
+            'dpi': 300,
+            'figsize': (6,4),
+            'xlabel': 'Date',
+            'ylabel': '[mm]'
+
+            }
+        plot_kwargs = { **default_plotting_kwargs, **plot_kwargs}
+        
+        if kind == 'timeseries':
+            fig, ax = plt.subplots(dpi=plot_kwargs['dpi'], figsize = plot_kwargs['figsize'])
+            if title is not None:
+                ax.set_title(title)
+            if plot_kwargs['plot_P']:
+                df_wy = self.wateryear_timeseries
+                df_wy['date'] = pd.to_datetime(df_wy['date'])
+                ax.fill_between(df_wy['date'], 0, df_wy['P_cumulative'],color='#b1d6f0', label='P (mm)', alpha = 0.7)
+            if plot_kwargs['plot_ET']:
+                df_wy = self.wateryear_timeseries
+                df_wy['date'] = pd.to_datetime(df_wy['date'])
+                ax.plot(df_wy['date'], df_wy['ET_cumulative'], plot_kwargs['linestyle_ET'], color=plot_kwargs['color_ET'], label= 'ET (mm)')
+            if plot_kwargs['plot_D']:
+                df_d = self.deficit_timeseries
+                df_d['date'] = pd.to_datetime(df_d['date'])
+                ax.plot(df_d['date'], df_d['D'], plot_kwargs['linestyle_D'], color=plot_kwargs['color_D'], label='D(t) (mm)')
+
+            ax.set_xlim(pd.to_datetime(plot_kwargs['xmin'], exact = False), pd.to_datetime(plot_kwargs['xmax'], exact = False))
+            ax.set_xlabel(plot_kwargs['xlabel'])
+            ax.set_ylabel(plot_kwargs['ylabel'])
+            if plot_kwargs['legend']: ax.legend(loc = 'best')
+
+            return fig
+        
     
     def describe(self):
         """
