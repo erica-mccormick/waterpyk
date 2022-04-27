@@ -7,7 +7,8 @@ import pandas as pd
 import numpy as np
 import datetime
 ee.Initialize()
-
+import matplotlib
+import matplotlib.pyplot as plt
 import ee_extractions as ee_tools
 
 # These are the coordinates for the site "Rivendell"
@@ -21,14 +22,27 @@ gage = [11475560]
 rivendell = ee_tools.StudyArea(coords, layers)
 #rivendell.get_feature()
 print(rivendell.description)
+print(rivendell.wateryear_timeseries)
+print(rivendell.wateryear_total)
 
-kwargs = {'plot_ET': True}
-fig = rivendell.plot(kind='timeseries', title = 'Rivendell', **kwargs)
-fig.savefig('timeseries.png')
+wytotal = rivendell.wateryear_total
+print(type(wytotal.wateryear))
 
-kwargs = {'plot_ET': True, 'plot_P': False, 'color_D': 'green'}
-fig = rivendell.plot(kind='timeseries', title = 'Rivendell', **kwargs)
-fig.savefig('timeseries_2.png')
+#kwargs = {'plot_ET': True}
+##fig = rivendell.plot(kind='timeseries', title = 'Rivendell', **kwargs)
+#fig.savefig('timeseries.png')
+
+#kwargs = {'plot_ET': True, 'plot_P': False, 'color_D': 'green', 'linestyle_D': '--', 'linestyle_ET':':'}
+#fig = rivendell.plot(kind='timeseries', title = 'Rivendell', **kwargs)
+#fig.savefig('timeseries_2.png')
+
+kwargs = {'plot_ET': True, 'plot_ET_dry':True, 'xmin':2004, 'xmax':2020, 'linestyle_ET':'-o', 'linestyle_P':'-o', 'twinx': True, 'legend':False}
+fig = rivendell.plot(kind='wateryear', title = 'Rivendell', **kwargs)
+fig.savefig('timeseries_3.png')
+
+df = rivendell.wateryear_total
+
+
 #print(rivendell.wateryear_timeseries)
 #print(rivendell.wateryear_total)
 #print(rivendell.smax)

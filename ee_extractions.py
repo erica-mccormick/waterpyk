@@ -260,12 +260,18 @@ class StudyArea:
         df_wide = df_wide.set_index(pd.to_datetime(df_wide['date']))
         df_wide['wateryear'] = np.where(~df_wide.index.month.isin([10,11,12]),df_wide.index.year,df_wide.index.year+1)
         
+        # Get a df of just summer ET
+        df_wide['season'] = np.where(~df_wide.index.month.isin([6,7,8,9]),'summer','other')
+        df_summer = df_wide[df_wide['season'] == 'summer']
+        del df_wide['season']
+        
         df_wide['ET_cumulative'] = df_wide.groupby(['wateryear'])['ET'].cumsum()
         df_wide['P_cumulative'] = df_wide.groupby(['wateryear'])['P'].cumsum()
-        
+    
         df_total = pd.DataFrame()
         df_total['ET'] = df_wide.groupby(['wateryear'])['ET'].sum()
         df_total['P'] = df_wide.groupby(['wateryear'])['P'].sum()
+        df_total['ET_summer'] = df_summer.groupby(['wateryear'])['ET'].sum()
         df_total['wateryear'] = df_wide.groupby(['wateryear'])['wateryear'].first()
         self.wateryear_timeseries = df_wide
         self.wateryear_total = df_total
@@ -281,9 +287,12 @@ class StudyArea:
             'plot_P': True,
             'plot_D': True,
             'plot_ET': False,
+            'plot_ET_dry': False,
             'color_P': '#b1d6f0',
             'color_D': 'black',
             'color_ET': 'purple',
+            'markeredgecolor': 'black',
+            'linestyle_P':'-',
             'linestyle_D': '-',
             'linestyle_ET': '-',
             'xmin': '2003-10-01',
@@ -292,15 +301,15 @@ class StudyArea:
             'dpi': 300,
             'figsize': (6,4),
             'xlabel': 'Date',
-            'ylabel': '[mm]'
-
+            'ylabel': '[mm]',
+            'twinx': False
             }
-        plot_kwargs = { **default_plotting_kwargs, **plot_kwargs}
-        
+        plot_kwargs = {**default_plotting_kwargs, **plot_kwargs}
+
+        fig, ax = plt.subplots(dpi=plot_kwargs['dpi'], figsize = plot_kwargs['figsize'])
+        if title is not None: ax.set_title(title) 
+              
         if kind == 'timeseries':
-            fig, ax = plt.subplots(dpi=plot_kwargs['dpi'], figsize = plot_kwargs['figsize'])
-            if title is not None:
-                ax.set_title(title)
             if plot_kwargs['plot_P']:
                 df_wy = self.wateryear_timeseries
                 df_wy['date'] = pd.to_datetime(df_wy['date'])
@@ -313,15 +322,31 @@ class StudyArea:
                 df_d = self.deficit_timeseries
                 df_d['date'] = pd.to_datetime(df_d['date'])
                 ax.plot(df_d['date'], df_d['D'], plot_kwargs['linestyle_D'], color=plot_kwargs['color_D'], label='D(t) (mm)')
-
             ax.set_xlim(pd.to_datetime(plot_kwargs['xmin'], exact = False), pd.to_datetime(plot_kwargs['xmax'], exact = False))
-            ax.set_xlabel(plot_kwargs['xlabel'])
-            ax.set_ylabel(plot_kwargs['ylabel'])
-            if plot_kwargs['legend']: ax.legend(loc = 'best')
 
-            return fig
+        elif kind == 'wateryear':
+            #default_plotting_kwargs_2 = {'plot_D':False, 'plot_ET':True, 'plot_P': True, 'linestyle_P':'o', 'linestyle_ET':'o', 'xmin':2004, 'xmax':2020}
+            #default_plotting_kwargs = { **default_plotting_kwargs, **default_plotting_kwargs_2}
+            #plot_kwargs = { **default_plotting_kwargs, **plot_kwargs}
+
+            df = self.wateryear_total
+            if plot_kwargs['plot_P']:
+                ax.plot(df['wateryear'], df['P'], plot_kwargs['linestyle_P'], color = plot_kwargs['color_P'], markeredgecolor = plot_kwargs['markeredgecolor'], label = 'WY P (mm)')
+            if plot_kwargs['twinx']:
+                ax2 = ax.twinx()
+                ax2.set_ylabel('ET (mm)', color = plot_kwargs['color_ET'])
+            else: ax2 = ax
+            if plot_kwargs['plot_ET']:
+                ax2.plot(df['wateryear'], df['ET'], plot_kwargs['linestyle_ET'], color = plot_kwargs['color_ET'], markeredgecolor = plot_kwargs['markeredgecolor'], label = r'$\mathrm{ET}_{wy}\/\mathrm{(mm)}$')
+            if plot_kwargs['plot_ET_dry']:
+                ax2.plot(df['wateryear'], df['ET_summer'], ':o', color = plot_kwargs['color_ET'],markeredgecolor = plot_kwargs['markeredgecolor'], label = r'$\mathrm{ET}_{dry}\/\mathrm{(mm)}$')
+        ax.set_xlim(plot_kwargs['xmin'], plot_kwargs['xmax'])
+        ax.set_xlabel(plot_kwargs['xlabel'])
+        ax.set_ylabel(plot_kwargs['ylabel'])
+        if plot_kwargs['legend']: ax.legend(loc = 'best')
         
-    
+        return fig
+            
     def describe(self):
         """
         Print statements describing StudyArea attributes and deficit parameters, if deficit was calculated.
