@@ -25,6 +25,10 @@ print(rivendell.description)
 kwargs = {'plot_ET': True}
 fig = rivendell.plot(kind='timeseries', title = 'Rivendell', **kwargs)
 fig.savefig('timeseries.png')
+
+kwargs = {'plot_ET': True, 'plot_P': False, 'color_D': 'green'}
+fig = rivendell.plot(kind='timeseries', title = 'Rivendell', **kwargs)
+fig.savefig('timeseries_2.png')
 #print(rivendell.wateryear_timeseries)
 #print(rivendell.wateryear_total)
 #print(rivendell.smax)
