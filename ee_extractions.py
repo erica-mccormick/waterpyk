@@ -11,6 +11,7 @@ warnings.filterwarnings("ignore")
 ee.Initialize()
 import matplotlib
 import matplotlib.pyplot as plt
+from scipy import stats
 
 class StudyArea:
 
@@ -282,7 +283,6 @@ class StudyArea:
     
     ########################## PLOTS ##########################
     def plot(self, kind = 'timeseries', title = '', **plot_kwargs):
-        
         default_plotting_kwargs = {
             'plot_P': True,
             'plot_D': True,
@@ -308,7 +308,6 @@ class StudyArea:
 
         fig, ax = plt.subplots(dpi=plot_kwargs['dpi'], figsize = plot_kwargs['figsize'])
         if title is not None: ax.set_title(title) 
-              
         if kind == 'timeseries':
             if plot_kwargs['plot_P']:
                 df_wy = self.wateryear_timeseries
@@ -325,13 +324,9 @@ class StudyArea:
             ax.set_xlim(pd.to_datetime(plot_kwargs['xmin'], exact = False), pd.to_datetime(plot_kwargs['xmax'], exact = False))
 
         elif kind == 'wateryear':
-            #default_plotting_kwargs_2 = {'plot_D':False, 'plot_ET':True, 'plot_P': True, 'linestyle_P':'o', 'linestyle_ET':'o', 'xmin':2004, 'xmax':2020}
-            #default_plotting_kwargs = { **default_plotting_kwargs, **default_plotting_kwargs_2}
-            #plot_kwargs = { **default_plotting_kwargs, **plot_kwargs}
-
             df = self.wateryear_total
             if plot_kwargs['plot_P']:
-                ax.plot(df['wateryear'], df['P'], plot_kwargs['linestyle_P'], color = plot_kwargs['color_P'], markeredgecolor = plot_kwargs['markeredgecolor'], label = 'WY P (mm)')
+                ax.plot(df['wateryear'], df['P'], plot_kwargs['linestyle_P'], color = plot_kwargs['color_P'], markeredgecolor = plot_kwargs['markeredgecolor'], label = r'$\mathrm{P}_{wy}\/\mathrm{(mm)}$')
             if plot_kwargs['twinx']:
                 ax2 = ax.twinx()
                 ax2.set_ylabel('ET (mm)', color = plot_kwargs['color_ET'])
@@ -340,9 +335,23 @@ class StudyArea:
                 ax2.plot(df['wateryear'], df['ET'], plot_kwargs['linestyle_ET'], color = plot_kwargs['color_ET'], markeredgecolor = plot_kwargs['markeredgecolor'], label = r'$\mathrm{ET}_{wy}\/\mathrm{(mm)}$')
             if plot_kwargs['plot_ET_dry']:
                 ax2.plot(df['wateryear'], df['ET_summer'], ':o', color = plot_kwargs['color_ET'],markeredgecolor = plot_kwargs['markeredgecolor'], label = r'$\mathrm{ET}_{dry}\/\mathrm{(mm)}$')
-        ax.set_xlim(plot_kwargs['xmin'], plot_kwargs['xmax'])
+            ax.set_xlim(plot_kwargs['xmin'], plot_kwargs['xmax'])
+
+        elif kind == 'spearman':
+            df = self.wateryear_total
+            ax.plot(df['P'], df['ET_summer'], 'o', color = '#a4a5ab', markersize = 14, markeredgecolor = plot_kwargs['markeredgecolor'], label = '')
+            plot_kwargs['xlabel'] = r'$\mathrm{P}_{wy}\/\mathrm{(mm)}$'
+            plot_kwargs['ylabel'] = r'$\mathrm{ET}_{dry}\/\mathrm{(mm)}$'
+            plot_kwargs['legend'] = False
+            ax.set_ylim(0,600)
+            corr, p = stats.spearmanr(df[['P','ET_summer']])
+            ax.annotate(r'$\rho$' + ' = ' + str(round(corr,2)) + '\n p-val = ' + str(round(p,4)),
+                        xy=(.9, .85), xycoords='figure fraction',
+                        horizontalalignment='right', verticalalignment='top',
+                        fontsize=10)
         ax.set_xlabel(plot_kwargs['xlabel'])
         ax.set_ylabel(plot_kwargs['ylabel'])
+        ax.set_xlim(plot_kwargs['xmin'], plot_kwargs['xmax'])
         if plot_kwargs['legend']: ax.legend(loc = 'best')
         
         return fig

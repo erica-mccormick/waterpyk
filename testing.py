@@ -40,8 +40,9 @@ kwargs = {'plot_ET': True, 'plot_ET_dry':True, 'xmin':2004, 'xmax':2020, 'linest
 fig = rivendell.plot(kind='wateryear', title = 'Rivendell', **kwargs)
 fig.savefig('timeseries_3.png')
 
-df = rivendell.wateryear_total
-
+kwargs_spearman = {'xmin':0, 'xmax':4000, 'legend':False}
+fig2 = rivendell.plot(kind = 'spearman', title = 'Rivendell', **kwargs_spearman)
+fig2.savefig('spearman.png')
 
 #print(rivendell.wateryear_timeseries)
 #print(rivendell.wateryear_total)
