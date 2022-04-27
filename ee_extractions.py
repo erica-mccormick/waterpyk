@@ -339,14 +339,14 @@ class StudyArea:
 
         elif kind == 'spearman':
             df = self.wateryear_total
-            ax.plot(df['P'], df['ET_summer'], 'o', color = '#a4a5ab', markersize = 14, markeredgecolor = plot_kwargs['markeredgecolor'], label = '')
+            ax.plot(df['P'], df['ET_summer'], 'o', color = '#a4a5ab', markersize = 12, markeredgecolor = plot_kwargs['markeredgecolor'], label = '')
             plot_kwargs['xlabel'] = r'$\mathrm{P}_{wy}\/\mathrm{(mm)}$'
             plot_kwargs['ylabel'] = r'$\mathrm{ET}_{dry}\/\mathrm{(mm)}$'
             plot_kwargs['legend'] = False
             ax.set_ylim(0,600)
             corr, p = stats.spearmanr(df[['P','ET_summer']])
             ax.annotate(r'$\rho$' + ' = ' + str(round(corr,2)) + '\n p-val = ' + str(round(p,4)),
-                        xy=(.9, .85), xycoords='figure fraction',
+                        xy=(.88, .85), xycoords='figure fraction',
                         horizontalalignment='right', verticalalignment='top',
                         fontsize=10)
         ax.set_xlabel(plot_kwargs['xlabel'])
