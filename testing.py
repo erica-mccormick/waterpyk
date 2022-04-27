@@ -12,21 +12,22 @@ import matplotlib.pyplot as plt
 import ee_extractions as ee_tools
 
 # These are the coordinates for the site "Rivendell"
-coords = [39.7273, -123.6433]
+#coords = [39.7273, -123.6433]
 layers = pd.read_csv('layers_long_contemporary_2021.csv')
 
 # This is the USGS gage ID for Elder Creek
-gage = [11475560]
+#gage = [11475560] #Real elder
+gage = [11180825] #San Lorenzo
 
 # We can make objects using these coords
-rivendell = ee_tools.StudyArea(coords, layers)
+#rivendell = ee_tools.StudyArea(coords, layers)
+elder = ee_tools.StudyArea(gage, layers)
 #rivendell.get_feature()
-print(rivendell.description)
-print(rivendell.wateryear_timeseries)
-print(rivendell.wateryear_total)
+#print(rivendell.description)
+#print(rivendell.wateryear_timeseries)
+#print(rivendell.wateryear_total)#
 
-wytotal = rivendell.wateryear_total
-print(type(wytotal.wateryear))
+#print(type(wytotal.wateryear))
 
 #kwargs = {'plot_ET': True}
 ##fig = rivendell.plot(kind='timeseries', title = 'Rivendell', **kwargs)
@@ -37,12 +38,12 @@ print(type(wytotal.wateryear))
 #fig.savefig('timeseries_2.png')
 
 kwargs = {'plot_ET': True, 'plot_ET_dry':True, 'xmin':2004, 'xmax':2020, 'linestyle_ET':'-o', 'linestyle_P':'-o', 'twinx': True, 'legend':False}
-fig = rivendell.plot(kind='wateryear', title = 'Rivendell', **kwargs)
-fig.savefig('timeseries_3.png')
+fig = elder.plot(kind='wateryear', title = 'Elder Creek', **kwargs)
+fig.savefig('plot_timeseries_3.png')
 
 kwargs_spearman = {'xmin':0, 'xmax':4000, 'legend':False}
-fig2 = rivendell.plot(kind = 'spearman', title = 'Rivendell', **kwargs_spearman)
-fig2.savefig('spearman.png')
+fig2 = elder.plot(kind = 'spearman', title = 'Elder Creek', **kwargs_spearman)
+fig2.savefig('plot_spearman.png')
 
 #print(rivendell.wateryear_timeseries)
 #print(rivendell.wateryear_total)
