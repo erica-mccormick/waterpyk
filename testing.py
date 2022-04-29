@@ -12,16 +12,19 @@ import matplotlib.pyplot as plt
 import ee_extractions as ee_tools
 
 # These are the coordinates for the site "Rivendell"
-#coords = [39.7273, -123.6433]
+coords = [39.7273, -123.6433]
+coords_plim = [36.5272 ,-118.8003]
 layers = pd.read_csv('layers_long_contemporary_2021.csv')
 
 # This is the USGS gage ID for Elder Creek
 #gage = [11475560] #Real elder
-gage = [11180825] #San Lorenzo
+#gage = [11180825] #San Lorenzo
 
 # We can make objects using these coords
-#rivendell = ee_tools.StudyArea(coords, layers)
-elder = ee_tools.StudyArea(gage, layers)
+rivendell = ee_tools.StudyArea(coords, layers)
+plim = ee_tools.StudyArea(coords_plim, layers)
+
+#elder = ee_tools.StudyArea(gage, layers)
 #rivendell.get_feature()
 #print(rivendell.description)
 #print(rivendell.wateryear_timeseries)
@@ -36,14 +39,55 @@ elder = ee_tools.StudyArea(gage, layers)
 #kwargs = {'plot_ET': True, 'plot_P': False, 'color_D': 'green', 'linestyle_D': '--', 'linestyle_ET':':'}
 #fig = rivendell.plot(kind='timeseries', title = 'Rivendell', **kwargs)
 #fig.savefig('timeseries_2.png')
+print('Plim site')
+deficit = plim.deficit_timeseries
+#print(deficit[deficit['D_wy']>395])
+#print(deficit[deficit['D']>395])
 
-kwargs = {'plot_ET': True, 'plot_ET_dry':True, 'xmin':2004, 'xmax':2020, 'linestyle_ET':'-o', 'linestyle_P':'-o', 'twinx': True, 'legend':False}
-fig = elder.plot(kind='wateryear', title = 'Elder Creek', **kwargs)
-fig.savefig('plot_timeseries_3.png')
+print(deficit.groupby(['wateryear'])['D_wy'].max())
 
-kwargs_spearman = {'xmin':0, 'xmax':4000, 'legend':False}
-fig2 = elder.plot(kind = 'spearman', title = 'Elder Creek', **kwargs_spearman)
-fig2.savefig('plot_spearman.png')
+print('Deficit where smax = smax')
+print(deficit[deficit['D'] == plim.smax])
+
+kwargs = {'plot_P': False, 'legend':False, 'lw':1}
+fig = plim.plot(kind='timeseries', **kwargs)
+fig.savefig('plim_timeseries_noP.pdf')
+
+print('rivendell')
+
+deficit_rivendell = rivendell.deficit_timeseries
+#print(deficit[deficit['D_wy']>395])
+#print(deficit[deficit['D']>395])
+
+print(deficit_rivendell.groupby(['wateryear'])['D_wy'].max())
+
+print('Deficit where smax = smax')
+print(deficit_rivendell[deficit_rivendell['D'] == rivendell.smax])
+
+fig = rivendell.plot(kind='timeseries', **kwargs)
+fig.savefig('rivendell_timeseries_noP.pdf')
+
+
+#kwargs = {'plot_ET': True, 'plot_P': False, 'color_D': 'green', 'linestyle_D': '--', 'linestyle_ET':':'}
+#fig = rivendell.plot(kind='timeseries', title = 'Rivendell')
+#fig.savefig('plot_timeseries.pdf')
+
+
+
+
+#kwargs_wy = {'plot_P': False, 'plot_ET': False, 'plot_ET_dry':False, 'xmin':2004, 'xmax':2020, 'linestyle_ET':'-o', 'linestyle_P':'-o', 'twinx': True, 'legend':False}
+#fig_paper = rivendell.plot(kind = 'timeseries')
+
+#kwargs_wy = {'plot_ET': True, 'plot_ET_dry':False, 'xmin':2004, 'xmax':2020, 'linestyle_ET':'-o', 'linestyle_P':'-o', 'twinx': True, 'legend':False}
+#fig2 = rivendell.plot(kind='wateryear', title = 'Rivendell', **kwargs_wy)
+#fig2.savefig('plot_timeseries_wy.png')
+
+##kwargs_spearman = {'xmin':0, 'xmax':4000, 'legend':False}
+#fig3 = rivendell.plot(kind = 'spearman', title = 'Rivendell', **kwargs_spearman)
+#fig3.savefig('plot_spearman.png')
+
+#fig4 = rivendell.plot(kind = 'location', title = 'Rivendell')
+#fig4.savefig('plot_location.png')
 
 #print(rivendell.wateryear_timeseries)
 #print(rivendell.wateryear_total)

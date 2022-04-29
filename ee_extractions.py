@@ -12,6 +12,8 @@ ee.Initialize()
 import matplotlib
 import matplotlib.pyplot as plt
 from scipy import stats
+import contextily as ctx
+
 
 class StudyArea:
 
@@ -50,19 +52,25 @@ class StudyArea:
             feature = ee.Feature(ee.Geometry.Point(long, lat))
             url = 'No url for points'
             description = 'Site at coordinates ' + str(lat) + ', ' + str(long) + '.'
+            gp_site = pd.DataFrame({'longitude': [long], 'latitude': [lat]})
+            site_geometry = gpd.points_from_xy(gp_site.longitude, gp_site.latitude, crs="EPSG:4326")
+            flowlines = None
+
         elif self.kind == 'watershed':
             watershed = self.coords[0]
             url = 'https://labs.waterdata.usgs.gov/api/nldi/linked-data/nwissite/USGS-%s/basin?f=json'%watershed
-            sites = gpd.read_file(url)    
+            site_geometry = gpd.read_file(url)    
             request = urllib.request.urlopen("https://labs.waterdata.usgs.gov/api/nldi/linked-data/nwissite/USGS-%s/?f=json"%watershed)
             site_name = [json.load(request)['features'][0]['properties']['name'].title()]
             flowlines = gpd.read_file('https://labs.waterdata.usgs.gov/api/nldi/linked-data/nwissite/USGS-%s/navigation/UM/flowlines?f=json&distance=1000'%watershed)
-            description = 'USGS Basin (' +str(watershed)+ ') imported at ' + str(site_name[0]) + 'CRS: ' + str(sites.crs)
-            poly_coords = [item for item in sites.geometry[0].exterior.coords]
+            description = 'USGS Basin (' +str(watershed)+ ') imported at ' + str(site_name[0]) + 'CRS: ' + str(site_geometry.crs)
+            poly_coords = [item for item in site_geometry.geometry[0].exterior.coords]
             feature = ee.Feature(ee.Geometry.Polygon(coords=poly_coords), {'Name': str(site_name[0]), 'Gage':int(watershed)})
         self.site_feature = feature
         self.url = url
         self.description = description
+        self.site_geometry = site_geometry
+        self.flowlines = flowlines
         return self, feature
 
     def extract_asset(self, asset_id, start_date, end_date, scale, bands = None, bands_to_scale = None, scaling_factor = 1, reducer_type = None):
@@ -189,6 +197,16 @@ class StudyArea:
         ppt_df = ppt_df[ppt_df['band'] == kwargs['ppt_band']]
         ppt_df['P'] = ppt_df['value']
         df_wide = et_df.merge(ppt_df, how = 'inner', on = 'date')[['date', 'ET', 'P']]
+        df_wide['original_index'] = df_wide.index
+        df_wide = df_wide.set_index(pd.to_datetime(df_wide['date']))
+        df_wide['wateryear'] = np.where(~df_wide.index.month.isin([10,11,12]),df_wide.index.year,df_wide.index.year+1)
+
+        #df_wide['date'] = pd.to_datetime(df_wide['date'])
+
+        #df_wide['wateryear'] = np.where(~df_wide.date.month.isin([10,11,12]),df_wide.date.year,df_wide.date.year+1)
+        #df_wide = df_wide.set_index(df_wide['original_index'])
+        #del df_wide['original_index']
+        df_wide = df_wide.reset_index(drop=True)
         #df_def = df_def.set_index(pd.to_datetime(df_def['date']))
         #df_def['wateryear'] = np.where(~df_def.index.month.isin([10,11,12]),df_def.index.year,df_def.index.year+1)
         return df_wide
@@ -230,7 +248,7 @@ class StudyArea:
             snow_df = df[df['asset_name'] == 'modis_snow']
             snow_df = snow_df[snow_df['band'] == 'Cover']
             snow_df['Snow'] = snow_df['value']
-            df_def = df_def.merge(snow_df, how = 'inner', on = 'date')[['date','ET','P','Snow']]
+            df_def = df_def.merge(snow_df, how = 'inner', on = 'date')[['date','ET','P','Snow','wateryear']]
             df_def.loc[df_def['Snow'] > kwargs['snow_frac'], 'ET'] = 0
         # Calculate A and D
         df_def['A'] = df_def['ET'] - df_def['P']
@@ -238,6 +256,19 @@ class StudyArea:
         for _i in range(df_def.shape[0]-1):
             df_def.loc[_i+1, 'D'] = max((df_def.loc[_i+1, 'A'] + df_def.loc[_i, 'D']), 0)
         
+        
+        ## Calculate wateryear deficit (D(t)_wy))
+        df_wy = pd.DataFrame()
+        for wy in df_def.wateryear.unique():
+            temp = df_def[df_def['wateryear'] == wy][['date','ET','P']]
+            temp['A'] = temp['ET'] - temp['P']
+            temp['D_wy'] = 0
+            temp = temp.reset_index()
+            for _i in range(temp.shape[0]-1):
+                temp.loc[_i+1, 'D_wy'] = max((temp.loc[_i+1, 'A'] + temp.loc[_i, 'D_wy']), 0)
+            df_wy = df_wy.append(temp)
+        df_wy = df_wy[['date','D_wy']]
+        df_def = df_def.merge(df_wy, how = 'left', on = 'date')
         self.deficit_timeseries = df_def
         self.smax = df_def.D.max()
         return self, df_def
@@ -258,10 +289,9 @@ class StudyArea:
             self: with added wateryear_timeseries and wateryear_total attributes, corresponding to df_wide and df_total
         """
         df_wide = StudyArea.long_to_wide(self, layers, **kwargs)
-        df_wide = df_wide.set_index(pd.to_datetime(df_wide['date']))
-        df_wide['wateryear'] = np.where(~df_wide.index.month.isin([10,11,12]),df_wide.index.year,df_wide.index.year+1)
-        
+
         # Get a df of just summer ET
+        df_wide = df_wide.set_index(df_wide['date'])
         df_wide['season'] = np.where(~df_wide.index.month.isin([6,7,8,9]),'summer','other')
         df_summer = df_wide[df_wide['season'] == 'summer']
         del df_wide['season']
@@ -274,6 +304,9 @@ class StudyArea:
         df_total['P'] = df_wide.groupby(['wateryear'])['P'].sum()
         df_total['ET_summer'] = df_summer.groupby(['wateryear'])['ET'].sum()
         df_total['wateryear'] = df_wide.groupby(['wateryear'])['wateryear'].first()
+        
+        df_wide = df_wide.reset_index(drop=True)
+        df_total = df_total.reset_index(drop=True)
         self.wateryear_timeseries = df_wide
         self.wateryear_total = df_total
         self.map = df_total['P'].mean()
@@ -286,15 +319,19 @@ class StudyArea:
         default_plotting_kwargs = {
             'plot_P': True,
             'plot_D': True,
+            'plot_Dwy': True,
             'plot_ET': False,
             'plot_ET_dry': False,
             'color_P': '#b1d6f0',
             'color_D': 'black',
+            'color_Dwy':'black',
             'color_ET': 'purple',
             'markeredgecolor': 'black',
             'linestyle_P':'-',
             'linestyle_D': '-',
+            'linestyle_Dwy':'--',
             'linestyle_ET': '-',
+            'lw': 1.5, 
             'xmin': '2003-10-01',
             'xmax': '2020-10-01',
             'legend': True,
@@ -316,30 +353,34 @@ class StudyArea:
             if plot_kwargs['plot_ET']:
                 df_wy = self.wateryear_timeseries
                 df_wy['date'] = pd.to_datetime(df_wy['date'])
-                ax.plot(df_wy['date'], df_wy['ET_cumulative'], plot_kwargs['linestyle_ET'], color=plot_kwargs['color_ET'], label= 'ET (mm)')
+                ax.plot(df_wy['date'], df_wy['ET_cumulative'], plot_kwargs['linestyle_ET'], color=plot_kwargs['color_ET'], lw = plot_kwargs['lw'], label= 'ET (mm)')
             if plot_kwargs['plot_D']:
                 df_d = self.deficit_timeseries
                 df_d['date'] = pd.to_datetime(df_d['date'])
-                ax.plot(df_d['date'], df_d['D'], plot_kwargs['linestyle_D'], color=plot_kwargs['color_D'], label='D(t) (mm)')
+                ax.plot(df_d['date'], df_d['D'], plot_kwargs['linestyle_D'], color=plot_kwargs['color_D'], lw = plot_kwargs['lw'], label=r'$\mathrm{D(t)}\/\mathrm{(mm)}$')
+            if plot_kwargs['plot_Dwy']:
+                df_d = self.deficit_timeseries
+                df_d['date'] = pd.to_datetime(df_d['date'])
+                ax.plot(df_d['date'], df_d['D_wy'], plot_kwargs['linestyle_Dwy'], color=plot_kwargs['color_Dwy'], lw = plot_kwargs['lw'], label=r'$\mathrm{D}_{wy}\/\mathrm{(mm)}$')
             ax.set_xlim(pd.to_datetime(plot_kwargs['xmin'], exact = False), pd.to_datetime(plot_kwargs['xmax'], exact = False))
 
         elif kind == 'wateryear':
             df = self.wateryear_total
             if plot_kwargs['plot_P']:
-                ax.plot(df['wateryear'], df['P'], plot_kwargs['linestyle_P'], color = plot_kwargs['color_P'], markeredgecolor = plot_kwargs['markeredgecolor'], label = r'$\mathrm{P}_{wy}\/\mathrm{(mm)}$')
+                ax.plot(df['wateryear'], df['P'], plot_kwargs['linestyle_P'], color = plot_kwargs['color_P'], lw = plot_kwargs['lw'], markeredgecolor = plot_kwargs['markeredgecolor'], label = r'$\mathrm{P}_{wy}\/\mathrm{(mm)}$')
             if plot_kwargs['twinx']:
                 ax2 = ax.twinx()
                 ax2.set_ylabel('ET (mm)', color = plot_kwargs['color_ET'])
             else: ax2 = ax
             if plot_kwargs['plot_ET']:
-                ax2.plot(df['wateryear'], df['ET'], plot_kwargs['linestyle_ET'], color = plot_kwargs['color_ET'], markeredgecolor = plot_kwargs['markeredgecolor'], label = r'$\mathrm{ET}_{wy}\/\mathrm{(mm)}$')
+                ax2.plot(df['wateryear'], df['ET'], plot_kwargs['linestyle_ET'], color = plot_kwargs['color_ET'], lw = plot_kwargs['lw'], markeredgecolor = plot_kwargs['markeredgecolor'], label = r'$\mathrm{ET}_{wy}\/\mathrm{(mm)}$')
             if plot_kwargs['plot_ET_dry']:
-                ax2.plot(df['wateryear'], df['ET_summer'], ':o', color = plot_kwargs['color_ET'],markeredgecolor = plot_kwargs['markeredgecolor'], label = r'$\mathrm{ET}_{dry}\/\mathrm{(mm)}$')
+                ax2.plot(df['wateryear'], df['ET_summer'], ':o', color = plot_kwargs['color_ET'], lw = plot_kwargs['lw'], markeredgecolor = plot_kwargs['markeredgecolor'], label = r'$\mathrm{ET}_{dry}\/\mathrm{(mm)}$')
             ax.set_xlim(plot_kwargs['xmin'], plot_kwargs['xmax'])
 
         elif kind == 'spearman':
             df = self.wateryear_total
-            ax.plot(df['P'], df['ET_summer'], 'o', color = '#a4a5ab', markersize = 12, markeredgecolor = plot_kwargs['markeredgecolor'], label = '')
+            ax.plot(df['P'], df['ET_summer'], 'o', color = '#a4a5ab', markersize = 12, lw = plot_kwargs['lw'],  markeredgecolor = plot_kwargs['markeredgecolor'], label = '')
             plot_kwargs['xlabel'] = r'$\mathrm{P}_{wy}\/\mathrm{(mm)}$'
             plot_kwargs['ylabel'] = r'$\mathrm{ET}_{dry}\/\mathrm{(mm)}$'
             plot_kwargs['legend'] = False
@@ -349,11 +390,19 @@ class StudyArea:
                         xy=(.88, .85), xycoords='figure fraction',
                         horizontalalignment='right', verticalalignment='top',
                         fontsize=10)
+            ax.set_xlim(plot_kwargs['xmin'], plot_kwargs['xmax'])
+
         ax.set_xlabel(plot_kwargs['xlabel'])
         ax.set_ylabel(plot_kwargs['ylabel'])
-        ax.set_xlim(plot_kwargs['xmin'], plot_kwargs['xmax'])
         if plot_kwargs['legend']: ax.legend(loc = 'best')
         
+        elif kind == 'location':
+            self.site_geometry.plot(ax = ax, crs = self.site_geometry.crs.to_string())
+            #bbox_gdf.boundary.plot(ax = ax)
+            self.flowlines.plot(ax = ax, crs = self.site_geometry.crs.to_string())
+            ctx.add_basemap(ax = ax, crs = self.site_geometry.crs.to_string())
+            plt.title(self.description)
+
         return fig
             
     def describe(self):
