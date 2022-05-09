@@ -73,6 +73,33 @@ class StudyArea:
         self.flowlines = flowlines
         return self, feature
 
+    def get_streamflow(self, **kwargs):
+        if self.kind == 'watershed':
+            watershed = self.coords[0]
+            basin = gpd.read_file(self.url)
+            # url of flow data (usgs)
+            start_date = kwargs['flow_startdate']
+            end_date = kwargs['flow_enddate']
+            url_flow = 'https://waterdata.usgs.gov/nwis/dv?cb_00060=on&format=rdb&site_no=' + str(watershed) + '&referred_module=sw&period=&begin_date='+ start_date +'&end_date='+ end_date
+            print('Streamflow data is being retrieved from:')
+            print('\t', url_flow)
+            # get df
+            df = pd.read_csv(url_flow, header=31, delim_whitespace=True)
+            df.columns = ['usgs', 'site_number', 'datetime', 'Q_cfs', 'a'] 
+            df['date'] = pd.to_datetime(df.datetime)
+            df = df[['Q_cfs','date']]
+            df['Q_cfs'] = df['Q_cfs'].astype(float, errors='ignore')  #this is needed because sometimes there are non-numeric entries and we want to ignore them
+            df['Q_m3day']= (86400*df['Q_cfs'])/(35.31) #m3/day
+            # Calculate drainage area in m^2
+            drainage_area_m2=basin.to_crs('epsg:26910').geometry.area 
+            df['Q_m'] = df['Q_m3day'] / float(drainage_area_m2)
+            df['Q_mm'] = df['Q_m3day'] / float(drainage_area_m2) * 1000
+            #df.set_index('date',inplace=True)  
+        else: df = pd.DataFrame()
+        self.streamflow = df
+        
+        return self, df
+        
     def extract_asset(self, asset_id, start_date, end_date, scale, bands = None, bands_to_scale = None, scaling_factor = 1, reducer_type = None):
         """
         Extract data from start_date to end_date for an asset_id.
@@ -197,6 +224,7 @@ class StudyArea:
         ppt_df = ppt_df[ppt_df['band'] == kwargs['ppt_band']]
         ppt_df['P'] = ppt_df['value']
         df_wide = et_df.merge(ppt_df, how = 'inner', on = 'date')[['date', 'ET', 'P']]
+        if self.kind == 'watershed': df_wide = df_wide.merge(self.streamflow, how = 'left', on = 'date')[['date', 'ET', 'P', 'Q_mm']]
         df_wide['original_index'] = df_wide.index
         df_wide = df_wide.set_index(pd.to_datetime(df_wide['date']))
         df_wide['wateryear'] = np.where(~df_wide.index.month.isin([10,11,12]),df_wide.index.year,df_wide.index.year+1)
@@ -298,13 +326,14 @@ class StudyArea:
         
         df_wide['ET_cumulative'] = df_wide.groupby(['wateryear'])['ET'].cumsum()
         df_wide['P_cumulative'] = df_wide.groupby(['wateryear'])['P'].cumsum()
-    
+        if self.kind == 'watershed': df_wide['Q_cumulative'] = df_wide.groupby(['wateryear'])['Q_mm'].cumsum()
+
         df_total = pd.DataFrame()
         df_total['ET'] = df_wide.groupby(['wateryear'])['ET'].sum()
         df_total['P'] = df_wide.groupby(['wateryear'])['P'].sum()
         df_total['ET_summer'] = df_summer.groupby(['wateryear'])['ET'].sum()
+        if self.kind == 'watershed': df_total['Q'] = df_wide.groupby(['wateryear'])['Q_mm'].sum()
         df_total['wateryear'] = df_wide.groupby(['wateryear'])['wateryear'].first()
-        
         df_wide = df_wide.reset_index(drop=True)
         df_total = df_total.reset_index(drop=True)
         self.wateryear_timeseries = df_wide
@@ -317,16 +346,19 @@ class StudyArea:
     ########################## PLOTS ##########################
     def plot(self, kind = 'timeseries', title = '', **plot_kwargs):
         default_plotting_kwargs = {
+            'plot_Q': False,
             'plot_P': True,
             'plot_D': True,
             'plot_Dwy': True,
             'plot_ET': False,
             'plot_ET_dry': False,
+            'color_Q': 'blue',
             'color_P': '#b1d6f0',
             'color_D': 'black',
             'color_Dwy':'black',
             'color_ET': 'purple',
             'markeredgecolor': 'black',
+            'linestyle_Q':'-',
             'linestyle_P':'-',
             'linestyle_D': '-',
             'linestyle_Dwy':'--',
@@ -339,13 +371,18 @@ class StudyArea:
             'figsize': (6,4),
             'xlabel': 'Date',
             'ylabel': '[mm]',
-            'twinx': False
+            'twinx': False,
+            'title': None
             }
         plot_kwargs = {**default_plotting_kwargs, **plot_kwargs}
 
         fig, ax = plt.subplots(dpi=plot_kwargs['dpi'], figsize = plot_kwargs['figsize'])
         if title is not None: ax.set_title(title) 
         if kind == 'timeseries':
+            if plot_kwargs['plot_Q']:
+                df_wy = self.wateryear_timeseries
+                df_wy['date'] = pd.to_datetime(df_wy['date'])
+                ax.plot(df_wy['date'], df_wy['Q_cumulative'], plot_kwargs['linestyle_Q'], color=plot_kwargs['color_Q'], lw = plot_kwargs['lw'], label= 'Q (mm)')
             if plot_kwargs['plot_P']:
                 df_wy = self.wateryear_timeseries
                 df_wy['date'] = pd.to_datetime(df_wy['date'])
@@ -363,11 +400,14 @@ class StudyArea:
                 df_d['date'] = pd.to_datetime(df_d['date'])
                 ax.plot(df_d['date'], df_d['D_wy'], plot_kwargs['linestyle_Dwy'], color=plot_kwargs['color_Dwy'], lw = plot_kwargs['lw'], label=r'$\mathrm{D}_{wy}\/\mathrm{(mm)}$')
             ax.set_xlim(pd.to_datetime(plot_kwargs['xmin'], exact = False), pd.to_datetime(plot_kwargs['xmax'], exact = False))
+            if plot_kwargs['title'] is not None: fig.suptitle([plot_kwargs['title']])
 
         elif kind == 'wateryear':
             df = self.wateryear_total
             if plot_kwargs['plot_P']:
                 ax.plot(df['wateryear'], df['P'], plot_kwargs['linestyle_P'], color = plot_kwargs['color_P'], lw = plot_kwargs['lw'], markeredgecolor = plot_kwargs['markeredgecolor'], label = r'$\mathrm{P}_{wy}\/\mathrm{(mm)}$')
+            if plot_kwargs['plot_Q']:
+                ax.plot(df['wateryear'], df['Q'], plot_kwargs['linestyle_Q'], color = plot_kwargs['color_Q'], lw = plot_kwargs['lw'], markeredgecolor = plot_kwargs['markeredgecolor'], label = r'$\mathrm{Q}_{wy}\/\mathrm{(mm)}$')
             if plot_kwargs['twinx']:
                 ax2 = ax.twinx()
                 ax2.set_ylabel('ET (mm)', color = plot_kwargs['color_ET'])
@@ -377,7 +417,7 @@ class StudyArea:
             if plot_kwargs['plot_ET_dry']:
                 ax2.plot(df['wateryear'], df['ET_summer'], ':o', color = plot_kwargs['color_ET'], lw = plot_kwargs['lw'], markeredgecolor = plot_kwargs['markeredgecolor'], label = r'$\mathrm{ET}_{dry}\/\mathrm{(mm)}$')
             ax.set_xlim(plot_kwargs['xmin'], plot_kwargs['xmax'])
-
+            if plot_kwargs['title'] is not None: fig.suptitle([plot_kwargs['title']])
         elif kind == 'spearman':
             df = self.wateryear_total
             ax.plot(df['P'], df['ET_summer'], 'o', color = '#a4a5ab', markersize = 12, lw = plot_kwargs['lw'],  markeredgecolor = plot_kwargs['markeredgecolor'], label = '')
@@ -394,14 +434,16 @@ class StudyArea:
 
         ax.set_xlabel(plot_kwargs['xlabel'])
         ax.set_ylabel(plot_kwargs['ylabel'])
+        if plot_kwargs['title'] is not None: fig.suptitle([plot_kwargs['title']])
+
         if plot_kwargs['legend']: ax.legend(loc = 'best')
         
-        elif kind == 'location':
-            self.site_geometry.plot(ax = ax, crs = self.site_geometry.crs.to_string())
-            #bbox_gdf.boundary.plot(ax = ax)
-            self.flowlines.plot(ax = ax, crs = self.site_geometry.crs.to_string())
-            ctx.add_basemap(ax = ax, crs = self.site_geometry.crs.to_string())
-            plt.title(self.description)
+       # elif kind == 'location':
+       #     self.site_geometry.plot(ax = ax, crs = self.site_geometry.crs.to_string())
+       #     #bbox_gdf.boundary.plot(ax = ax)
+       #     self.flowlines.plot(ax = ax, crs = self.site_geometry.crs.to_string())
+       #     ctx.add_basemap(ax = ax, crs = self.site_geometry.crs.to_string())
+       #     plt.title(self.description)
             
         elif kind == 'RWS':
             df_d = self.deficit_timeseries
@@ -410,6 +452,8 @@ class StudyArea:
             df_d['date'] = pd.to_datetime(df_d['date'])
             ax.plot(df_d['date'], df_d['RWS'], plot_kwargs['linestyle_D'], color=plot_kwargs['color_D'], lw = plot_kwargs['lw'], label=r'$\mathrm{RWS(t)}\/\mathrm{(mm)}$')
             ax.set_xlim(pd.to_datetime(plot_kwargs['xmin'], exact = False), pd.to_datetime(plot_kwargs['xmax'], exact = False))
+            if plot_kwargs['title'] is not None: fig.suptitle([plot_kwargs['title']])
+
         return fig
             
     def describe(self):
@@ -431,11 +475,16 @@ class StudyArea:
         except:
             print('Data has not been extracted for this site.')
 
-    def __init__(self, coords, layers = None, **kwargs):
-        self.coords = coords
-        self.get_kind()
-        self.get_feature()
+
+
+
+            
         
+        
+        
+        
+        
+    def __init__(self, coords, layers = None, **kwargs):
         default_kwargs = {
             'interp': True,
             'combine_ET_bands': True,
@@ -446,12 +495,18 @@ class StudyArea:
             'ppt_asset': 'prism',
             'ppt_band': 'ppt',
             'snow_correction': True,
-            'snow_frac': 10
+            'snow_frac': 10,
+            'flow_startdate':'1980-10-01',
+            'flow_enddate':'2021-10-01'
             }
-        kwargs = { **default_kwargs, **kwargs}
+        kwargs = {**default_kwargs, **kwargs}
+        
+        self.coords = coords
+        self.get_kind()
+        self.get_feature()
+        self.get_streamflow(**kwargs)
         
         if layers is not None:
-
             self.make_combined_df(layers, **kwargs)
             self.calculate_deficit(layers, **kwargs)
             self.wateryear(layers, **kwargs)
@@ -460,9 +515,6 @@ class StudyArea:
                 self.et_bands = kwargs['bands_to_combine']
             else: self.et_bands = 'Not combined'
         
-        
-        
-
 
 ## HELPER FUNCTIONS ##
 def interp_columns_daily(df):
