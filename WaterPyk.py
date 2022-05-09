@@ -402,7 +402,14 @@ class StudyArea:
             self.flowlines.plot(ax = ax, crs = self.site_geometry.crs.to_string())
             ctx.add_basemap(ax = ax, crs = self.site_geometry.crs.to_string())
             plt.title(self.description)
-
+            
+        elif kind == 'RWS':
+            df_d = self.deficit_timeseries
+            df_d['RWS'] = df_d['D'] - self.smax
+            df_d['RWS'] = df_d['RWS'] * -1
+            df_d['date'] = pd.to_datetime(df_d['date'])
+            ax.plot(df_d['date'], df_d['RWS'], plot_kwargs['linestyle_D'], color=plot_kwargs['color_D'], lw = plot_kwargs['lw'], label=r'$\mathrm{RWS(t)}\/\mathrm{(mm)}$')
+            ax.set_xlim(pd.to_datetime(plot_kwargs['xmin'], exact = False), pd.to_datetime(plot_kwargs['xmax'], exact = False))
         return fig
             
     def describe(self):

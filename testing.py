@@ -24,6 +24,15 @@ layers = pd.read_csv('layers_long_contemporary_2021.csv')
 rivendell = ee_tools.StudyArea(coords, layers)
 plim = ee_tools.StudyArea(coords_plim, layers)
 
+
+kwargs = {'legend':False, 'lw':1}
+fig = plim.plot(kind='RWS', **kwargs)
+fig.savefig('rws_plim.pdf')
+
+fig2 = rivendell.plot(kind = 'RWS', **kwargs)
+fig2.savefig('rws_rivendell.pdf')
+
+
 #elder = ee_tools.StudyArea(gage, layers)
 #rivendell.get_feature()
 #print(rivendell.description)
@@ -39,34 +48,25 @@ plim = ee_tools.StudyArea(coords_plim, layers)
 #kwargs = {'plot_ET': True, 'plot_P': False, 'color_D': 'green', 'linestyle_D': '--', 'linestyle_ET':':'}
 #fig = rivendell.plot(kind='timeseries', title = 'Rivendell', **kwargs)
 #fig.savefig('timeseries_2.png')
-print('Plim site')
-deficit = plim.deficit_timeseries
+#print('Plim site')
+#deficit = plim.deficit_timeseries
 #print(deficit[deficit['D_wy']>395])
 #print(deficit[deficit['D']>395])
 
-print(deficit.groupby(['wateryear'])['D_wy'].max())
+#print(deficit.groupby(['wateryear'])['D_wy'].max())
 
-print('Deficit where smax = smax')
-print(deficit[deficit['D'] == plim.smax])
+#print('Deficit where smax = smax')
+#print(deficit[deficit['D'] == plim.smax])
 
-kwargs = {'plot_P': False, 'legend':False, 'lw':1}
-fig = plim.plot(kind='timeseries', **kwargs)
-fig.savefig('plim_timeseries_noP.pdf')
+##kwargs = {'plot_P': False, 'legend':False, 'lw':1}
+##fig = plim.plot(kind='timeseries', **kwargs)
+##fig.savefig('plim_timeseries_noP.pdf')
 
-print('rivendell')
+#print('rivendell')
 
-deficit_rivendell = rivendell.deficit_timeseries
+#deficit_rivendell = rivendell.deficit_timeseries
 #print(deficit[deficit['D_wy']>395])
 #print(deficit[deficit['D']>395])
-
-print(deficit_rivendell.groupby(['wateryear'])['D_wy'].max())
-
-print('Deficit where smax = smax')
-print(deficit_rivendell[deficit_rivendell['D'] == rivendell.smax])
-
-fig = rivendell.plot(kind='timeseries', **kwargs)
-fig.savefig('rivendell_timeseries_noP.pdf')
-
 
 #kwargs = {'plot_ET': True, 'plot_P': False, 'color_D': 'green', 'linestyle_D': '--', 'linestyle_ET':':'}
 #fig = rivendell.plot(kind='timeseries', title = 'Rivendell')
