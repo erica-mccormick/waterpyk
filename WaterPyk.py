@@ -12,7 +12,6 @@ ee.Initialize()
 import matplotlib
 import matplotlib.pyplot as plt
 from scipy import stats
-import contextily as ctx
 
 
 class StudyArea:
