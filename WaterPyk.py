@@ -188,6 +188,7 @@ class StudyArea:
 
         # Add Hargreaves PET if bands are present
         if 'tmax' and 'tmin' in df['band'].unique():
+            print('\nPET has been calcuated using the Hargreaves method.\n')
             pet_df = calculate_PET(df, self.latitude)
             self.pet_daily = pet_df
             df_wide = df_wide.merge(pet_df[['PET', 'date']], how = 'left', on = 'date')
@@ -285,10 +286,14 @@ class StudyArea:
         """
         try:
             df_wide = self.daily_data_wide
+            df_deficit = self.deficit_timeseries
         except:
             print('\nwateryear() is extracting layers...')
             df_wide = StudyArea.make_wide_df(self, layers, **kwargs)
-
+            df_deficit = StudyArea.calculate_deficit(self, layers, **kwargs)
+        print(df_deficit.head())
+        df_wide = df_wide.merge(df_deficit, how = 'left', on = 'date')
+        print(df_wide.head())
         # Get a df of just summer ET
         df_wide = df_wide.set_index(df_wide['date'])
         df_wide['season'] = np.where(~df_wide.index.month.isin([6,7,8,9]),'summer','other')
@@ -299,8 +304,9 @@ class StudyArea:
         df_wide['P_cumulative'] = df_wide.groupby(['wateryear'])['P'].cumsum()
         df_wide['PET_cumulative'] = df_wide.groupby(['wateryear'])['PET'].cumsum()
         if self.kind == 'watershed': 
+            print('\ndV has been calculated for wateryear total and cumulative dataframes.\n')
             df_wide['Q_cumulative'] = df_wide.groupby(['wateryear'])['Q_mm'].cumsum()
-            df_wide['dV'] = df_wide['P_cumulative'] - df_wide['PET_cumulative']-df_wide['Q_cumulative'] 
+            df_wide['dV'] = df_wide['P_cumulative'] - df_wide['PET_cumulative'] - df_wide['Q_cumulative'] 
         df_total = pd.DataFrame()
         df_total['ET'] = df_wide.groupby(['wateryear'])['ET'].sum()
         df_total['P'] = df_wide.groupby(['wateryear'])['P'].sum()
@@ -310,6 +316,7 @@ class StudyArea:
         if self.kind == 'watershed':
             df_total['Q'] = df_wide.groupby(['wateryear'])['Q_mm'].sum()
             df_total['dV'] = df_wide.groupby(['wateryear'])['dV'].nth([-1]) #get the last row to get wy max
+        df_total['Dmax'] = df_wide.groupby(['wateryear'])['D_wy'].nth([-1])
         df_total['wateryear'] = df_wide.groupby(['wateryear'])['wateryear'].first()
         df_wide = df_wide.reset_index(drop=True)
         df_total = df_total.reset_index(drop=True)
