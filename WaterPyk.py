@@ -57,7 +57,11 @@ class StudyArea:
             flowlines = None
 
         elif self.kind == 'watershed':
-            watershed = self.coords[0]
+            watershed = str(self.coords[0])
+            # Add 0s if watershed ID started with 0s that were removed bc #s not strings
+            if (len(watershed)<8):
+                num = 8 - len(watershed)
+                watershed = '0'*num + watershed
             url = 'https://labs.waterdata.usgs.gov/api/nldi/linked-data/nwissite/USGS-%s/basin?f=json'%watershed
             site_geometry = gpd.read_file(url)    
             request = urllib.request.urlopen("https://labs.waterdata.usgs.gov/api/nldi/linked-data/nwissite/USGS-%s/?f=json"%watershed)
