@@ -291,9 +291,7 @@ class StudyArea:
             print('\nwateryear() is extracting layers...')
             df_wide = StudyArea.make_wide_df(self, layers, **kwargs)
             df_deficit = StudyArea.calculate_deficit(self, layers, **kwargs)
-        print(df_deficit.head())
-        df_wide = df_wide.merge(df_deficit, how = 'left', on = 'date')
-        print(df_wide.head())
+        df_wide = df_wide.merge(df_deficit[['date','D','D_wy']], how = 'left', on = 'date')
         # Get a df of just summer ET
         df_wide = df_wide.set_index(df_wide['date'])
         df_wide['season'] = np.where(~df_wide.index.month.isin([6,7,8,9]),'summer','other')
@@ -316,7 +314,7 @@ class StudyArea:
         if self.kind == 'watershed':
             df_total['Q'] = df_wide.groupby(['wateryear'])['Q_mm'].sum()
             df_total['dV'] = df_wide.groupby(['wateryear'])['dV'].nth([-1]) #get the last row to get wy max
-        df_total['Dmax'] = df_wide.groupby(['wateryear'])['D_wy'].nth([-1])
+        df_total['Dwy_max'] = df_wide.groupby(['wateryear'])['D_wy'].nth([-1])
         df_total['wateryear'] = df_wide.groupby(['wateryear'])['wateryear'].first()
         df_wide = df_wide.reset_index(drop=True)
         df_total = df_total.reset_index(drop=True)

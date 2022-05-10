@@ -76,7 +76,7 @@ def wshed_test():
     }
     
     fig, ax = plt.subplots(dpi=300, figsize = (6,4))
-    ax.plot(elder.wateryear_total['dV'], elder.wateryear_total[''])
+    ax.plot(elder.wateryear_total['dV'], elder.wateryear_total['Dwy_max'])
     
     #fig = elder.plot(kind = 'wateryear',**kwargs)
     fig.savefig('figs/elder_wy.png')
