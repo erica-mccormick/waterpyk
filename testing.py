@@ -61,9 +61,16 @@ def wshed_test():
 
     print(elder.smax)
     print(elder.wateryear_timeseries)
-    for col in elder.wateryear_timeseries.columns:
-        print(col)
+    print(elder.wateryear_total)
+    
+    fig = plt.subplots()
+    plt.plot(elder.wateryear_total['wateryear'], elder.wateryear_total['dV'],'o')
+    fig.savefig('figs/elder_dV_total.png')
  
+    
+    fig2 = plt.subplots()
+    plt.plot(elder.wateryear_timeseries['date'], elder.wateryear_timeseries['dV'],'-')
+    fig2.savefig('figs/elder_dV_timeseries.png')
     
     kwargs = {
         'plot_Q': True,

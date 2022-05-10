@@ -180,7 +180,7 @@ class StudyArea:
         ppt_df['P'] = ppt_df['value']
         df_wide = et_df.merge(ppt_df, how = 'inner', on = 'date')[['date', 'ET', 'P']]
         if self.kind == 'watershed': df_wide = df_wide.merge(self.streamflow, how = 'left', on = 'date')[['date', 'ET', 'P', 'Q_mm']]
-        df_wide['original_index'] = df_wide.index
+        #df_wide['original_index'] = df_wide.index
 
         # Add Hargreaves PET if bands are present
         if 'tmax' and 'tmin' in df['band'].unique():
