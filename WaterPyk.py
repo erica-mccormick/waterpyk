@@ -294,8 +294,9 @@ class StudyArea:
         df_wide['ET_cumulative'] = df_wide.groupby(['wateryear'])['ET'].cumsum()
         df_wide['P_cumulative'] = df_wide.groupby(['wateryear'])['P'].cumsum()
         df_wide['PET_cumulative'] = df_wide.groupby(['wateryear'])['PET'].cumsum()
-        if self.kind == 'watershed': df_wide['Q_cumulative'] = df_wide.groupby(['wateryear'])['Q_mm'].cumsum()
-
+        if self.kind == 'watershed': 
+            df_wide['Q_cumulative'] = df_wide.groupby(['wateryear'])['Q_mm'].cumsum()
+            df_wide['dV'] = df_wide['P_cumulative'] - df_wide['PET_cumulative']-df_wide['Q_cumulative'] 
         df_total = pd.DataFrame()
         df_total['ET'] = df_wide.groupby(['wateryear'])['ET'].sum()
         df_total['P'] = df_wide.groupby(['wateryear'])['P'].sum()
@@ -375,6 +376,7 @@ class StudyArea:
         elif kind == 'wateryear':
             df = self.wateryear_total
             if plot_kwargs['plot_PET']:
+                print('Plotting PET!')
                 ax.plot(df['wateryear'], df['PET'], plot_kwargs['linestyle_PET'], color = plot_kwargs['color_PET'], lw = plot_kwargs['lw'], markeredgecolor = plot_kwargs['markeredgecolor'], label = r'$\mathrm{PET}_{wy}\/\mathrm{(mm)}$')
             if plot_kwargs['plot_P']:
                 ax.plot(df['wateryear'], df['P'], plot_kwargs['linestyle_P'], color = plot_kwargs['color_P'], lw = plot_kwargs['lw'], markeredgecolor = plot_kwargs['markeredgecolor'], label = r'$\mathrm{P}_{wy}\/\mathrm{(mm)}$')
@@ -427,7 +429,7 @@ class StudyArea:
             ax.set_xlim(pd.to_datetime(plot_kwargs['xmin'], exact = False), pd.to_datetime(plot_kwargs['xmax'], exact = False))
             if plot_kwargs['title'] is not None: fig.suptitle([plot_kwargs['title']])
 
-        return fig, ax
+        return fig
             
     def describe(self):
         """

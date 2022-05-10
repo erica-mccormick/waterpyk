@@ -58,12 +58,12 @@ def wshed_test():
     gage = [11475560] #Real elder
     #gage = [11180825] #San Lorenzo
     elder = pyk.StudyArea(gage, layers)
-    #print(elder.streamflow.head())
-    #print(elder.wateryear_total.head())
-    #print(elder.wateryear_timeseries.head())
-    #elder.make_PET_df(layers, **kwargs)
+
     print(elder.smax)
-    print(elder.maxdmax)
+    print(elder.wateryear_timeseries)
+    for col in elder.wateryear_timeseries.columns:
+        print(col)
+ 
     
     kwargs = {
         'plot_Q': True,
@@ -75,9 +75,12 @@ def wshed_test():
         'xmin':2003,
         'xmax':2020
     }
-    #fig = elder.plot(kind = 'timeseries',**kwargs)
-    #fig.savefig('figs/elder_timeseries.png')
+    
+    fig = elder.plot(kind = 'wateryear',**kwargs)
+    fig.savefig('figs/elder_wy.png')
+
     
     #fig2 = elder.plot(kind = 'wateryear', **kwargs)
     #fig2.savefig('figs/elder_wateryear.png')
-run_tests_limitation_sites()
+#run_tests_limitation_sites()
+wshed_test()
