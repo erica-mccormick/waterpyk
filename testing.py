@@ -58,19 +58,11 @@ def wshed_test():
     gage = [11475560] #Real elder
     #gage = [11180825] #San Lorenzo
     elder = pyk.StudyArea(gage, layers)
-
+    elder.describe()
     print(elder.smax)
     print(elder.wateryear_timeseries)
     print(elder.wateryear_total)
     
-    fig = plt.subplots()
-    plt.plot(elder.wateryear_total['wateryear'], elder.wateryear_total['dV'],'o')
-    fig.savefig('figs/elder_dV_total.png')
- 
-    
-    fig2 = plt.subplots()
-    plt.plot(elder.wateryear_timeseries['date'], elder.wateryear_timeseries['dV'],'-')
-    fig2.savefig('figs/elder_dV_timeseries.png')
     
     kwargs = {
         'plot_Q': True,

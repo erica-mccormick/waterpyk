@@ -445,9 +445,13 @@ class StudyArea:
         """
         
         print('\n'+ str(self.description))
+        print('Geometry kind:', self.kind)
         try:
-            print('Available data for this site:', self.available_data)
-            print('Smax = ' + str(round(self.smax)) + ' mm')
+            print('Data extracted from GEE:', self.daily_data_long.band.unique())
+            print('GEE reducer used: MEAN() for watersheds and FIRST() for points')
+            print('Data available as daily and wateryear (cum. and total):', list(self.wateryear_total))
+            print('Deficit results:\n\tSmax = ' + str(self.smax) + ' mm')
+            print('\tmax(Dmax) = ' + str(self.maxdmax) + 'mm')
             print('Deficit calculation parameters:\n\tDataset: ' + str(self.et_asset) + '\n\tBands: ' + str(self.et_bands))
             print('\tStart date: ' + str(self.start_date) + '\n\tEnd date: ' + str(self.end_date))
         except:
