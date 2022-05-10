@@ -302,7 +302,10 @@ class StudyArea:
         df_total['P'] = df_wide.groupby(['wateryear'])['P'].sum()
         df_total['PET'] = df_wide.groupby(['wateryear'])['PET'].sum()
         df_total['ET_summer'] = df_summer.groupby(['wateryear'])['ET'].sum()
-        if self.kind == 'watershed': df_total['Q'] = df_wide.groupby(['wateryear'])['Q_mm'].sum()
+ 
+        if self.kind == 'watershed':
+            df_total['Q'] = df_wide.groupby(['wateryear'])['Q_mm'].sum()
+            df_total['dV'] = df_wide.groupby(['wateryear'])['dV'].nth([-1]) #get the last row to get wy max
         df_total['wateryear'] = df_wide.groupby(['wateryear'])['wateryear'].first()
         df_wide = df_wide.reset_index(drop=True)
         df_total = df_total.reset_index(drop=True)
