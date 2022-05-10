@@ -315,18 +315,21 @@ class StudyArea:
     ########################## PLOTS ##########################
     def plot(self, kind = 'timeseries', title = '', **plot_kwargs):
         default_plotting_kwargs = {
+            'plot_PET': False,
             'plot_Q': False,
             'plot_P': True,
             'plot_D': True,
             'plot_Dwy': True,
             'plot_ET': False,
             'plot_ET_dry': False,
+            'color_PET': 'red',
             'color_Q': 'blue',
             'color_P': '#b1d6f0',
             'color_D': 'black',
             'color_Dwy':'black',
             'color_ET': 'purple',
             'markeredgecolor': 'black',
+            'linestyle_PET':'-',
             'linestyle_Q':'-',
             'linestyle_P':'-',
             'linestyle_D': '-',
@@ -348,26 +351,23 @@ class StudyArea:
         fig, ax = plt.subplots(dpi=plot_kwargs['dpi'], figsize = plot_kwargs['figsize'])
         if title is not None: ax.set_title(title) 
         if kind == 'timeseries':
+            df_wy = self.wateryear_timeseries
+            df_d = self.deficit_timeseries
+            df_wy['date'] = pd.to_datetime(df_wy['date'])
+            df_d['date'] = pd.to_datetime(df_d['date'])
+
             if plot_kwargs['plot_Q']:
                 if self.kind == 'watershed':
-                    df_wy = self.wateryear_timeseries
-                    df_wy['date'] = pd.to_datetime(df_wy['date'])
                     ax.plot(df_wy['date'], df_wy['Q_cumulative'], plot_kwargs['linestyle_Q'], color=plot_kwargs['color_Q'], lw = plot_kwargs['lw'], label= 'Q (mm)')
+            if plot_kwargs['plot_PET']:
+                ax.plot(df_wy['date'], df_wy['PET_cumulative'], plot_kwargs['linestyle_PET'], color=plot_kwargs['color_PET'], lw = plot_kwargs['lw'], label= 'PET (mm)') 
             if plot_kwargs['plot_P']:
-                df_wy = self.wateryear_timeseries
-                df_wy['date'] = pd.to_datetime(df_wy['date'])
                 ax.fill_between(df_wy['date'], 0, df_wy['P_cumulative'],color='#b1d6f0', label='P (mm)', alpha = 0.7)
             if plot_kwargs['plot_ET']:
-                df_wy = self.wateryear_timeseries
-                df_wy['date'] = pd.to_datetime(df_wy['date'])
                 ax.plot(df_wy['date'], df_wy['ET_cumulative'], plot_kwargs['linestyle_ET'], color=plot_kwargs['color_ET'], lw = plot_kwargs['lw'], label= 'ET (mm)')
             if plot_kwargs['plot_D']:
-                df_d = self.deficit_timeseries
-                df_d['date'] = pd.to_datetime(df_d['date'])
                 ax.plot(df_d['date'], df_d['D'], plot_kwargs['linestyle_D'], color=plot_kwargs['color_D'], lw = plot_kwargs['lw'], label=r'$\mathrm{D(t)}\/\mathrm{(mm)}$')
             if plot_kwargs['plot_Dwy']:
-                df_d = self.deficit_timeseries
-                df_d['date'] = pd.to_datetime(df_d['date'])
                 ax.plot(df_d['date'], df_d['D_wy'], plot_kwargs['linestyle_Dwy'], color=plot_kwargs['color_Dwy'], lw = plot_kwargs['lw'], label=r'$\mathrm{D}_{wy}\/\mathrm{(mm)}$')
             ax.set_xlim(pd.to_datetime(plot_kwargs['xmin'], exact = False), pd.to_datetime(plot_kwargs['xmax'], exact = False))
             if plot_kwargs['title'] is not None: fig.suptitle([plot_kwargs['title']])
