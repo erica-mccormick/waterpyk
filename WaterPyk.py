@@ -425,7 +425,7 @@ class StudyArea:
             ax.set_xlim(pd.to_datetime(plot_kwargs['xmin'], exact = False), pd.to_datetime(plot_kwargs['xmax'], exact = False))
             if plot_kwargs['title'] is not None: fig.suptitle([plot_kwargs['title']])
 
-        return fig
+        return fig, ax
             
     def describe(self):
         """
