@@ -177,26 +177,17 @@ class StudyArea:
         
         # Isolate ET and P datasetes
         et_df = df[df['asset_name'] == kwargs['et_asset']]
+        ei_df = et_df[et_df['band'] == 'Ei']
+        ei_df['Ei'] = ei_df['value']
         et_df = et_df[et_df['band'] == kwargs['et_band']]
         et_df['ET'] = et_df['value']
         ppt_df = df[df['asset_name'] == kwargs['ppt_asset']]
         ppt_df = ppt_df[ppt_df['band'] == kwargs['ppt_band']]
         ppt_df['P'] = ppt_df['value']
-        df_wide = et_df.merge(ppt_df, how = 'inner', on = 'date')[['date', 'ET', 'P']]
-        if self.kind == 'watershed': df_wide = df_wide.merge(self.streamflow, how = 'left', on = 'date')[['date', 'ET', 'P', 'Q_mm']]
-        #df_wide['original_index'] = df_wide.index
-        #pet_df = df[df['asset_name'] == 'modis_et']]
-        #pet_df = pet_df[pet_df['band'] == 'PET']
-        #pet_df['PET'] = et_df['value']
-        #df_wide = df_wide.merge(pet_df[['PET', 'date']], how = 'inner', on = 'date')
-        # Add Hargreaves PET if bands are present
-        #if 'tmax' and 'tmin' in df['band'].unique():
-        #    print('\nPET was calcuated using the Hargreaves method.\n')
-        #    pet_df = calculate_PET(df, self.latitude)
-        #    self.pet_daily = pet_df
-        #    df_wide = df_wide.merge(pet_df[['PET', 'date']], how = 'left', on = 'date')
-        #else: print('PET was not calculated because PRISM tmax and tmin bands were not extracted.')
-   
+        ppt_df = ppt_df.merge(ei_df[['date','Ei']], how = 'left', on = 'date')
+        ppt_df['P_min_Ei'] = ppt_df['P'] - ppt_df['Ei']
+        df_wide = et_df.merge(ppt_df, how = 'inner', on = 'date')[['date', 'ET', 'P', 'P_min_Ei', 'Ei']]
+        if self.kind == 'watershed': df_wide = df_wide.merge(self.streamflow, how = 'left', on = 'date')[['date', 'ET', 'P', 'Q_mm', 'P_min_Ei', 'Ei']]
         # Add wateryear column
         df_wide = df_wide.set_index(pd.to_datetime(df_wide['date']))
         df_wide['wateryear'] = np.where(~df_wide.index.month.isin([10,11,12]),df_wide.index.year,df_wide.index.year+1)
@@ -303,6 +294,8 @@ class StudyArea:
         
         df_wide['ET_cumulative'] = df_wide.groupby(['wateryear'])['ET'].cumsum()
         df_wide['P_cumulative'] = df_wide.groupby(['wateryear'])['P'].cumsum()
+        df_wide['P_min_Ei_cumulative'] = df_wide.groupby(['wateryear'])['P_min_Ei'].cumsum()
+        df_wide['Ei_cumulative'] = df_wide.groupby(['wateryear'])['Ei'].cumsum()
         #df_wide['PET_cumulative'] = df_wide.groupby(['wateryear'])['PET'].cumsum()
         if self.kind == 'watershed': 
             print('dV was calculated for wateryear total and cumulative dataframes.\n')
@@ -313,7 +306,8 @@ class StudyArea:
         df_total['P'] = df_wide.groupby(['wateryear'])['P'].sum()
         #df_total['PET'] = df_wide.groupby(['wateryear'])['PET'].sum()
         df_total['ET_summer'] = df_summer.groupby(['wateryear'])['ET'].sum()
- 
+        df_total['P_min_Ei'] = df_summer.groupby(['wateryear'])['P_min_Ei'].sum()
+        df_total['Ei'] = df_summer.groupby(['wateryear'])['Ei'].sum()
         if self.kind == 'watershed':
             df_total['Q'] = df_wide.groupby(['wateryear'])['Q_mm'].sum()
             df_total['dV'] = df_wide.groupby(['wateryear'])['dV'].nth([-1]) #get the last row to get wy max
