@@ -12,6 +12,7 @@ ee.Initialize()
 import matplotlib
 import matplotlib.pyplot as plt
 from scipy import stats
+import sys
 
 
 class StudyArea:
@@ -65,8 +66,10 @@ class StudyArea:
             description = 'USGS Basin (' +str(watershed)+ ') imported at ' + str(site_name[0]) + 'CRS: ' + str(site_geometry.crs)
             poly_coords = [item for item in site_geometry.geometry[0].exterior.coords]
             feature = ee.Feature(ee.Geometry.Polygon(coords=poly_coords), {'Name': str(site_name[0]), 'Gage':int(watershed)})
+            lat = site_geometry.to_crs('epsg:4326').geometry[0].centroid.y
         self.site_feature = feature
         self.url = url
+        self.latitude = lat
         self.description = description
         self.site_geometry = site_geometry
         self.flowlines = flowlines
@@ -80,8 +83,7 @@ class StudyArea:
             start_date = kwargs['flow_startdate']
             end_date = kwargs['flow_enddate']
             url_flow = 'https://waterdata.usgs.gov/nwis/dv?cb_00060=on&format=rdb&site_no=' + str(watershed) + '&referred_module=sw&period=&begin_date='+ start_date +'&end_date='+ end_date
-            print('Streamflow data is being retrieved from:')
-            print('\t', url_flow)
+            print('\nStreamflow data is being retrieved from:', url_flow, '\n')
             # get df
             df = pd.read_csv(url_flow, header=31, delim_whitespace=True)
             df.columns = ['usgs', 'site_number', 'datetime', 'Q_cfs', 'a'] 
@@ -96,60 +98,11 @@ class StudyArea:
             #df.set_index('date',inplace=True)  
         else: df = pd.DataFrame()
         self.streamflow = df
-        
         return self, df
-        
-    def extract_asset(self, asset_id, start_date, end_date, scale, bands = None, bands_to_scale = None, scaling_factor = 1, reducer_type = None):
-        """
-        Extract data from start_date to end_date for an asset_id.
-
-        Args:
-            self
-            asset_id: GEE asset identification string
-            start_date: format mm/dd/yyy or similiar date format
-            end_date: format mm/dd/yyyy or similiar date format
-            scale (int): scale in meters for GEE reducer function
-            bands (list of str): bands of GEE asset to extract
-            bands_to_scale (list of str, optional): bands for which each value will be multiplied by scaling_factor.
-            scaling_factor (float, optional): scaling factor to apply to all values in bands_to_scale
-            reducer_type (optional): not used at this time. reducer_type defaults to first() for points and mean() for watersheds
-        Returns:
-            df: pandas df of all extracted data
-        """
-        
-        StudyArea.get_feature(self)
-        asset = ee.ImageCollection(asset_id).filterDate(start_date, end_date)
-        if bands is not None: asset = asset.select(bands)
-        assetband = asset.toBands()
-        if self.kind == 'point':
-            reducer_type = ee.Reducer.first()
-        elif self.kind == 'watershed':
-            reducer_type = ee.Reducer.mean()
-       # else:
-       #     reducer_type = reducer_type
-        reducer_dict = assetband.reduceRegion(reducer = reducer_type, geometry = self.site_feature.geometry(), scale = scale)
-        
-        # Make df from reducer output, format, and apply scaling factor to specified columns
-        df = pd.DataFrame(list(reducer_dict.getInfo().items()), columns = ['variable', 'value'])
-        df['date'] = [item.replace('-', '_').split('_')[:-1] for item in df['variable'].values]
-        df['date'] = [pd.to_datetime('-'.join(item[0:3])) for item in df['date'].values]
-        df['band'] = [item.split('_')[-1] for item in df['variable'].values]
-        df['value_raw'] = df['value']
-        if bands_to_scale is not None:
-            df['value'] = [value * np.where(band_value in bands_to_scale, scaling_factor, 1) for value, band_value in zip(df.value.values, df.band.values)]            
-        
-        # Calculate gaps between data and interpolate
-        date0 = df[df['band'] == df.band.unique()[0]]['date'][0]
-        date1 = df[df['band'] == df.band.unique()[0]]['date'][len(df.band.unique())]
-        date_range = date1-date0
-        #if interp == None:
-        df = interp_columns_daily(df)
-        print('\tTimestep of', date_range.days, 'days was interpolated to daily.')
-        #else: print('Timestep of', date_range, 'was not interpolated.')
-        return df
     
-
-    def make_combined_df(self, layers, **kwargs):
+ 
+    
+    def make_long_df(self, layers, **kwargs):
         """
         Extract data at site for several assets at once. Uses extract_asset().
 
@@ -184,7 +137,7 @@ class StudyArea:
             print('Extracting', row.name)
             bands = [i.split(',') for i in [row.bands]][0] # Make list of strings from string
             bands = [i.replace(" ", "") for i in bands] # Remove any spaces
-            single_asset = StudyArea.extract_asset(self, asset_id = row.asset_id, start_date = pd.to_datetime(row.start_date), end_date = pd.to_datetime(row.end_date), scale = row.scale, bands = bands, bands_to_scale = row.bands_to_scale, scaling_factor = row.scaling_factor)#, row.file_path, row.file_name)
+            single_asset = extract_asset(self.site_feature, self.kind, asset_id = row.asset_id, start_date = pd.to_datetime(row.start_date), end_date = pd.to_datetime(row.end_date), scale = row.scale, bands = bands, bands_to_scale = row.bands_to_scale, scaling_factor = row.scaling_factor)#, row.file_path, row.file_name)
             single_asset['asset_name'] = row.name
             single_asset_propogate = single_asset[['asset_name', 'value','date','band']]
             df = df.append(single_asset_propogate)   
@@ -192,13 +145,13 @@ class StudyArea:
         if kwargs['combine_ET_bands'] == True:
             df = combine_bands(df, **kwargs)
  
-        self.extracted_data = df
+        self.daily_data_long = df
         self.available_data = df.band.unique()
         self.start_date = layers.start_date[0]
         self.end_date = layers.end_date[0]
         return self, df
 
-    def long_to_wide(self, layers, **kwargs):
+    def make_wide_df(self, layers, **kwargs):
         """
         Uses ET and P (designated in **kwargs) to return a wide-form dataframe with columns
         date, ET, and P. Resulting df_wide is used in calculate_deficit() and wateryear().
@@ -212,10 +165,13 @@ class StudyArea:
             df_wide: df with columns date, ET and P.
         """
         try:
-            df = self.extracted_data
+            df = self.daily_data_long
         except:
-            StudyArea.make_combined_df(self, layers, **kwargs)
-            df = self.extracted_data
+            print('\nmake_wide_df() is extracting daily data specified in "layers"...')
+            StudyArea.make_long_df(self, layers, **kwargs)
+            df = self.daily_data_long
+        
+        # Isolate ET and P datasetes
         et_df = df[df['asset_name'] == kwargs['et_asset']]
         et_df = et_df[et_df['band'] == kwargs['et_band']]
         et_df['ET'] = et_df['value']
@@ -225,18 +181,21 @@ class StudyArea:
         df_wide = et_df.merge(ppt_df, how = 'inner', on = 'date')[['date', 'ET', 'P']]
         if self.kind == 'watershed': df_wide = df_wide.merge(self.streamflow, how = 'left', on = 'date')[['date', 'ET', 'P', 'Q_mm']]
         df_wide['original_index'] = df_wide.index
+
+        # Add Hargreaves PET if bands are present
+        if 'tmax' and 'tmin' in df['band'].unique():
+            pet_df = calculate_PET(df, self.latitude)
+            self.pet_daily = pet_df
+            df_wide = df_wide.merge(pet_df[['PET', 'date']], how = 'left', on = 'date')
+        else: print('PET was not included because PRISM tmax and tmin bands were not extracted.')
+   
+        # Add wateryear column
         df_wide = df_wide.set_index(pd.to_datetime(df_wide['date']))
         df_wide['wateryear'] = np.where(~df_wide.index.month.isin([10,11,12]),df_wide.index.year,df_wide.index.year+1)
-
-        #df_wide['date'] = pd.to_datetime(df_wide['date'])
-
-        #df_wide['wateryear'] = np.where(~df_wide.date.month.isin([10,11,12]),df_wide.date.year,df_wide.date.year+1)
-        #df_wide = df_wide.set_index(df_wide['original_index'])
-        #del df_wide['original_index']
+        
         df_wide = df_wide.reset_index(drop=True)
-        #df_def = df_def.set_index(pd.to_datetime(df_def['date']))
-        #df_def['wateryear'] = np.where(~df_def.index.month.isin([10,11,12]),df_def.index.year,df_def.index.year+1)
-        return df_wide
+        self.daily_data_wide = df_wide
+        return self, df_wide
 
     def calculate_deficit(self, layers, **kwargs):
         """
@@ -268,9 +227,13 @@ class StudyArea:
             self: with added attribute self.smax (defined as max(D)) and self.deficit_timeseries (i.e. df).
             df: pandas df of deficit data where deficit is column 'D'.
         """
-        df_def = StudyArea.long_to_wide(self, layers, **kwargs)
-        df = self.extracted_data
-
+        try:
+            df_def = self.daily_data_wide
+            df = self.daily_data_long
+        except:
+            print('\ncalculate_deficit() is extracting layers...This may not work...')
+            df_def = StudyArea.make_wide_df(self, layers, **kwargs)
+            df = StudyArea.make_long_df(self, layers, **kwargs)
         if kwargs['snow_correction'] == True:
             snow_df = df[df['asset_name'] == 'modis_snow']
             snow_df = snow_df[snow_df['band'] == 'Cover']
@@ -297,7 +260,8 @@ class StudyArea:
         df_wy = df_wy[['date','D_wy']]
         df_def = df_def.merge(df_wy, how = 'left', on = 'date')
         self.deficit_timeseries = df_def
-        self.smax = df_def.D.max()
+        self.smax = round(df_def.D.max())
+        self.maxdmax = round(df_def.D_wy.max())
         return self, df_def
     
     
@@ -315,7 +279,11 @@ class StudyArea:
             df_total: df with columns wateryear, ET, and P with wateryear totals
             self: with added wateryear_timeseries and wateryear_total attributes, corresponding to df_wide and df_total
         """
-        df_wide = StudyArea.long_to_wide(self, layers, **kwargs)
+        try:
+            df_wide = self.daily_data_wide
+        except:
+            print('\nwateryear() is extracting layers...')
+            df_wide = StudyArea.make_wide_df(self, layers, **kwargs)
 
         # Get a df of just summer ET
         df_wide = df_wide.set_index(df_wide['date'])
@@ -325,11 +293,13 @@ class StudyArea:
         
         df_wide['ET_cumulative'] = df_wide.groupby(['wateryear'])['ET'].cumsum()
         df_wide['P_cumulative'] = df_wide.groupby(['wateryear'])['P'].cumsum()
+        df_wide['PET_cumulative'] = df_wide.groupby(['wateryear'])['PET'].cumsum()
         if self.kind == 'watershed': df_wide['Q_cumulative'] = df_wide.groupby(['wateryear'])['Q_mm'].cumsum()
 
         df_total = pd.DataFrame()
         df_total['ET'] = df_wide.groupby(['wateryear'])['ET'].sum()
         df_total['P'] = df_wide.groupby(['wateryear'])['P'].sum()
+        df_total['PET'] = df_wide.groupby(['wateryear'])['PET'].sum()
         df_total['ET_summer'] = df_summer.groupby(['wateryear'])['ET'].sum()
         if self.kind == 'watershed': df_total['Q'] = df_wide.groupby(['wateryear'])['Q_mm'].sum()
         df_total['wateryear'] = df_wide.groupby(['wateryear'])['wateryear'].first()
@@ -338,7 +308,7 @@ class StudyArea:
         self.wateryear_timeseries = df_wide
         self.wateryear_total = df_total
         self.map = df_total['P'].mean()
-        
+    
         return self, df_wide, df_total
     
     
@@ -379,9 +349,10 @@ class StudyArea:
         if title is not None: ax.set_title(title) 
         if kind == 'timeseries':
             if plot_kwargs['plot_Q']:
-                df_wy = self.wateryear_timeseries
-                df_wy['date'] = pd.to_datetime(df_wy['date'])
-                ax.plot(df_wy['date'], df_wy['Q_cumulative'], plot_kwargs['linestyle_Q'], color=plot_kwargs['color_Q'], lw = plot_kwargs['lw'], label= 'Q (mm)')
+                if self.kind == 'watershed':
+                    df_wy = self.wateryear_timeseries
+                    df_wy['date'] = pd.to_datetime(df_wy['date'])
+                    ax.plot(df_wy['date'], df_wy['Q_cumulative'], plot_kwargs['linestyle_Q'], color=plot_kwargs['color_Q'], lw = plot_kwargs['lw'], label= 'Q (mm)')
             if plot_kwargs['plot_P']:
                 df_wy = self.wateryear_timeseries
                 df_wy['date'] = pd.to_datetime(df_wy['date'])
@@ -406,7 +377,8 @@ class StudyArea:
             if plot_kwargs['plot_P']:
                 ax.plot(df['wateryear'], df['P'], plot_kwargs['linestyle_P'], color = plot_kwargs['color_P'], lw = plot_kwargs['lw'], markeredgecolor = plot_kwargs['markeredgecolor'], label = r'$\mathrm{P}_{wy}\/\mathrm{(mm)}$')
             if plot_kwargs['plot_Q']:
-                ax.plot(df['wateryear'], df['Q'], plot_kwargs['linestyle_Q'], color = plot_kwargs['color_Q'], lw = plot_kwargs['lw'], markeredgecolor = plot_kwargs['markeredgecolor'], label = r'$\mathrm{Q}_{wy}\/\mathrm{(mm)}$')
+                if self.kind == 'watershed':
+                    ax.plot(df['wateryear'], df['Q'], plot_kwargs['linestyle_Q'], color = plot_kwargs['color_Q'], lw = plot_kwargs['lw'], markeredgecolor = plot_kwargs['markeredgecolor'], label = r'$\mathrm{Q}_{wy}\/\mathrm{(mm)}$')
             if plot_kwargs['twinx']:
                 ax2 = ax.twinx()
                 ax2.set_ylabel('ET (mm)', color = plot_kwargs['color_ET'])
@@ -506,16 +478,68 @@ class StudyArea:
         self.get_streamflow(**kwargs)
         
         if layers is not None:
-            self.make_combined_df(layers, **kwargs)
+            self.make_long_df(layers, **kwargs)
+            self.make_wide_df(layers, **kwargs)
             self.calculate_deficit(layers, **kwargs)
             self.wateryear(layers, **kwargs)
+            # Keep track of which ET product and bands were combined for deficit
             self.et_asset = kwargs['et_asset']
-            if kwargs['combine_ET_bands'] == True:
-                self.et_bands = kwargs['bands_to_combine']
+            if kwargs['combine_ET_bands'] == True: self.et_bands = kwargs['bands_to_combine']
             else: self.et_bands = 'Not combined'
         
 
 ## HELPER FUNCTIONS ##
+
+def extract_asset(feature_geometry, kind, asset_id, start_date, end_date, scale, bands = None, bands_to_scale = None, scaling_factor = 1, reducer_type = None):
+        """
+        Extract data from start_date to end_date for an asset_id.
+
+        Args:
+            self
+            asset_id: GEE asset identification string
+            start_date: format mm/dd/yyy or similiar date format
+            end_date: format mm/dd/yyyy or similiar date format
+            scale (int): scale in meters for GEE reducer function
+            bands (list of str): bands of GEE asset to extract
+            bands_to_scale (list of str, optional): bands for which each value will be multiplied by scaling_factor.
+            scaling_factor (float, optional): scaling factor to apply to all values in bands_to_scale
+            reducer_type (optional): not used at this time. reducer_type defaults to first() for points and mean() for watersheds
+        Returns:
+            df: pandas df of all extracted data
+        """
+        
+        asset = ee.ImageCollection(asset_id).filterDate(start_date, end_date)
+        if bands is not None: asset = asset.select(bands)
+        assetband = asset.toBands()
+        if kind == 'point':
+            reducer_type = ee.Reducer.first()
+        elif kind == 'watershed':
+            reducer_type = ee.Reducer.mean()
+       # else:
+       #     reducer_type = reducer_type
+        reducer_dict = assetband.reduceRegion(reducer = reducer_type, geometry = feature_geometry.geometry(), scale = scale)
+        
+        # Make df from reducer output, format, and apply scaling factor to specified columns
+        df = pd.DataFrame(list(reducer_dict.getInfo().items()), columns = ['variable', 'value'])
+        df['date'] = [item.replace('-', '_').split('_')[:-1] for item in df['variable'].values]
+        df['date'] = [pd.to_datetime('-'.join(item[0:3])) for item in df['date'].values]
+        df['band'] = [item.split('_')[-1] for item in df['variable'].values]
+        df['value_raw'] = df['value']
+        if bands_to_scale is not None:
+            df['value'] = [value * np.where(band_value in bands_to_scale, scaling_factor, 1) for value, band_value in zip(df.value.values, df.band.values)]            
+        
+        # Calculate gaps between data and interpolate
+        date0 = df[df['band'] == df.band.unique()[0]]['date'][0]
+        date1 = df[df['band'] == df.band.unique()[0]]['date'][len(df.band.unique())]
+        date_range = date1-date0
+        #if interp == None:
+        df = interp_columns_daily(df)
+        print('\tTimestep of', date_range.days, 'days was interpolated to daily.')
+        #else: print('Timestep of', date_range, 'was not interpolated.')
+        return df
+    
+
+
 def interp_columns_daily(df):
     """Interpolate all data to daily."""
     df_interp = pd.DataFrame()
@@ -550,3 +574,55 @@ def combine_bands(df, **kwargs) :
     df = df.append(to_store)
     df = df.reset_index(drop=True)
     return df
+
+
+def getRA(site_lat_decimal):
+  ## J (julian day)
+  J = (np.linspace(1,365,365))
+  ## Gsc (solar constant)  [MJ m-2 day -1] 
+  Gsc = 0.0820
+  ## inverse relative distance Earth-Sun
+  dr = 1+0.033*np.cos(((2*np.pi)/365)*J) 
+  ## delta = solar declination [rad]
+  delta = 0.409*np.sin(((2*np.pi)/365)*J-1.39)  
+  ## psi [rad] = convert decimal latitude to radians
+  psi = (np.pi/180)*(32.3863) 
+  ## omega_s (ws)= solar time angle at beginning of period [rad]
+  omega_s = np.arccos(-np.tan(psi)*np.tan(delta)) 
+  ## [ws * sin(psi) * sin(delta) + cos(psi) * cos(delta) * sin(ws)]
+  angles = omega_s * np.sin(psi) * np.sin(delta) + np.cos(psi) * np.cos(delta) * np.sin(omega_s)
+  RA = ((24*60)/np.pi) * Gsc * dr * angles
+
+  df = pd.DataFrame()
+  df['RA'] = RA
+  df['J'] = J
+  df['J']= df['J'].astype(int)
+  return df
+
+
+def calculate_PET(daily_data_df, latitude):#gage, p, tmin = 'tmin', tmax = 'tmax', tmean = 'tmean'):
+    if 'tmax' and 'tmin' not in daily_data_df['band'].unique():
+        sys.exit("'PET cannot be calsculated because PRISM temperature was not extracted.'")  
+    else:
+        # Get temperatures from prism
+        prism_df = daily_data_df[daily_data_df['asset_name'] == 'prism']
+        pet_df = pd.DataFrame()
+        pet_df['tmax'] = prism_df[prism_df['band'] == 'tmax']['value'].values
+        pet_df['tmin'] = prism_df[prism_df['band'] == 'tmin']['value'].values
+        pet_df['date'] = pd.to_datetime(prism_df[prism_df['band'] == 'tmin']['date']).values
+
+        # get RA (extraterrestrial radiation) with julian day column
+        RA_df = getRA(latitude)
+        pet_df['J'] = pd.to_datetime(pet_df['date']).dt.strftime('%j')
+        pet_df['J'] = pet_df['J'].astype(int)
+        
+        # merge prism df with RA
+        pet_df = pet_df.merge(RA_df, how='left', on=['J'])
+
+        # calculate PET (Hargreave and Semani 1985)
+        # Ep = 0.0023 · (Tmean + 17.8)·(Tmax − Tmin)^0.5 · 0.408 · Rext
+        Krs = 0.0023 # Erica changed this from 0.00023 on Oct 15, 2021
+        pet_df['PET'] = Krs * pet_df['RA'] * np.sqrt(pet_df['tmax'] - pet_df['tmin']) * (((pet_df['tmin']+pet_df['tmax'])/2) + 17.8)
+    
+        return pet_df
+        
