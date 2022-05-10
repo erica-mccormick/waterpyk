@@ -374,6 +374,8 @@ class StudyArea:
 
         elif kind == 'wateryear':
             df = self.wateryear_total
+            if plot_kwargs['plot_PET']:
+                ax.plot(df['wateryear'], df['PET'], plot_kwargs['linestyle_PET'], color = plot_kwargs['color_PET'], lw = plot_kwargs['lw'], markeredgecolor = plot_kwargs['markeredgecolor'], label = r'$\mathrm{PET}_{wy}\/\mathrm{(mm)}$')
             if plot_kwargs['plot_P']:
                 ax.plot(df['wateryear'], df['P'], plot_kwargs['linestyle_P'], color = plot_kwargs['color_P'], lw = plot_kwargs['lw'], markeredgecolor = plot_kwargs['markeredgecolor'], label = r'$\mathrm{P}_{wy}\/\mathrm{(mm)}$')
             if plot_kwargs['plot_Q']:
