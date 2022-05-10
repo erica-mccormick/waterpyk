@@ -185,14 +185,17 @@ class StudyArea:
         df_wide = et_df.merge(ppt_df, how = 'inner', on = 'date')[['date', 'ET', 'P']]
         if self.kind == 'watershed': df_wide = df_wide.merge(self.streamflow, how = 'left', on = 'date')[['date', 'ET', 'P', 'Q_mm']]
         #df_wide['original_index'] = df_wide.index
-
+        #pet_df = df[df['asset_name'] == 'modis_et']]
+        #pet_df = pet_df[pet_df['band'] == 'PET']
+        #pet_df['PET'] = et_df['value']
+        #df_wide = df_wide.merge(pet_df[['PET', 'date']], how = 'inner', on = 'date')
         # Add Hargreaves PET if bands are present
-        if 'tmax' and 'tmin' in df['band'].unique():
-            print('\nPET has been calcuated using the Hargreaves method.\n')
-            pet_df = calculate_PET(df, self.latitude)
-            self.pet_daily = pet_df
-            df_wide = df_wide.merge(pet_df[['PET', 'date']], how = 'left', on = 'date')
-        else: print('PET was not included because PRISM tmax and tmin bands were not extracted.')
+        #if 'tmax' and 'tmin' in df['band'].unique():
+        #    print('\nPET was calcuated using the Hargreaves method.\n')
+        #    pet_df = calculate_PET(df, self.latitude)
+        #    self.pet_daily = pet_df
+        #    df_wide = df_wide.merge(pet_df[['PET', 'date']], how = 'left', on = 'date')
+        #else: print('PET was not calculated because PRISM tmax and tmin bands were not extracted.')
    
         # Add wateryear column
         df_wide = df_wide.set_index(pd.to_datetime(df_wide['date']))
@@ -300,15 +303,15 @@ class StudyArea:
         
         df_wide['ET_cumulative'] = df_wide.groupby(['wateryear'])['ET'].cumsum()
         df_wide['P_cumulative'] = df_wide.groupby(['wateryear'])['P'].cumsum()
-        df_wide['PET_cumulative'] = df_wide.groupby(['wateryear'])['PET'].cumsum()
+        #df_wide['PET_cumulative'] = df_wide.groupby(['wateryear'])['PET'].cumsum()
         if self.kind == 'watershed': 
-            print('\ndV has been calculated for wateryear total and cumulative dataframes.\n')
+            print('dV was calculated for wateryear total and cumulative dataframes.\n')
             df_wide['Q_cumulative'] = df_wide.groupby(['wateryear'])['Q_mm'].cumsum()
-            df_wide['dV'] = df_wide['P_cumulative'] - df_wide['PET_cumulative'] - df_wide['Q_cumulative'] 
+            df_wide['dV'] = df_wide['P_cumulative'] - df_wide['ET_cumulative'] - df_wide['Q_cumulative'] 
         df_total = pd.DataFrame()
         df_total['ET'] = df_wide.groupby(['wateryear'])['ET'].sum()
         df_total['P'] = df_wide.groupby(['wateryear'])['P'].sum()
-        df_total['PET'] = df_wide.groupby(['wateryear'])['PET'].sum()
+        #df_total['PET'] = df_wide.groupby(['wateryear'])['PET'].sum()
         df_total['ET_summer'] = df_summer.groupby(['wateryear'])['ET'].sum()
  
         if self.kind == 'watershed':
@@ -460,7 +463,7 @@ class StudyArea:
             print('GEE reducer used: MEAN() for watersheds and FIRST() for points')
             print('Data available as daily and wateryear (cum. and total):', list(self.wateryear_total))
             print('Deficit results:\n\tSmax = ' + str(self.smax) + ' mm')
-            print('\tmax(Dmax) = ' + str(self.maxdmax) + 'mm')
+            print('\tmax(Dmax) = ' + str(self.maxdmax) + ' mm')
             print('Deficit calculation parameters:\n\tDataset: ' + str(self.et_asset) + '\n\tBands: ' + str(self.et_bands))
             print('\tStart date: ' + str(self.start_date) + '\n\tEnd date: ' + str(self.end_date))
         except:

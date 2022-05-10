@@ -57,7 +57,7 @@ def sedgewick_tests():
 def wshed_test():
     gage = [11475560] #Real elder
     #gage = [11180825] #San Lorenzo
-    elder = pyk.StudyArea(gage, layers)
+    elder = pyk.StudyArea(gage, layers, interp = False)
     elder.describe()
     print(elder.smax)
     print(elder.wateryear_timeseries)
@@ -75,14 +75,53 @@ def wshed_test():
         'xmax':2020
     }
     
-    fig, ax = plt.subplots(dpi=300, figsize = (6,4))
-    ax.plot(elder.wateryear_total['dV'], elder.wateryear_total['Dwy_max'])
+    #print(pet[pet['date']>'2007-10-01'])
+    #fig, ax = plt.subplots(dpi=300, figsize = (6,4))
+    #ax.plot(elder.wateryear_total['dV'], elder.wateryear_total['Dwy_max'],'o')
     
     #fig = elder.plot(kind = 'wateryear',**kwargs)
-    fig.savefig('figs/elder_wy.png')
+    #fig.savefig('figs/elder_wy.png')
+    """
+    df = elder.daily_data_wide
+    dfwy = elder.wateryear_timeseries
 
+    fig,ax =plt.subplots(sharex=True,figsize=(10,4))
+    plt.plot(df.date,df.P,color='black')
+    ax.set_ylabel('Precipitation (mm/day)',color='black',fontsize=15)
+
+    # twin object for two different y-axis on the sample plot
+    ax2=ax.twinx()
+    ax2.plot(dfwy.date,dfwy.P_cumulative,color='black',linestyle=':')
+    ax2.set_ylabel('Precipitation mm',color='black',fontsize=15)
+
+    fig,ax = plt.subplots(sharex=True,figsize=(10,4))
+    plt.plot(df.date,df.Q_mm,color='blue')
+    ax.set_ylabel('Runoff (mm/day)',color='blue',fontsize=15)
+
+    # twin object for two different y-axis on the sample plot
+    ax2=ax.twinx()
+    ax2.plot(dfwy.date,dfwy.Q_cumulative,color='blue',linestyle=':')
+    ax2.set_ylabel('Runoff mm',color='blue',fontsize=15)
+
+    fig,ax =plt.subplots(sharex=True,figsize=(10,4))
+    plt.plot(df.date,df.PET,color='green')
+    ax.set_ylabel('Runoff (mm/day)',color='green',fontsize=15)
+
+    # twin object for two different y-axis on the sample plot
+    ax2=ax.twinx()
+    ax2.plot(dfwy.date,dfwy.PET_cumulative,color='green',linestyle=':')
+    ax2.set_ylabel('PET mm',color='green',fontsize=15)
     
-    #fig2 = elder.plot(kind = 'wateryear', **kwargs)
-    #fig2.savefig('figs/elder_wateryear.png')
+    fig.savefig('figs/elder_data.png')
 #run_tests_limitation_sites()
+"""
 wshed_test()
+
+
+### GET DAVIDS STUFF ###
+#elder_q =  pd.read_pickle('data/df_elder.p')
+#elder_q_mmday = elder_q*1000
+#for runoff and pet, we can take a daily mean of the values on that day to arrive at a daily value:  
+#freq = '1D'
+#elder_q_mmday = elder_q_mmday.resample(freq).mean()
+#print(elder_q_mmday)
