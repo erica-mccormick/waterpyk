@@ -1,0 +1,7 @@
+waterpyk.gee\_extraction module
+===============================
+
+.. automodule:: waterpyk.gee_extraction
+   :members:
+   :undoc-members:
+   :show-inheritance:

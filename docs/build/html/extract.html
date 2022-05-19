@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>extract package &mdash; WaterPyk 0.1.0 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="massbalance package" href="massbalance.html" />
+    <link rel="prev" title="waterpyk" href="modules.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="index.html" class="icon icon-home"> WaterPyk
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="api.html">API</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">waterpyk</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">extract package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#submodules">Submodules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-extract.gee">extract.gee module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-extract.watershed">extract.watershed module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-extract">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="massbalance.html">massbalance package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="plot.html">plot package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="studyarea.html">studyarea package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="unused.html">unused package</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">WaterPyk</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="modules.html">waterpyk</a> &raquo;</li>
+      <li>extract package</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/extract.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <div class="section" id="extract-package">
+<h1>extract package<a class="headerlink" href="#extract-package" title="Permalink to this headline"></a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline"></a></h2>
+</div>
+<div class="section" id="module-extract.gee">
+<span id="extract-gee-module"></span><h2>extract.gee module<a class="headerlink" href="#module-extract.gee" title="Permalink to this headline"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="extract.gee.combine_bands">
+<span class="sig-prename descclassname"><span class="pre">extract.gee.</span></span><span class="sig-name descname"><span class="pre">combine_bands</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bands_to_combine</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">band_name_final</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#extract.gee.combine_bands" title="Permalink to this definition"></a></dt>
+<dd><p>Defaults to add together soil and vegetation ET bands (Es and Ec) for PML to create ET band.
+Can be customized to add any bands together to create a new band.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>bands_to_combine</strong> (<em>list of str</em>) – list of strings of band names (example: [‘Es’, ‘Ec’]) to combine into a single band</p></li>
+<li><p><strong>band_name_final</strong> (<em>str</em>) – the final band name to be stored in the ‘band’ column of the final dataframe, where the ‘value’ column will contain the added values from bands_to_combine</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>input long-form dataframe with appended section which contains date, asset_name, value, band, and value_raw (set to np.nan) columns with data from combined</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>df</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="extract.gee.extract_assets_at_site">
+<span class="sig-prename descclassname"><span class="pre">extract.gee.</span></span><span class="sig-name descname"><span class="pre">extract_assets_at_site</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">layers</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gee_feature</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kind</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reducer_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#extract.gee.extract_assets_at_site" title="Permalink to this definition"></a></dt>
+<dd><p>Extract data at site for several assets at once. Uses extract_single_asset_for_site().</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>layers</strong> – pandas df with the following columns, which are the same as the arguments for extract_single_asset_for_site():
+asset_id: GEE asset identification string
+start_date: format mm/dd/yyy or similiar date format
+end_date: format mm/dd/yyyy or similiar date format
+scale (int): scale in meters for GEE reducer function
+bands (list of str): bands of GEE asset to extract
+bands_to_scale (list of str, optional): bands for which each value will be multiplied by scaling_factor.
+scaling_factor (float, optional): scaling factor to apply to all values in bands_to_scale</p></li>
+<li><p><strong>gee_feature</strong> – GEE feature for region geometry</p></li>
+<li><p><strong>kind</strong> (<em>str</em>) – ‘point’ or ‘watershed’</p></li>
+<li><p><strong>reducer_type</strong> – defaults to None, in which case GEE reduceRegion reducer function is first() and mean() for points and watersheds, respectively. See GEE documentation for more available types.</p></li>
+<li><p><strong>**kwargs</strong> (<em>optional</em>) – interp (bool): (default: True), currently no option to change to False.
+combine_ET_bands (bool): (default True) add ET bands to make one ET band.
+bands_to_combine (list of str): (default [Es, Ec]) ET bands to combine
+band_names_combined (str): (default ‘ET’) name of combined ET band</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>with added attribute self.extracted_data (i.e. df), self.available_data, self.layers_info, self.start_date, self.end_date
+df: long-style pandas df of extracted df.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>self</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="extract.gee.extract_single_asset_at_site">
+<span class="sig-prename descclassname"><span class="pre">extract.gee.</span></span><span class="sig-name descname"><span class="pre">extract_single_asset_at_site</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">gee_feature</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kind</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">asset_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start_date</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">end_date</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scale</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bands</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bands_to_scale</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scaling_factor</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reducer_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#extract.gee.extract_single_asset_at_site" title="Permalink to this definition"></a></dt>
+<dd><p>Extract data from start_date to end_date for an asset_id.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>gee_feature</strong> – GEE feature for region geometry</p></li>
+<li><p><strong>kind</strong> (<em>str</em>) – ‘point’ or ‘watershed’</p></li>
+<li><p><strong>asset_id</strong> (<em>str</em>) – GEE asset identification string</p></li>
+<li><p><strong>start_date</strong> (<em>str</em>) – format mm/dd/yyy or similiar date format</p></li>
+<li><p><strong>end_date</strong> (<em>str</em>) – format mm/dd/yyyy or similiar date format</p></li>
+<li><p><strong>scale</strong> (<em>int</em>) – scale in meters for GEE reducer function</p></li>
+<li><p><strong>bands</strong> (<em>list of str</em>) – bands of GEE asset to extract</p></li>
+<li><p><strong>bands_to_scale</strong> (<em>list of str</em><em>, </em><em>optional</em>) – bands for which each value will be multiplied by scaling_factor.</p></li>
+<li><p><strong>scaling_factor</strong> (<em>float</em><em>, </em><em>optional</em>) – scaling factor to apply to all values in bands_to_scale</p></li>
+<li><p><strong>reducer_type</strong> (<em>function</em><em>, </em><em>optional</em>) – reducer_type defaults to first() for points and mean() for watersheds. See available gee ReduceRegion options online for other possible inputs.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>pandas dataframe of all extracted data</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>df</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="extract.gee.interp_columns_daily">
+<span class="sig-prename descclassname"><span class="pre">extract.gee.</span></span><span class="sig-name descname"><span class="pre">interp_columns_daily</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#extract.gee.interp_columns_daily" title="Permalink to this definition"></a></dt>
+<dd><p>Interpolate all data to daily.
+:param df: initial long-form dataframe for a single asset (may contain multiple bands) with column ‘value’ for interpolating</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>pandas dataframe with ‘value’ column containing daily interpolated daily</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>df_interp</p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="module-extract.watershed">
+<span id="extract-watershed-module"></span><h2>extract.watershed module<a class="headerlink" href="#module-extract.watershed" title="Permalink to this headline"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="extract.watershed.access_data">
+<span class="sig-prename descclassname"><span class="pre">extract.watershed.</span></span><span class="sig-name descname"><span class="pre">access_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">gage</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#extract.watershed.access_data" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="extract.watershed.flowline_geometry">
+<span class="sig-prename descclassname"><span class="pre">extract.watershed.</span></span><span class="sig-name descname"><span class="pre">flowline_geometry</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">gage</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#extract.watershed.flowline_geometry" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="extract.watershed.geometry">
+<span class="sig-prename descclassname"><span class="pre">extract.watershed.</span></span><span class="sig-name descname"><span class="pre">geometry</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">gage</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#extract.watershed.geometry" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="extract.watershed.latitude">
+<span class="sig-prename descclassname"><span class="pre">extract.watershed.</span></span><span class="sig-name descname"><span class="pre">latitude</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">gage</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#extract.watershed.latitude" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="extract.watershed.metadata">
+<span class="sig-prename descclassname"><span class="pre">extract.watershed.</span></span><span class="sig-name descname"><span class="pre">metadata</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">gage</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#extract.watershed.metadata" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="extract.watershed.streamflow">
+<span class="sig-prename descclassname"><span class="pre">extract.watershed.</span></span><span class="sig-name descname"><span class="pre">streamflow</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">gage</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#extract.watershed.streamflow" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-extract">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-extract" title="Permalink to this headline"></a></h2>
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="modules.html" class="btn btn-neutral float-left" title="waterpyk" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="massbalance.html" class="btn btn-neutral float-right" title="massbalance package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Erica L. McCormick.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

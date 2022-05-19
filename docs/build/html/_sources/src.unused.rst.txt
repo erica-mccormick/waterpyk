@@ -1,0 +1,7 @@
+src.unused module
+=================
+
+.. automodule:: src.unused
+   :members:
+   :undoc-members:
+   :show-inheritance:

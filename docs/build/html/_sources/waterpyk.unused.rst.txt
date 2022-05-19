@@ -1,0 +1,7 @@
+waterpyk.unused module
+======================
+
+.. automodule:: waterpyk.unused
+   :members:
+   :undoc-members:
+   :show-inheritance:

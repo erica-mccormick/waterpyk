@@ -1,0 +1,7 @@
+src.dataframe\_manipulations module
+===================================
+
+.. automodule:: src.dataframe_manipulations
+   :members:
+   :undoc-members:
+   :show-inheritance:

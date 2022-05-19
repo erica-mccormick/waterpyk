@@ -1,0 +1,7 @@
+plot.basic module
+=================
+
+.. automodule:: plot.basic
+   :members:
+   :undoc-members:
+   :show-inheritance:

@@ -1,0 +1,7 @@
+WaterPyk.waterpyk.dataframe\_manipulations module
+=================================================
+
+.. automodule:: WaterPyk.waterpyk.dataframe_manipulations
+   :members:
+   :undoc-members:
+   :show-inheritance:

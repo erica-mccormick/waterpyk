@@ -1,0 +1,7 @@
+waterpyk.watersheds module
+==========================
+
+.. automodule:: waterpyk.watersheds
+   :members:
+   :undoc-members:
+   :show-inheritance:

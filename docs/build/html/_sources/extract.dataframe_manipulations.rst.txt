@@ -1,0 +1,7 @@
+extract.dataframe\_manipulations module
+=======================================
+
+.. automodule:: extract.dataframe_manipulations
+   :members:
+   :undoc-members:
+   :show-inheritance:

@@ -1,0 +1,7 @@
+WaterPyk.makefigs module
+========================
+
+.. automodule:: WaterPyk.makefigs
+   :members:
+   :undoc-members:
+   :show-inheritance:

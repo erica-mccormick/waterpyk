@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>massbalance.massbalance module &mdash; WaterPyk 0.1.0 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="plot package" href="plot.html" />
+    <link rel="prev" title="massbalance package" href="massbalance.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="index.html" class="icon icon-home"> WaterPyk
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="api.html">API</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">waterpyk</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="extract.html">extract package</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="massbalance.html">massbalance package</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="massbalance.html#submodules">Submodules</a><ul class="current">
+<li class="toctree-l4 current"><a class="current reference internal" href="#">massbalance.massbalance module</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="massbalance.html#module-massbalance">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="plot.html">plot package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="studyarea.html">studyarea package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="unused.html">unused package</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">WaterPyk</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="modules.html">waterpyk</a> &raquo;</li>
+          <li><a href="massbalance.html">massbalance package</a> &raquo;</li>
+      <li>massbalance.massbalance module</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/massbalance.massbalance.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <div class="section" id="module-massbalance.massbalance">
+<span id="massbalance-massbalance-module"></span><h1>massbalance.massbalance module<a class="headerlink" href="#module-massbalance.massbalance" title="Permalink to this headline"></a></h1>
+<dl class="py function">
+<dt class="sig sig-object py" id="massbalance.massbalance.calculate_deficit">
+<span class="sig-prename descclassname"><span class="pre">massbalance.massbalance.</span></span><span class="sig-name descname"><span class="pre">calculate_deficit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df_long</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">df_wide</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#massbalance.massbalance.calculate_deficit" title="Permalink to this definition"></a></dt>
+<dd><p>Calculate D(t) after McCormick et al., 2021 and Dralle et al., 2020.
+Uses extract_asset() and make_combined_df().</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>df_long</strong> – original long-style dataframe with snow, P, and ET data at a minimum</p></li>
+<li><p><strong>df_wide</strong> – dataframe created from make_wide_df(). (default = None, in which case new df_wide is created from df_long using default args). This dataframe must have ET, P, and wateryear columns.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="simple">
+<dt>Kwargs:</dt><dd><p>interp: (default: True), currently no option to change to False.
+combine_ET_bands: (default True) add ET bands to make one ET band.
+bands_to_combine: (default [Es, Ec]) ET bands to combine
+band_names_combined: (default ET) name of combined ET band
+et_asset: (default pml) ET dataset to use for deficit calculation, if multiple are given
+et_band: (default ET) band from ET dataset to use for deficit calculation, if multiple are given
+ppt_asset: (default prism) precipitation dataset to use for deficit calculation, if multiple are given
+ppt_band: (default ppt) precipitation dataset to use for deficit calculation, if multiple are given
+snow_correction: (default True) use snow correction factor when calculating deficit
+snow_frac: (default 10) set all ET when snow is greater than this (%) to 0 if snow_correction = True</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>dataframe with root-zone water storage deficit data where deficit is column ‘D’ and wateryear deficit is ‘D_wy’.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>df_deficit</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="massbalance.massbalance.make_wide_df">
+<span class="sig-prename descclassname"><span class="pre">massbalance.massbalance.</span></span><span class="sig-name descname"><span class="pre">make_wide_df</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df_long</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pivot_all</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#massbalance.massbalance.make_wide_df" title="Permalink to this definition"></a></dt>
+<dd><p>Uses ET and P asset and band names (designated in <a href="#id1"><span class="problematic" id="id2">**</span></a>kwargs) to return a wide-form dataframe with columns:
+date, ET, Ei, P, and P-Ei (where Ei is the interception band from PML and is only extracted if it exists). merge_wide_streamflow() can then be used to merge with streamflow df.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>df_long</strong> – dataframe such as that produced by extract_assets_at_site() where columns contain asset_name, band, and value.</p></li>
+<li><p><strong>pivot_all</strong> (<em>bool</em>) – NOT FUNCTIONAL YET (default = False). Eventually will skip the <a href="#id3"><span class="problematic" id="id4">**</span></a>kwargs and pivot al data to wide format.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="simple">
+<dt>Kwargs:</dt><dd><p>et_asset (str): asset to be used for creation of ET column (default ‘pml’).
+et_band (str): band name to be used for creation of ET column (default ‘ET’).
+ppt_asset (str): asset name for precipitation column (default ‘prism’).
+ppt_band (str): band name for precipitation colum (default ‘ppt’)</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>wide-form dataframe with columns for date, ET, Ei, P, and P-Ei (where Ei is the interception band from PML and is only included if it exists.)</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>df_wide</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="massbalance.massbalance.merge_wide_deficit">
+<span class="sig-prename descclassname"><span class="pre">massbalance.massbalance.</span></span><span class="sig-name descname"><span class="pre">merge_wide_deficit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df_wide</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">df_deficit</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#massbalance.massbalance.merge_wide_deficit" title="Permalink to this definition"></a></dt>
+<dd><p>Merge df_wide (dataframe with columns representing variable names) with deficit dataframe, which contains ‘date’, ‘D’, and ‘D_wy’ columns.
+:param df_wide: wide-form dataframe with ‘date’ column and other columns with variable names (ie ET, P, etc)
+:param df_deficit: dataframe with deficit and wateryear deficit (D and D_wy). Must contain ‘date’ column.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>merged input dataframes.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>df_wide</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="massbalance.massbalance.merge_wide_streamflow">
+<span class="sig-prename descclassname"><span class="pre">massbalance.massbalance.</span></span><span class="sig-name descname"><span class="pre">merge_wide_streamflow</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df_wide</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">df_streamflow</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">q_column_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Q_mm'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#massbalance.massbalance.merge_wide_streamflow" title="Permalink to this definition"></a></dt>
+<dd><p>Merge df_wide (dataframe with columns representing variable names) with streamflow dataframe.
+:param df_wide: wide-form dataframe with ‘date’ column and other columns with variable names (ie ET, P, etc)
+:param df_streamflow: dataframe with streamflow extracted from the USGS containing columns for ‘date’ and ‘Q_mm’ at least.
+:param q_column_name: Name of the streamflow column in df_streamflow that you wish to merge (default: ‘Q_mm’).
+:type q_column_name: str</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>merged input dataframes.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>df_wide</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="massbalance.massbalance.wateryear">
+<span class="sig-prename descclassname"><span class="pre">massbalance.massbalance.</span></span><span class="sig-name descname"><span class="pre">wateryear</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df_wide</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#massbalance.massbalance.wateryear" title="Permalink to this definition"></a></dt>
+<dd><p>Create total and cumulative wateryear dataframes for all variables (ie columns) given in df_wide.
+:param df_wide: wide-form dataframe with ‘date’ column and other columns with variable names (i.e. ET, P, Q_mm, etc.) This dataframe can also have D, D_wy, Q_mm, etc merged into it.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>original wide-form dataframe with added columns (in the naming form of ORIGINALNAME_cumulative) with cumulative wateryear values. For example, if ‘P’ was in original dataframe, then ‘P_cumulative’ now exists. If ‘Q_mm’ was in dataframe, then ‘Q_mm_cumulative’ now exists.
+df_total: dataframe with one row for each wateryear with columns such as wateryear, ET, P, D_wy_max, ET_summer, Q_mm, etc, which represent the total (or maximum, for D_wy_max) wateryear sum.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>df_wide</p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="massbalance.html" class="btn btn-neutral float-left" title="massbalance package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="plot.html" class="btn btn-neutral float-right" title="plot package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Erica L. McCormick.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,7 @@
+src.waterpyk module
+===================
+
+.. automodule:: src.waterpyk
+   :members:
+   :undoc-members:
+   :show-inheritance:

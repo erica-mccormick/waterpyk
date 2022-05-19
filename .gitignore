@@ -2,4 +2,6 @@
 *.png
 *.pdf
 *.pyc
-__pycache__
+__pycache__/
+.DS_Store
+

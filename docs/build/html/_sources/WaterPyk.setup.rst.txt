@@ -1,0 +1,7 @@
+WaterPyk.setup module
+=====================
+
+.. automodule:: WaterPyk.setup
+   :members:
+   :undoc-members:
+   :show-inheritance:

@@ -1,0 +1,7 @@
+WaterPyk.run module
+===================
+
+.. automodule:: WaterPyk.run
+   :members:
+   :undoc-members:
+   :show-inheritance:

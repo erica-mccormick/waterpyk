@@ -1,0 +1,21 @@
+src package
+===========
+
+Submodules
+----------
+
+.. toctree::
+   :maxdepth: 4
+
+   src.dataframe_manipulations
+   src.unused
+   src.waterpyk
+   src.watersheds
+
+Module contents
+---------------
+
+.. automodule:: src
+   :members:
+   :undoc-members:
+   :show-inheritance:

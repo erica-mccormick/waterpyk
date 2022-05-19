@@ -1,0 +1,27 @@
+WaterPyk package
+================
+
+Subpackages
+-----------
+
+.. toctree::
+   :maxdepth: 4
+
+   WaterPyk.tests
+
+Submodules
+----------
+
+.. toctree::
+   :maxdepth: 4
+
+   WaterPyk.run
+   WaterPyk.setup
+
+Module contents
+---------------
+
+.. automodule:: WaterPyk
+   :members:
+   :undoc-members:
+   :show-inheritance:

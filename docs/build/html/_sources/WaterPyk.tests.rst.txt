@@ -1,0 +1,10 @@
+WaterPyk.tests package
+======================
+
+Module contents
+---------------
+
+.. automodule:: WaterPyk.tests
+   :members:
+   :undoc-members:
+   :show-inheritance:
