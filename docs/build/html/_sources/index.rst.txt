@@ -8,17 +8,15 @@ WaterPyk: Choose a place and get some data!
    This project is under active development.
 
 
-Contents
---------
-
 .. toctree::
+   :maxdepth: 2
+   :caption: Contents:
 
-   api
-   modules
+   readme
+   waterpyk
 
 Indices and tables
 ==================
-
 * :ref:`genindex`
 * :ref:`modindex`
 * :ref:`search`

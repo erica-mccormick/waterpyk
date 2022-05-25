@@ -12,8 +12,12 @@
 #
 import os
 import sys
-sys.path.append(os.path.abspath('../../waterpyk'))
+#sys.path.append(os.path.abspath('../../waterpyk'))
 ####sphinx-apidoc -f -o source/ ../waterpyk
+
+sys.path.insert(0, os.path.abspath("../.."))
+
+import waterpyk
 
 
 # -- Project information -----------------------------------------------------

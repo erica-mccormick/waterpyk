@@ -9,15 +9,15 @@
 
    
    
-   
-
-   
-   
-   .. rubric:: Classes
+   .. rubric:: Functions
 
    .. autosummary::
    
-      StudyArea
+      in_colab_shell
+   
+   
+
+   
    
    
 

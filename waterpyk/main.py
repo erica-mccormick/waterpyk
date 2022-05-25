@@ -38,8 +38,7 @@ class StudyArea:
     
     def get_location(self, **kwargs):
         """
-        Convert coordinates to GEE feature. For a USGS watershed,
-        coordinates are extracted from website using gage ID.
+        Convert coordinates to GEE feature. For a USGS watershed, coordinates are extracted from website using gage ID.
 
         Args:
             self
@@ -77,6 +76,12 @@ class StudyArea:
     
             
     def get_data(self, layers, **kwargs):
+        """Updates self with attributes containing dataframes for the site. If data already exists in saving_dir, data is simply loaded. Otherwise, data from layers is extracted from GEE and the USGS.
+        
+        Args:
+            layers (:obj:`df`): dataframe with list and details of GEE assets to extract.
+            **kwargs (optional): see init.
+        """
         if in_colab_shell(): path_format = '_'
         else: path_format = '/'
         
@@ -157,7 +162,6 @@ class StudyArea:
         Returns:
             printed statement
         """
-        
         print('\n'+ str(self.description))
         print('Geometry kind:', self.kind)
         print('Data extracted from GEE:', self.daily_df_long.band.unique())
@@ -169,7 +173,14 @@ class StudyArea:
         print('\tStart date: ' + str(self.deficit_timerange[0]) + '\n\tEnd date: ' + str(self.deficit_timerange[1]))
         print('Kwargs set to:', self.settings)
         
+        
     def plot(self, kind, **kwargs):
+        """ Make common plots of the data specifying what 'kind' of plot.
+        
+        Args:
+            kind (str): timeseries, spearman, wateryear, and RWS.
+            **kwargs (optional): Plotting kwargs. See wateryear.plot for defaults and options.
+        """
         if kind == 'timeseries':
             fig = plots.plot_timeseries(self, **kwargs)
         elif kind == 'spearman':
@@ -180,7 +191,9 @@ class StudyArea:
             fig = plots.plot_RWS(self, **kwargs)
         return fig
             
+            
     def _path(self):
+        """Make a folder name for storing data."""
         if self.kind == 'watershed':
             folder_name = str(self.coords[0])
         elif self.kind == 'point':
@@ -188,6 +201,7 @@ class StudyArea:
         saving_path = os.path.abspath(os.path.join(self.saving_dir, folder_name))
         self.saving_path = saving_path
         return saving_path   
+        
         
     def __init__(self, coords, layers = None, saving_dir = default_saving_dir, **kwargs):
         default_kwargs = {
