@@ -1,5 +1,6 @@
 import matplotlib
 import matplotlib.pyplot as plt
+import seaborn as sns
 import pandas as pd
 import numpy as np
 from scipy import stats
@@ -37,6 +38,31 @@ default_kwarg_dictionary = {
         'title': None
         }
 
+def plot_p_distribution(studyareaobject = None, df_wateryear_totals = None, smax = None, **plot_kwargs):
+    print('Plotting precip distribution...')
+    updated_kwargs = {'xmin': 0, 'xmax':4000, 'xlabel':'mm', 'ylabel':'Density'}
+    default_kwargs = {**default_kwarg_dictionary, **updated_kwargs}    
+    plot_kwargs = {**default_kwargs, **plot_kwargs}    
+    
+    if studyareaobject is not None:
+        wateryear_totals = studyareaobject.wateryear_totals
+        smax = studyareaobject.smax
+    elif df_wateryear_totals is not None:
+        wateryear_totals = df_wateryear_totals
+        smax = smax
+    fig, ax = plt.subplots(dpi=plot_kwargs['dpi'], figsize = plot_kwargs['figsize'])
+    sns.kdeplot(data=wateryear_totals, x="P", color = '#79C3DB', alpha = 0.3)
+    x = ax.lines[-1].get_xdata()
+    y = ax.lines[-1].get_ydata()
+    ax.fill_between(x, 0, y, color='#79C3DB', alpha=0.3, label=r'$\mathrm{P}_{wy (2003-2020)}\/\mathrm{(mm)}$')
+    ax.fill_between(x, 0, y, where=x<smax, color='#ED9935', hatch = 'x', alpha=0.4)
+    plt.axvspan(smax, smax, alpha=1, color='#ED9935', label = r'$\mathrm{S}_{max}\/\mathrm{(mm)}$')
+    ax.set_xlim(plot_kwargs['xmin'], plot_kwargs['xmax'])
+    if plot_kwargs['title'] is not None: fig.suptitle(plot_kwargs['title'])
+    if plot_kwargs['legend']: ax.legend(loc = 'best')
+    ax.set_xlabel(plot_kwargs['xlabel'])
+    ax.set_ylabel(plot_kwargs['ylabel'])
+
 
 def plot_timeseries(studyareaobject = None, df_daily_wide = None, df_timeseries = None, **plot_kwargs):
     print('Plotting timeseries...')
@@ -73,6 +99,8 @@ def plot_timeseries(studyareaobject = None, df_daily_wide = None, df_timeseries 
     ax.set_xlim(pd.to_datetime(plot_kwargs['xmin'], exact = False), pd.to_datetime(plot_kwargs['xmax'], exact = False))
     if plot_kwargs['title'] is not None: fig.suptitle(plot_kwargs['title'])
     if plot_kwargs['legend'] == True: ax.legend(loc = 'best')
+    ax.set_xlabel(plot_kwargs['xlabel'])
+    ax.set_ylabel(plot_kwargs['ylabel'])
     return fig
 
 
@@ -96,6 +124,7 @@ def plot_wateryear_totals(studyareaobject = None, df_wateryear_totals = None, **
             'linestyle_Q':'-o',
             'linestyle_ET':'-o',
             'linestyle_P':'-o',
+            'xlabel':'Wateryear'
         }
     
     default_kwargs = {**default_kwarg_dictionary, **updated_kwargs}    
@@ -121,6 +150,8 @@ def plot_wateryear_totals(studyareaobject = None, df_wateryear_totals = None, **
     ax.set_xlim(plot_kwargs['xmin'], plot_kwargs['xmax'])
     if plot_kwargs['title'] is not None: fig.suptitle(plot_kwargs['title'])
     if plot_kwargs['legend']: ax.legend(loc = 'best')
+    ax.set_xlabel(plot_kwargs['xlabel'])
+    ax.set_ylabel(plot_kwargs['ylabel'])
     return fig
 
 
@@ -154,8 +185,9 @@ def plot_spearman(studyareaobject = None, df_wateryear_totals = None, **plot_kwa
     ax.set_xlabel(plot_kwargs['xlabel'])
     ax.set_ylabel(plot_kwargs['ylabel'])
     if plot_kwargs['title'] is not None: fig.suptitle(plot_kwargs['title'])
-
     if plot_kwargs['legend']: ax.legend(loc = 'best')
+    ax.set_xlabel(plot_kwargs['xlabel'])
+    ax.set_ylabel(plot_kwargs['ylabel'])
         
     return fig
 
@@ -183,5 +215,7 @@ def plot_RWS(studyareaobject = None, df_deficit =  None, **plot_kwargs):
     ax.set_xlim(pd.to_datetime(plot_kwargs['xmin'], exact = False), pd.to_datetime(plot_kwargs['xmax'], exact = False))
     if plot_kwargs['title'] is not None: fig.suptitle(plot_kwargs['title'])
     if plot_kwargs['legend']: ax.legend(loc = 'best')
+    ax.set_xlabel(plot_kwargs['xlabel'])
+    ax.set_ylabel(plot_kwargs['ylabel'])
     return fig
         

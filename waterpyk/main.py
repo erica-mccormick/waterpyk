@@ -189,6 +189,8 @@ class StudyArea:
             fig = plots.plot_wateryear_totals(self, **kwargs)
         elif kind == 'RWS':
             fig = plots.plot_RWS(self, **kwargs)
+        elif kind == 'distribution':
+            fig = plots.plot_p_distribution(self, **kwargs)
         return fig
             
             
@@ -233,3 +235,4 @@ class StudyArea:
         self.get_data(layers, **kwargs)
         t2 = time()
         print('\nTime to access data: ' + str(round(t2-t1,3)) + ' seconds')
+        self.MAP = round(self.wateryear_totals.P.mean())

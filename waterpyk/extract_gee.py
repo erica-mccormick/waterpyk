@@ -59,6 +59,7 @@ def extract_single_asset_at_site(gee_feature, kind, asset_id, start_date, end_da
         print('\tTimestep of', date_range.days, 'days was interpolated to daily.')
         return df
     
+
 def extract_assets_at_site(layers, gee_feature, kind, reducer_type = None, **kwargs):
     """
     Extract data at site for several assets at once. Uses extract_single_asset_for_site().
@@ -102,7 +103,16 @@ def extract_assets_at_site(layers, gee_feature, kind, reducer_type = None, **kwa
 
     return df
 
-
+"""
+def extract_longterm_p(gee_feature, kind):
+    asset_id = "OREGONSTATE/PRISM/AN81m"
+    start_date = '1980-10-01'
+    end_date = '2020-10-01'
+    scale = 500
+    bands = 'ppt'
+    df = extract_single_asset_at_site(gee_feature, kind, asset_id, start_date, end_date, bands, scale)
+    return df
+"""
 ######## CLEANING DATAFRAME ########
 
 def interp_columns_daily(df):
