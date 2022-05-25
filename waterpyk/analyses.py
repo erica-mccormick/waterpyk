@@ -1,6 +1,5 @@
 import pandas as pd
 import numpy as np
-import datetime
 
 def make_wide_df(df_long, pivot_all = False, **kwargs):
     """
@@ -214,3 +213,107 @@ def calculate_deficit(df_long, df_wide = None, **kwargs):
     #self.smax = round(df_deficit.D.max())
     #self.maxdmax = round(df_deficit.D_wy.max())
     return df_deficit
+
+
+def deficit_bursts(df):
+    """
+    Get a dataframe with the length and maximum deficit of each "burst" (i.e. deficits that are continuously above zero).
+
+    Args:
+        df (:obj:`df`): dataframe with columns for date and D (for deficit), at minimum.
+
+    Returns: 
+        :obj:`df`: dataframe with columns for start and end dates, and max_D [mm], duration [days] and start and end wateryear of each burst.
+    """
+    # get all places where deficit = 0
+    df_zero = df[df.D == 0]
+
+    # get the start and end dates of the bursts and add in an artificial 'burst' starting on the first date of the year and ending at the start of the next burst
+    start_of_bursts = []
+    end_of_bursts = []
+    max_D = []
+
+    # For all the dates where the deficit = 0, find the time between the dates and the maximum value between the dates
+    for j in range(len(df_zero['date'])-1):
+        if (df_zero['date'][j+1] > df_zero['date'][j]):
+            mask2 = (pd.to_datetime(df['date']) >= df_zero['date'][j]) & (pd.to_datetime(df['date']) <= df_zero['date'][j+1])
+            bursts = pd.DataFrame()
+            bursts = df.loc[mask2]
+            if (len(bursts['D'])>2):
+                start_of_bursts.append(bursts['date'][0])
+                end_of_bursts.append(bursts['date'][-1])
+                max_D.append(bursts['D'].max())
+            else: continue
+        else: continue
+        
+    # Save in df
+    burstdf = pd.DataFrame()
+    burstdf['start'] = start_of_bursts
+    burstdf['end'] = end_of_bursts
+    burstdf['max_D'] = max_D
+  
+    # Clean up and add more columns
+    burstdf['start'] = pd.to_datetime(burstdf['start'])
+    burstdf['end'] = pd.to_datetime(burstdf['end'])
+    burstdf['duration'] = (burstdf['end'] - burstdf['start']).dt.days.astype('int16')
+    burstdf = burstdf.set_index(burstdf['start'])
+    burstdf['start_wateryear'] = np.where(~burstdf.index.month.isin([10,11,12]),burstdf.index.year,burstdf.index.year+1)
+    burstdf = burstdf.reset_index(drop=True)
+    burstdf = burstdf.set_index(burstdf['end'])
+    burstdf['end_wateryear'] = np.where(~burstdf.index.month.isin([10,11,12]),burstdf.index.year,burstdf.index.year+1)
+    burstdf = burstdf.reset_index(drop=True)
+
+    return burstdf
+
+
+"""
+def getRA(site_lat_decimal):
+  ## J (julian day)
+  J = (np.linspace(1,365,365))
+  ## Gsc (solar constant)  [MJ m-2 day -1] 
+  Gsc = 0.0820
+  ## inverse relative distance Earth-Sun
+  dr = 1+0.033*np.cos(((2*np.pi)/365)*J) 
+  ## delta = solar declination [rad]
+  delta = 0.409*np.sin(((2*np.pi)/365)*J-1.39)  
+  ## psi [rad] = convert decimal latitude to radians
+  psi = (np.pi/180)*(32.3863) 
+  ## omega_s (ws)= solar time angle at beginning of period [rad]
+  omega_s = np.arccos(-np.tan(psi)*np.tan(delta)) 
+  ## [ws * sin(psi) * sin(delta) + cos(psi) * cos(delta) * sin(ws)]
+  angles = omega_s * np.sin(psi) * np.sin(delta) + np.cos(psi) * np.cos(delta) * np.sin(omega_s)
+  RA = ((24*60)/np.pi) * Gsc * dr * angles
+
+  df = pd.DataFrame()
+  df['RA'] = RA
+  df['J'] = J
+  df['J']= df['J'].astype(int)
+  return df
+
+
+def calculate_PET(daily_data_df, latitude):#gage, p, tmin = 'tmin', tmax = 'tmax', tmean = 'tmean'):
+    if 'tmax' and 'tmin' not in daily_data_df['band'].unique():
+        sys.exit("'PET cannot be calsculated because PRISM temperature was not extracted.'")  
+    else:
+        # Get temperatures from prism
+        prism_df = daily_data_df[daily_data_df['asset_name'] == 'prism']
+        pet_df = pd.DataFrame()
+        pet_df['tmax'] = prism_df[prism_df['band'] == 'tmax']['value'].values
+        pet_df['tmin'] = prism_df[prism_df['band'] == 'tmin']['value'].values
+        pet_df['date'] = pd.to_datetime(prism_df[prism_df['band'] == 'tmin']['date']).values
+
+        # get RA (extraterrestrial radiation) with julian day column
+        RA_df = getRA(latitude)
+        pet_df['J'] = pd.to_datetime(pet_df['date']).dt.strftime('%j')
+        pet_df['J'] = pet_df['J'].astype(int)
+        
+        # merge prism df with RA
+        pet_df = pet_df.merge(RA_df, how='left', on=['J'])
+
+        # calculate PET (Hargreave and Semani 1985)
+        # Ep = 0.0023 · (Tmean + 17.8)·(Tmax - Tmin)^0.5 · 0.408 · Rext
+        Krs = 0.0023 # Erica changed this from 0.00023 on Oct 15, 2021
+        pet_df['PET'] = Krs * pet_df['RA'] * np.sqrt(pet_df['tmax'] - pet_df['tmin']) * (((pet_df['tmin']+pet_df['tmax'])/2) + 17.8)
+    
+        return pet_df
+"""      

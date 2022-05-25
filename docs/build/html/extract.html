@@ -190,32 +190,110 @@ df: long-style pandas df of extracted df.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="extract.watershed.access_data">
 <span class="sig-prename descclassname"><span class="pre">extract.watershed.</span></span><span class="sig-name descname"><span class="pre">access_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">gage</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#extract.watershed.access_data" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Return relevant urls for a USGS gage.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>gage</strong> (<em>str</em><em> or </em><em>int</em>) – USGS 8-number gage ID. If int, leading 0s will automatically be added.</p></li>
+<li><p><strong>**kwargs</strong> – flow_start_date (default: ‘1980-10-01’) and flow_end_date (default: ‘2021-10-01’).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>4 URLS, (1) to access basin lat/long geometry. (2) to access geometry of flowline (i.e. rivers) lat/long geometry. (3) to access basin metadata. (4) to access basin discharge timeseries (between the dates of <a href="#id1"><span class="problematic" id="id2">**</span></a>kwargs).</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="extract.watershed.flowline_geometry">
 <span class="sig-prename descclassname"><span class="pre">extract.watershed.</span></span><span class="sig-name descname"><span class="pre">flowline_geometry</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">gage</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#extract.watershed.flowline_geometry" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Get geopandas dataframe of USGS basin flowline geometry for plotting.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>gage</strong> (<em>str</em><em> or </em><em>int</em>) – USGS 8-number gage ID. If int, leading 0s will automatically be added.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>geopandas dataframe with geometry of flowlines (rivers) for plotting.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">df</span></code></p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="extract.watershed.geometry">
 <span class="sig-prename descclassname"><span class="pre">extract.watershed.</span></span><span class="sig-name descname"><span class="pre">geometry</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">gage</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#extract.watershed.geometry" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Get the geometry of a USGS gage in Google Earth Engine (GEE) form and as a geopandas dataframe.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>gage</strong> (<em>str</em><em> or </em><em>int</em>) – USGS 8-number gage ID. If int, leading 0s will automatically be added.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>GEE feature containing the basin’s exterior polygon coordinates and geopandas dataframe containing the basin’s coordinates.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">feature</span></code> and  <code class="xref py py-obj docutils literal notranslate"><span class="pre">gdf</span></code></p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="extract.watershed.latitude">
 <span class="sig-prename descclassname"><span class="pre">extract.watershed.</span></span><span class="sig-name descname"><span class="pre">latitude</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">gage</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#extract.watershed.latitude" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Get the latitude of the centroid of the USGS gage for calculating PET.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>gage</strong> (<em>str</em><em> or </em><em>int</em>) – USGS 8-number gage ID. If int, leading 0s will automatically be added.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>latitude</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="extract.watershed.metadata">
 <span class="sig-prename descclassname"><span class="pre">extract.watershed.</span></span><span class="sig-name descname"><span class="pre">metadata</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">gage</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#extract.watershed.metadata" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Get metadata for a USGS gage.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>gage</strong> (<em>str</em><em> or </em><em>int</em>) – USGS 8-number gage ID. If int, leading 0s will automatically be added.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>2 strings: (1) USGS long-name of gage. (2) description of the form ‘USGS Basin + gage ID + imported at + site_name + CRS: + coordinate system</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="extract.watershed.streamflow">
 <span class="sig-prename descclassname"><span class="pre">extract.watershed.</span></span><span class="sig-name descname"><span class="pre">streamflow</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">gage</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#extract.watershed.streamflow" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Get a dataframe with streamflow (i.e. discharge) for a USGS gage. Units are converted to mm using the area of the basin, calculated from the exterior geometry.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>gage</strong> (<em>str</em><em> or </em><em>int</em>) – USGS 8-number gage ID. If int, leading 0s will automatically be added.</p></li>
+<li><p><strong>**kwargs</strong> – flow_start_date (default: ‘1980-10-01’) and flow_end_date (default: ‘2021-10-01’).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>dataframe with daiy discharge (Q) in units of cfs, m3/day, m, and mm.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">df</span></code></p>
+</dd>
+</dl>
+</dd></dl>
 
 </div>
 <div class="section" id="module-extract">

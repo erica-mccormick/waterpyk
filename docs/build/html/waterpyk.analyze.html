@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>waterpyk &mdash; WaterPyk 0.1.0 documentation</title>
+  <title>waterpyk.analyze package &mdash; WaterPyk 0.1.0 documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -17,8 +17,8 @@
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="run module" href="run.html" />
-    <link rel="prev" title="API" href="api.html" /> 
+    <link rel="next" title="waterpyk.extract package" href="waterpyk.extract.html" />
+    <link rel="prev" title="waterpyk package" href="waterpyk.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -38,10 +38,18 @@
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="api.html">API</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">waterpyk</a><ul>
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">waterpyk</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="run.html">run module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="setup.html">setup module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="waterpyk.html">waterpyk package</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="waterpyk.html">waterpyk package</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="waterpyk.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l4 current"><a class="current reference internal" href="#">waterpyk.analyze package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="waterpyk.extract.html">waterpyk.extract package</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="waterpyk.html#module-contents">Module contents</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -60,9 +68,11 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
-      <li>waterpyk</li>
+          <li><a href="modules.html">waterpyk</a> &raquo;</li>
+          <li><a href="waterpyk.html">waterpyk package</a> &raquo;</li>
+      <li>waterpyk.analyze package</li>
       <li class="wy-breadcrumbs-aside">
-            <a href="_sources/modules.rst.txt" rel="nofollow"> View page source</a>
+            <a href="_sources/waterpyk.analyze.rst.txt" rel="nofollow"> View page source</a>
       </li>
   </ul>
   <hr/>
@@ -70,36 +80,25 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <div class="section" id="waterpyk">
-<h1>waterpyk<a class="headerlink" href="#waterpyk" title="Permalink to this headline"></a></h1>
-<div class="toctree-wrapper compound">
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="run.html">run module</a></li>
-<li class="toctree-l1"><a class="reference internal" href="setup.html">setup module</a></li>
-<li class="toctree-l1"><a class="reference internal" href="waterpyk.html">waterpyk package</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="waterpyk.html#subpackages">Subpackages</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="waterpyk.analyze.html">waterpyk.analyze package</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="waterpyk.analyze.html#submodules">Submodules</a></li>
-<li class="toctree-l4"><a class="reference internal" href="waterpyk.analyze.html#waterpyk-analyze-classes-module">waterpyk.analyze.classes module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="waterpyk.analyze.html#waterpyk-analyze-massbalance-module">waterpyk.analyze.massbalance module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="waterpyk.analyze.html#waterpyk-analyze-plot-module">waterpyk.analyze.plot module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="waterpyk.analyze.html#waterpyk-analyze-unused-module">waterpyk.analyze.unused module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="waterpyk.analyze.html#module-contents">Module contents</a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="waterpyk.extract.html">waterpyk.extract package</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="waterpyk.extract.html#submodules">Submodules</a></li>
-<li class="toctree-l4"><a class="reference internal" href="waterpyk.extract.html#waterpyk-extract-gee-module">waterpyk.extract.gee module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="waterpyk.extract.html#waterpyk-extract-watershed-module">waterpyk.extract.watershed module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="waterpyk.extract.html#module-contents">Module contents</a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="waterpyk.html#module-contents">Module contents</a></li>
-</ul>
-</li>
-</ul>
+  <div class="section" id="waterpyk-analyze-package">
+<h1>waterpyk.analyze package<a class="headerlink" href="#waterpyk-analyze-package" title="Permalink to this headline"></a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline"></a></h2>
+</div>
+<div class="section" id="waterpyk-analyze-classes-module">
+<h2>waterpyk.analyze.classes module<a class="headerlink" href="#waterpyk-analyze-classes-module" title="Permalink to this headline"></a></h2>
+</div>
+<div class="section" id="waterpyk-analyze-massbalance-module">
+<h2>waterpyk.analyze.massbalance module<a class="headerlink" href="#waterpyk-analyze-massbalance-module" title="Permalink to this headline"></a></h2>
+</div>
+<div class="section" id="waterpyk-analyze-plot-module">
+<h2>waterpyk.analyze.plot module<a class="headerlink" href="#waterpyk-analyze-plot-module" title="Permalink to this headline"></a></h2>
+</div>
+<div class="section" id="waterpyk-analyze-unused-module">
+<h2>waterpyk.analyze.unused module<a class="headerlink" href="#waterpyk-analyze-unused-module" title="Permalink to this headline"></a></h2>
+</div>
+<div class="section" id="module-contents">
+<h2>Module contents<a class="headerlink" href="#module-contents" title="Permalink to this headline"></a></h2>
 </div>
 </div>
 
@@ -107,8 +106,8 @@
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="api.html" class="btn btn-neutral float-left" title="API" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="run.html" class="btn btn-neutral float-right" title="run module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="waterpyk.html" class="btn btn-neutral float-left" title="waterpyk package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="waterpyk.extract.html" class="btn btn-neutral float-right" title="waterpyk.extract package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
