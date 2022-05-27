@@ -19,6 +19,7 @@ default_kwarg_dictionary = {
         'color_D': 'black',
         'color_Dwy':'black',
         'color_ET': 'purple',
+        'color_WY': False,
         'markeredgecolor': 'black',
         'linestyle_PET':'-',
         'linestyle_Q':'-',
@@ -97,7 +98,7 @@ def plot_timeseries(studyareaobject = None, df_daily_wide = None, df_timeseries 
     if plot_kwargs['plot_Dwy']:
         ax.plot(df_d['date'], df_d['D_wy'], plot_kwargs['linestyle_Dwy'], color=plot_kwargs['color_Dwy'], lw = plot_kwargs['lw'], label=r'$\mathrm{D}_{wy}\/\mathrm{(mm)}$')
     ax.set_xlim(pd.to_datetime(plot_kwargs['xmin'], exact = False), pd.to_datetime(plot_kwargs['xmax'], exact = False))
-    if plot_kwargs['title'] is not None: fig.suptitle(plot_kwargs['title'])
+    if plot_kwargs['title'] is not None: ax.set_title(plot_kwargs['title'])
     if plot_kwargs['legend'] == True: ax.legend(loc = 'best')
     ax.set_xlabel(plot_kwargs['xlabel'])
     ax.set_ylabel(plot_kwargs['ylabel'])
@@ -148,7 +149,7 @@ def plot_wateryear_totals(studyareaobject = None, df_wateryear_totals = None, **
     if plot_kwargs['plot_ET_dry']:
         ax2.plot(df['wateryear'], df['ET_summer'], ':o', color = plot_kwargs['color_ET'], lw = plot_kwargs['lw'], markeredgecolor = plot_kwargs['markeredgecolor'], label = r'$\mathrm{ET}_{dry}\/\mathrm{(mm)}$')
     ax.set_xlim(plot_kwargs['xmin'], plot_kwargs['xmax'])
-    if plot_kwargs['title'] is not None: fig.suptitle(plot_kwargs['title'])
+    if plot_kwargs['title'] is not None: ax.set_title(plot_kwargs['title'])
     if plot_kwargs['legend']: ax.legend(loc = 'best')
     ax.set_xlabel(plot_kwargs['xlabel'])
     ax.set_ylabel(plot_kwargs['ylabel'])
@@ -166,12 +167,12 @@ def plot_spearman(studyareaobject = None, df_wateryear_totals = None, **plot_kwa
         print('No data was specified for plotting')
 
     # Get kwargs set up
-    updated_kwargs = {'xmin':0, 'xmax':3000}
+    updated_kwargs = {'xmin':0, 'xmax':3000, 'color_WY': True}
     default_kwargs = {**default_kwarg_dictionary, **updated_kwargs}    
     plot_kwargs = {**default_kwargs, **plot_kwargs}     
 
     fig, ax = plt.subplots(dpi=plot_kwargs['dpi'], figsize = plot_kwargs['figsize'])
-    ax.plot(df['P'], df['ET_summer'], 'o', color = '#a4a5ab', markersize = 12, lw = plot_kwargs['lw'],  markeredgecolor = plot_kwargs['markeredgecolor'], label = '')
+
     plot_kwargs['xlabel'] = r'$\mathrm{P}_{wy}\/\mathrm{(mm)}$'
     plot_kwargs['ylabel'] = r'$\mathrm{ET}_{dry}\/\mathrm{(mm)}$'
     plot_kwargs['legend'] = False
@@ -184,11 +185,17 @@ def plot_spearman(studyareaobject = None, df_wateryear_totals = None, **plot_kwa
     ax.set_xlim(plot_kwargs['xmin'], plot_kwargs['xmax'])
     ax.set_xlabel(plot_kwargs['xlabel'])
     ax.set_ylabel(plot_kwargs['ylabel'])
-    if plot_kwargs['title'] is not None: fig.suptitle(plot_kwargs['title'])
+    if plot_kwargs['title'] is not None: ax.set_title(plot_kwargs['title'])
     if plot_kwargs['legend']: ax.legend(loc = 'best')
     ax.set_xlabel(plot_kwargs['xlabel'])
     ax.set_ylabel(plot_kwargs['ylabel'])
-        
+    if plot_kwargs['color_WY']:
+        cax = fig.add_axes([0.14, 0.15, 0.05, 0.70]) #[left, bottom, width, height]
+        my_cmap = plt.get_cmap('tab20', 17)
+        im = ax.scatter(df['P'], df['ET_summer'], c = df.wateryear, vmin=2004, vmax=2021, cmap = my_cmap, s = 150, edgecolor = 'black')
+        fig.colorbar(im, cax=cax, orientation='vertical', spacing='proportional')
+    else:
+        ax.plot(df['P'], df['ET_summer'], 'o', color = '#a4a5ab', markersize = 12, lw = plot_kwargs['lw'],  markeredgecolor = plot_kwargs['markeredgecolor'], label = '')
     return fig
 
 
@@ -213,7 +220,7 @@ def plot_RWS(studyareaobject = None, df_deficit =  None, **plot_kwargs):
 
     ax.plot(df_d['date'], df_d['RWS'], plot_kwargs['linestyle_D'], color=plot_kwargs['color_D'], lw = plot_kwargs['lw'], label=r'$\mathrm{RWS(t)}\/\mathrm{(mm)}$')
     ax.set_xlim(pd.to_datetime(plot_kwargs['xmin'], exact = False), pd.to_datetime(plot_kwargs['xmax'], exact = False))
-    if plot_kwargs['title'] is not None: fig.suptitle(plot_kwargs['title'])
+    if plot_kwargs['title'] is not None: ax.set_title(plot_kwargs['title'])
     if plot_kwargs['legend']: ax.legend(loc = 'best')
     ax.set_xlabel(plot_kwargs['xlabel'])
     ax.set_ylabel(plot_kwargs['ylabel'])

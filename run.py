@@ -32,12 +32,13 @@ if __name__ == "__main__":
         plt.savefig('figs/' + figname + '_pdistribution.png')
         
     gage = [11475560]
-    #coords = [39.7273, -123.6433] #rivendell
+    coords = [39.7273, -123.6433] #rivendell
     #coords = [43.463, -124.111] # oregon
     #coords = [43.46347, -124.11239] #where daniella is now
-    coords = [40.007, -105.493] #gordon gulch
+    #coords = [40.007, -105.493] #gordon gulch
 
     rivendell = main.StudyArea(coords, layers)
     print('Smax:', rivendell.smax)
     print('MAP:', rivendell.MAP)
-    make_all_plots(studyareaobject = rivendell, figname = 'Gordon Gulch')
+    #make_all_plots(studyareaobject = rivendell, figname = 'Rivendell')
+
