@@ -1,26 +1,7 @@
-waterpyk package
+waterpyk modules
 ================
 
-Submodules
-----------
-
-waterpyk.calcs module
----------------------
-
-.. automodule:: waterpyk.calcs
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-waterpyk.extract module
------------------------
-
-.. automodule:: waterpyk.extract
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-waterpyk.main module
+waterpyk.main
 --------------------
 
 .. automodule:: waterpyk.main
@@ -28,18 +9,26 @@ waterpyk.main module
    :undoc-members:
    :show-inheritance:
 
-waterpyk.plots module
----------------------
+waterpyk.extract
+-----------------------
 
-.. automodule:: waterpyk.plots
+.. automodule:: waterpyk.extract
    :members:
    :undoc-members:
    :show-inheritance:
 
-Module contents
----------------
+waterpyk.calcs
+---------------------
 
-.. automodule:: waterpyk
+.. automodule:: waterpyk.calcs
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+waterpyk.plots
+---------------------
+
+.. automodule:: waterpyk.plots
    :members:
    :undoc-members:
    :show-inheritance:

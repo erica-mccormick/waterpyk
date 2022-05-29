@@ -15,8 +15,3 @@ WaterPyk: Choose a place and get some data!
    readme
    waterpyk
 
-Indices and tables
-==================
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`

@@ -39,10 +39,11 @@
               <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul class="current">
 <li class="toctree-l1 current"><a class="current reference internal" href="#">ReadMe</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#here-are-some-of-the-things-waterpyk-can-do">Here are some of the things waterpyk can do:</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#get-started">Get started</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#what-waterpyk-can-do">What waterpyk can do</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#contact">Contact</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="#for-more-information">For more information:</a></li>
 <li class="toctree-l1"><a class="reference internal" href="waterpyk.html">waterpyk package</a></li>
 </ul>
 
@@ -72,15 +73,28 @@
              
   <div class="section" id="readme">
 <h1>ReadMe<a class="headerlink" href="#readme" title="Permalink to this headline"></a></h1>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>This project is under active development.</p>
-</div>
 <p>waterpyk is a simple package for extracting data from the <a class="reference external" href="https://developers.google.com/earth-engine/guides/getstarted">Google Earth Engine</a> (GEE) and USGS APIs and performing simple water-balance analyses.
-All you need to begin is a lat/long or a <cite>USGS gauge ID`_</cite> to start.</p>
+All you need to begin is a lat/long or a <a class="reference external" href="https://waterdata.usgs.gov/nwis/rt">USGS gauge ID</a> to start.</p>
 <p>For more information on the root-zone water storage capacity and deficit, see <a class="reference external" href="https://ericamccormick.com/pdfs/Dralle2021_HESS.pdf">Dralle et al., 2021</a>, <a class="reference external" href="https://ericamccormick.com/pdfs/McCormick_Nature2021.pdf">McCormick et al., 2021</a>, and <a class="reference external" href="https://eartharxiv.org/repository/view/3356/">Rempe, McCormick et al. (in prep)</a>.</p>
-<div class="section" id="here-are-some-of-the-things-waterpyk-can-do">
-<h2>Here are some of the things waterpyk can do:<a class="headerlink" href="#here-are-some-of-the-things-waterpyk-can-do" title="Permalink to this headline"></a></h2>
+<div class="section" id="get-started">
+<h2>Get started<a class="headerlink" href="#get-started" title="Permalink to this headline"></a></h2>
+<p>Install waterpyk:
+TBD.</p>
+<p>To get all of the available data and plots for a site, simply supply a list of coordinates (such as <code class="docutils literal notranslate"><span class="pre">[lat,</span> <span class="pre">long]</span></code> or [<code class="docutils literal notranslate"><span class="pre">gaugeID</span></code>]):</p>
+<p><code class="docutils literal notranslate"><span class="pre">from</span> <span class="pre">waterpyk</span> <span class="pre">install</span> <span class="pre">main</span></code></p>
+<p><code class="docutils literal notranslate"><span class="pre">yoursitename</span> <span class="pre">=</span> <span class="pre">main.StudyArea(COORDS)</span></code></p>
+<p>All of the dataframes will now be available in the form of:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">yoursitename.deficit_timeseries</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">yoursitename.daily_df_wide</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">yoursitename.streamflow</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">yoursitename.wateryear_totals</span></code></p></li>
+</ul>
+<p>You can also use <code class="docutils literal notranslate"><span class="pre">yoursite.describe</span></code> to see more information, or <code class="docutils literal notranslate"><span class="pre">yoursite.smax</span></code> to see Smax.</p>
+<p>To plot, simply use <code class="docutils literal notranslate"><span class="pre">yoursite.plot(kind</span> <span class="pre">=</span> <span class="pre">###)</span></code> and supply a string for which kind (see below).</p>
+</div>
+<div class="section" id="what-waterpyk-can-do">
+<h2>What waterpyk can do<a class="headerlink" href="#what-waterpyk-can-do" title="Permalink to this headline"></a></h2>
 <ul class="simple">
 <li><p>Download timeseries of GEE assets and:</p>
 <ul>
@@ -95,7 +109,7 @@ All you need to begin is a lat/long or a <cite>USGS gauge ID`_</cite> to start.<
 <li><p>Boundary and flowline geometry (as GEE or geopandas format)</p></li>
 <li><p>Metadata (such as CRS, name, and gauge ID)</p></li>
 <li><p>Daily discharge (in native units, and converted to mm)</p></li>
-<li><p>Cenroid latitude (for calculation of Hargreaves PET)</p></li>
+<li><p>Centroid latitude (for calculation of Hargreaves PET)</p></li>
 <li><p>URLs necessary to access all of the above directly</p></li>
 </ul>
 </li>
@@ -105,18 +119,22 @@ All you need to begin is a lat/long or a <cite>USGS gauge ID`_</cite> to start.<
 <ul>
 <li><p>Wateryear cumulative timeseries (<code class="docutils literal notranslate"><span class="pre">kind</span> <span class="pre">=</span> <span class="pre">'wateryear'</span></code>)</p></li>
 <li><p>Daily timeseries, with options (<code class="docutils literal notranslate"><span class="pre">kind</span> <span class="pre">=</span> <span class="pre">'timeseries'</span></code>)</p></li>
-<li><p>Summer ET vs wateryear P, with calculation of the Spearman rank correlation coefficient (<code class="docutils literal notranslate"><span class="pre">kind</span> <span class="pre">=</span> <span class="pre">'spearman'</span></code>)</p></li>
+<li><p>Plot &amp; calculate Spearman correlation coefficient for summer ET and wateryear P (<code class="docutils literal notranslate"><span class="pre">kind</span> <span class="pre">=</span> <span class="pre">'spearman'</span></code>)</p></li>
 <li><p>RWS capacity (Smax) relative to P distribution (<code class="docutils literal notranslate"><span class="pre">kind</span> <span class="pre">=</span> <span class="pre">'distribution'</span></code>)</p></li>
 <li><p>RWS timeseries (<code class="docutils literal notranslate"><span class="pre">kind</span> <span class="pre">=</span> <span class="pre">'RWS'</span></code>)</p></li>
 </ul>
 </li>
 </ul>
 </div>
-</div>
-<div class="section" id="for-more-information">
-<h1>For more information:<a class="headerlink" href="#for-more-information" title="Permalink to this headline"></a></h1>
+<div class="section" id="contact">
+<h2>Contact<a class="headerlink" href="#contact" title="Permalink to this headline"></a></h2>
 <p>This is a work in progress and is primarily intended for the Rempe Lab Group and co-authors.
 For more information, contact Erica McCormick at <a class="reference external" href="mailto:erica&#46;mccormick&#37;&#52;&#48;utexas&#46;edu">erica<span>&#46;</span>mccormick<span>&#64;</span>utexas<span>&#46;</span>edu</a> or the email address given on her <a class="reference external" href="https://www.ericamccormick.com">homepage</a>.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This project is under active development.</p>
+</div>
+</div>
 </div>
 
 

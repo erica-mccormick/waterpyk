@@ -1,15 +1,36 @@
-.. note::
 
-   This project is under active development.
 
 waterpyk is a simple package for extracting data from the `Google Earth Engine`_ (GEE) and USGS APIs and performing simple water-balance analyses.
 All you need to begin is a lat/long or a `USGS gauge ID`_ to start.
 
 For more information on the root-zone water storage capacity and deficit, see `Dralle et al., 2021`_, `McCormick et al., 2021`_, and `Rempe, McCormick et al. (in prep)`_.
 
+Get started
+***************
 
-Here are some of the things waterpyk can do:
-********************************************
+Install waterpyk:
+TBD.
+
+To get all of the available data and plots for a site, simply supply a list of coordinates (such as ``[lat, long]`` or [``gaugeID``]):
+
+``from waterpyk install main``
+
+``yoursitename = main.StudyArea(COORDS)``
+
+All of the dataframes will now be available in the form of:
+
+* ``yoursitename.deficit_timeseries``
+* ``yoursitename.daily_df_wide``
+* ``yoursitename.streamflow``
+* ``yoursitename.wateryear_totals``
+
+You can also use ``yoursite.describe`` to see more information, or ``yoursite.smax`` to see Smax.
+
+To plot, simply use ``yoursite.plot(kind = ###)`` and supply a string for which kind (see below).
+
+
+What waterpyk can do
+*********************
 
 * Download timeseries of GEE assets and:
 
@@ -50,11 +71,15 @@ Here are some of the things waterpyk can do:
   * RWS timeseries (``kind = 'RWS'``)
 
 
-For more information:
-=====================
+Contact
+*******
 
 This is a work in progress and is primarily intended for the Rempe Lab Group and co-authors.
 For more information, contact Erica McCormick at erica.mccormick@utexas.edu or the email address given on her `homepage`_.
+
+.. note::
+
+   This project is under active development.
 
 
 .. _Dralle et al., 2021: https://ericamccormick.com/pdfs/Dralle2021_HESS.pdf

@@ -24,8 +24,8 @@ setup(
         "Programming Language :: Python :: 3.7",
     ],
     packages= find_packages(),
-    include_package_data=True,
-    #install_requires=[],
+    include_package_data= True,
+    install_requires=['<geopandas>'],
     #entry_points={
     #    "console_scripts": [
     #        "realpython=reader.__main__:main",
