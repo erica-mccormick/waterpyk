@@ -1,5 +1,4 @@
 affine==2.3.0
-aiohttp @ file:///Users/runner/miniforge3/conda-bld/aiohttp_1623682531455/work
 alabaster==0.7.12
 altair==4.1.0
 anyio @ file:///Users/runner/miniforge3/conda-bld/anyio_1626998615142/work/dist
