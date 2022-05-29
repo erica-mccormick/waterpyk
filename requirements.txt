@@ -38,7 +38,7 @@ contextily==1.2.0
 cryptography==3.4.7
 cycler==0.10.0
 dacite==1.6.0
-dataclasses==0.8
+dataclasses==0.6
 datacommons==1.4.3
 datacommons-pandas==0.0.3
 datapane==0.12.0
