@@ -5,16 +5,14 @@
 # Required
 version: 2
 
-conda:
-  environment: ENV.yaml
+build:
+  os: "ubuntu-20.04"
+  tools:
+    python: "mambaforge-4.10"
 
-python:
-  version: 3.9
-  install:
-    - method: pip
-      path: .
-      extra_requirements:
-          - rtd
+conda:
+  environment: environment.yml
+
 # Build documentation in the docs/ directory with Sphinx
 sphinx:
    configuration: docs/conf.py
