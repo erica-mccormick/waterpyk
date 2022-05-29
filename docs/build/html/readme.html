@@ -38,7 +38,11 @@
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul class="current">
-<li class="toctree-l1 current"><a class="current reference internal" href="#">ReadMe</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">ReadMe</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#here-are-some-of-the-things-waterpyk-can-do">Here are some of the things waterpyk can do:</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="#for-more-information">For more information:</a></li>
 <li class="toctree-l1"><a class="reference internal" href="waterpyk.html">waterpyk package</a></li>
 </ul>
 
@@ -68,9 +72,51 @@
              
   <div class="section" id="readme">
 <h1>ReadMe<a class="headerlink" href="#readme" title="Permalink to this headline"></a></h1>
-<p>README
-===</p>
-<p>Modules for extracting Google Earth Engine and USGS data at a single lat/long or watershed and performing methods detailed in [Dralle et al., 2021](<a class="reference external" href="https://ericamccormick.com/pdfs/Dralle2021_HESS.pdf">https://ericamccormick.com/pdfs/Dralle2021_HESS.pdf</a>); [McCormick et al., 2021](<a class="reference external" href="https://ericamccormick.com/pdfs/McCormick_Nature2021.pdf">https://ericamccormick.com/pdfs/McCormick_Nature2021.pdf</a>); and [Rempe-McCormick et al. (in prep)]().</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This project is under active development.</p>
+</div>
+<p>waterpyk is a simple package for extracting data from the <a class="reference external" href="https://developers.google.com/earth-engine/guides/getstarted">Google Earth Engine</a> (GEE) and USGS APIs and performing simple water-balance analyses.
+All you need to begin is a lat/long or a <cite>USGS gauge ID`_</cite> to start.</p>
+<p>For more information on the root-zone water storage capacity and deficit, see <a class="reference external" href="https://ericamccormick.com/pdfs/Dralle2021_HESS.pdf">Dralle et al., 2021</a>, <a class="reference external" href="https://ericamccormick.com/pdfs/McCormick_Nature2021.pdf">McCormick et al., 2021</a>, and <a class="reference external" href="https://eartharxiv.org/repository/view/3356/">Rempe, McCormick et al. (in prep)</a>.</p>
+<div class="section" id="here-are-some-of-the-things-waterpyk-can-do">
+<h2>Here are some of the things waterpyk can do:<a class="headerlink" href="#here-are-some-of-the-things-waterpyk-can-do" title="Permalink to this headline"></a></h2>
+<ul class="simple">
+<li><p>Download timeseries of GEE assets and:</p>
+<ul>
+<li><p>Combining bands</p></li>
+<li><p>Applying a scaling factor</p></li>
+<li><p>Interpolating to daily</p></li>
+</ul>
+</li>
+<li><p>Download streamflow for gauged watersheds</p></li>
+<li><p>Download watershed information, such as:</p>
+<ul>
+<li><p>Boundary and flowline geometry (as GEE or geopandas format)</p></li>
+<li><p>Metadata (such as CRS, name, and gauge ID)</p></li>
+<li><p>Daily discharge (in native units, and converted to mm)</p></li>
+<li><p>Cenroid latitude (for calculation of Hargreaves PET)</p></li>
+<li><p>URLs necessary to access all of the above directly</p></li>
+</ul>
+</li>
+<li><p>Calculate cumulative and total wateryear timeseries</p></li>
+<li><p>Calculate the root-zone water storage (RWS) deficit</p></li>
+<li><p>Create 4 figures, out of the box, with P, ET, Q, and deficit data, including:</p>
+<ul>
+<li><p>Wateryear cumulative timeseries (<code class="docutils literal notranslate"><span class="pre">kind</span> <span class="pre">=</span> <span class="pre">'wateryear'</span></code>)</p></li>
+<li><p>Daily timeseries, with options (<code class="docutils literal notranslate"><span class="pre">kind</span> <span class="pre">=</span> <span class="pre">'timeseries'</span></code>)</p></li>
+<li><p>Summer ET vs wateryear P, with calculation of the Spearman rank correlation coefficient (<code class="docutils literal notranslate"><span class="pre">kind</span> <span class="pre">=</span> <span class="pre">'spearman'</span></code>)</p></li>
+<li><p>RWS capacity (Smax) relative to P distribution (<code class="docutils literal notranslate"><span class="pre">kind</span> <span class="pre">=</span> <span class="pre">'distribution'</span></code>)</p></li>
+<li><p>RWS timeseries (<code class="docutils literal notranslate"><span class="pre">kind</span> <span class="pre">=</span> <span class="pre">'RWS'</span></code>)</p></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="for-more-information">
+<h1>For more information:<a class="headerlink" href="#for-more-information" title="Permalink to this headline"></a></h1>
+<p>This is a work in progress and is primarily intended for the Rempe Lab Group and co-authors.
+For more information, contact Erica McCormick at <a class="reference external" href="mailto:erica&#46;mccormick&#37;&#52;&#48;utexas&#46;edu">erica<span>&#46;</span>mccormick<span>&#64;</span>utexas<span>&#46;</span>edu</a> or the email address given on her <a class="reference external" href="https://www.ericamccormick.com">homepage</a>.</p>
 </div>
 
 

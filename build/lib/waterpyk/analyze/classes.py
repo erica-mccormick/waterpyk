@@ -1,13 +1,25 @@
 
 import geopandas as gpd
+import urllib
+import json
 import ee
-ee.Initialize()
 import pandas as pd
+import numpy as np
+import datetime
+import warnings
 from time import time
+
+warnings.filterwarnings("ignore")
+ee.Initialize()
+import matplotlib
+import matplotlib.pyplot as plt
+from scipy import stats
+import sys
 import os
 
-from waterpyk import default_saving_dir, in_colab_shell # Determine default saving behavior
-from waterpyk import extract, calcs, plots
+from waterpyk.extract import gee, watershed
+from waterpyk.analyze import analyses, plots
+from waterpyk import default_saving_dir, in_colab_shell
 
 class StudyArea:
         
@@ -54,8 +66,8 @@ class StudyArea:
         # Use the watershed package to get the geometries and metadata for a USGS gauged watershed
         elif self.kind == 'watershed':
             gage = str(self.coords[0])
-            site_name, description = extract.watershed_metadata(gage)
-            gee_feature, gpd_geometry = extract.watershed_geometry(gage)
+            site_name, description = watershed.metadata(gage)
+            gee_feature, gpd_geometry = watershed.geometry(gage)
         
         self.site_name = site_name
         self.description = description
@@ -92,30 +104,31 @@ class StudyArea:
             if layers is None:
                 print('No layers were specified for extraction and data is not already available.')
             try:
-                df_long = extract.gee_extract(layers, self.gee_feature, self.kind, **kwargs)
+                df_long = gee.extract_assets_at_site(layers, self.gee_feature, self.kind, **kwargs)
             except AttributeError:
                 StudyArea.get_location(self, **kwargs)
-                df_long = extract.gee_extract(layers, self.gee_feature, self.kind, **kwargs)
+                df_long = gee.extract_assets_at_site(layers, self.gee_feature, self.kind, **kwargs)
         
             ### Convert dataframe to wide format using **kwargs
-            df_wide = calcs.make_wide_df(df_long, **kwargs)
+            df_wide = analyses.make_wide_df(df_long, **kwargs)
             
             ### If deficit data types are given, merge deficit data
-            df_deficit = calcs.deficit(df_long, df_wide, **kwargs)
+            df_deficit = analyses.calculate_deficit(df_long, df_wide, **kwargs)
             df_deficit_min = df_deficit.date.min()
             df_deficit_max = df_deficit.date.max()
             
-            df_wide = calcs.merge(df_wide, df_deficit, 'deficit')
+            df_wide = analyses.merge_wide_deficit(df_wide, df_deficit)
             
             ### If kind = watershed, get and merge streamflow data
             if self.kind == 'watershed':
                 gage = self.coords[0]
-                df_streamflow = extract.streamflow(gage, **kwargs)
-                df_wide = calcs.merge(df_wide, df_streamflow, 'streamflow')
+                df_streamflow = watershed.streamflow(gage, **kwargs)
+                df_wide = analyses.merge_wide_streamflow(df_wide, df_streamflow, q_column_name = 'Q_mm')
+
             else: df_streamflow = pd.DataFrame()
             
             ### Create wateryear cumulative and total dataframes
-            df_wide, df_total = calcs.wateryear(df_wide)
+            df_wide, df_total = analyses.wateryear(df_wide)
 
             ### Save data (just long df for GoogleColab and all data otherwise)
             print("\nSaving all dataframes at:\n\t% s" % os.path.abspath(self.saving_path))
@@ -145,7 +158,9 @@ class StudyArea:
     def describe(self):
         """
         Print statements describing StudyArea attributes and deficit parameters, if deficit was calculated.
-        
+
+        Args:
+            self
         Returns:
             printed statement
         """

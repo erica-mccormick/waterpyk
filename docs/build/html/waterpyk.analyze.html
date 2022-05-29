@@ -36,20 +36,23 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="api.html">API</a></li>
-<li class="toctree-l1 current"><a class="reference internal" href="modules.html">waterpyk</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="run.html">run module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="setup.html">setup module</a></li>
-<li class="toctree-l2 current"><a class="reference internal" href="waterpyk.html">waterpyk package</a><ul class="current">
-<li class="toctree-l3 current"><a class="reference internal" href="waterpyk.html#subpackages">Subpackages</a><ul class="current">
-<li class="toctree-l4 current"><a class="current reference internal" href="#">waterpyk.analyze package</a></li>
-<li class="toctree-l4"><a class="reference internal" href="waterpyk.extract.html">waterpyk.extract package</a></li>
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="readme.html">ReadMe</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="waterpyk.html">waterpyk package</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="waterpyk.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l3 current"><a class="current reference internal" href="#">waterpyk.analyze package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-waterpyk.analyze.analyses">waterpyk.analyze.analyses module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-waterpyk.analyze.classes">waterpyk.analyze.classes module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-waterpyk.analyze.plots">waterpyk.analyze.plots module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-waterpyk.analyze">Module contents</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="waterpyk.html#module-contents">Module contents</a></li>
+<li class="toctree-l3"><a class="reference internal" href="waterpyk.extract.html">waterpyk.extract package</a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="waterpyk.html#module-waterpyk">Module contents</a></li>
 </ul>
 </li>
 </ul>
@@ -68,7 +71,6 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="modules.html">waterpyk</a> &raquo;</li>
           <li><a href="waterpyk.html">waterpyk package</a> &raquo;</li>
       <li>waterpyk.analyze package</li>
       <li class="wy-breadcrumbs-aside">
@@ -85,20 +87,258 @@
 <div class="section" id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline"></a></h2>
 </div>
-<div class="section" id="waterpyk-analyze-classes-module">
-<h2>waterpyk.analyze.classes module<a class="headerlink" href="#waterpyk-analyze-classes-module" title="Permalink to this headline"></a></h2>
+<div class="section" id="module-waterpyk.analyze.analyses">
+<span id="waterpyk-analyze-analyses-module"></span><h2>waterpyk.analyze.analyses module<a class="headerlink" href="#module-waterpyk.analyze.analyses" title="Permalink to this headline"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="waterpyk.analyze.analyses.calculate_deficit">
+<span class="sig-prename descclassname"><span class="pre">waterpyk.analyze.analyses.</span></span><span class="sig-name descname"><span class="pre">calculate_deficit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df_long</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">df_wide</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#waterpyk.analyze.analyses.calculate_deficit" title="Permalink to this definition"></a></dt>
+<dd><p>Calculate D(t) after McCormick et al., 2021 and Dralle et al., 2020.
+Uses extract_asset() and make_combined_df().</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>df_long</strong> – original long-style dataframe with snow, P, and ET data at a minimum</p></li>
+<li><p><strong>df_wide</strong> – dataframe created from make_wide_df(). (default = None, in which case new df_wide is created from df_long using default args). This dataframe must have ET, P, and wateryear columns.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="simple">
+<dt>Kwargs:</dt><dd><p>interp: (default: True), currently no option to change to False.
+combine_ET_bands: (default True) add ET bands to make one ET band.
+bands_to_combine: (default [Es, Ec]) ET bands to combine
+band_names_combined: (default ET) name of combined ET band
+et_asset: (default pml) ET dataset to use for deficit calculation, if multiple are given
+et_band: (default ET) band from ET dataset to use for deficit calculation, if multiple are given
+ppt_asset: (default prism) precipitation dataset to use for deficit calculation, if multiple are given
+ppt_band: (default ppt) precipitation dataset to use for deficit calculation, if multiple are given
+snow_correction: (default True) use snow correction factor when calculating deficit
+snow_frac: (default 10) set all ET when snow is greater than this (%) to 0 if snow_correction = True</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>dataframe with root-zone water storage deficit data where deficit is column ‘D’ and wateryear deficit is ‘D_wy’.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>df_deficit</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="waterpyk.analyze.analyses.deficit_bursts">
+<span class="sig-prename descclassname"><span class="pre">waterpyk.analyze.analyses.</span></span><span class="sig-name descname"><span class="pre">deficit_bursts</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#waterpyk.analyze.analyses.deficit_bursts" title="Permalink to this definition"></a></dt>
+<dd><p>Get a dataframe with the length and maximum deficit of each “burst” (i.e. deficits that are continuously above zero).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>df</strong> (<code class="xref py py-obj docutils literal notranslate"><span class="pre">df</span></code>) – dataframe with columns for date and D (for deficit), at minimum.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>dataframe with columns for start and end dates, and max_D [mm], duration [days] and start and end wateryear of each burst.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">df</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="waterpyk.analyze.analyses.make_wide_df">
+<span class="sig-prename descclassname"><span class="pre">waterpyk.analyze.analyses.</span></span><span class="sig-name descname"><span class="pre">make_wide_df</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df_long</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pivot_all</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#waterpyk.analyze.analyses.make_wide_df" title="Permalink to this definition"></a></dt>
+<dd><p>Uses ET and P asset and band names (designated in <a href="#id1"><span class="problematic" id="id2">**</span></a>kwargs) to return a wide-form dataframe with columns:
+date, ET, Ei, P, and P-Ei (where Ei is the interception band from PML and is only extracted if it exists). merge_wide_streamflow() can then be used to merge with streamflow df.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>df_long</strong> – dataframe such as that produced by extract_assets_at_site() where columns contain asset_name, band, and value.</p></li>
+<li><p><strong>pivot_all</strong> (<em>bool</em>) – NOT FUNCTIONAL YET (default = False). Eventually will skip the <a href="#id3"><span class="problematic" id="id4">**</span></a>kwargs and pivot al data to wide format.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="simple">
+<dt>Kwargs:</dt><dd><p>et_asset (str): asset to be used for creation of ET column (default ‘pml’).
+et_band (str): band name to be used for creation of ET column (default ‘ET’).
+ppt_asset (str): asset name for precipitation column (default ‘prism’).
+ppt_band (str): band name for precipitation colum (default ‘ppt’)</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>wide-form dataframe with columns for date, ET, Ei, P, and P-Ei (where Ei is the interception band from PML and is only included if it exists.)</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>df_wide</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="waterpyk.analyze.analyses.merge_wide_deficit">
+<span class="sig-prename descclassname"><span class="pre">waterpyk.analyze.analyses.</span></span><span class="sig-name descname"><span class="pre">merge_wide_deficit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df_wide</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">df_deficit</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#waterpyk.analyze.analyses.merge_wide_deficit" title="Permalink to this definition"></a></dt>
+<dd><p>Merge df_wide (dataframe with columns representing variable names) with deficit dataframe, which contains ‘date’, ‘D’, and ‘D_wy’ columns.
+:param df_wide: wide-form dataframe with ‘date’ column and other columns with variable names (ie ET, P, etc)
+:param df_deficit: dataframe with deficit and wateryear deficit (D and D_wy). Must contain ‘date’ column.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>merged input dataframes.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>df_wide</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="waterpyk.analyze.analyses.merge_wide_streamflow">
+<span class="sig-prename descclassname"><span class="pre">waterpyk.analyze.analyses.</span></span><span class="sig-name descname"><span class="pre">merge_wide_streamflow</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df_wide</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">df_streamflow</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">q_column_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Q_mm'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#waterpyk.analyze.analyses.merge_wide_streamflow" title="Permalink to this definition"></a></dt>
+<dd><p>Merge df_wide (dataframe with columns representing variable names) with streamflow dataframe.
+:param df_wide: wide-form dataframe with ‘date’ column and other columns with variable names (ie ET, P, etc)
+:param df_streamflow: dataframe with streamflow extracted from the USGS containing columns for ‘date’ and ‘Q_mm’ at least.
+:param q_column_name: Name of the streamflow column in df_streamflow that you wish to merge (default: ‘Q_mm’).
+:type q_column_name: str</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>merged input dataframes.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>df_wide</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="waterpyk.analyze.analyses.wateryear">
+<span class="sig-prename descclassname"><span class="pre">waterpyk.analyze.analyses.</span></span><span class="sig-name descname"><span class="pre">wateryear</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df_wide</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#waterpyk.analyze.analyses.wateryear" title="Permalink to this definition"></a></dt>
+<dd><p>Create total and cumulative wateryear dataframes for all variables (ie columns) given in df_wide.
+:param df_wide: wide-form dataframe with ‘date’ column and other columns with variable names (i.e. ET, P, Q_mm, etc.) This dataframe can also have D, D_wy, Q_mm, etc merged into it.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>original wide-form dataframe with added columns (in the naming form of ORIGINALNAME_cumulative) with cumulative wateryear values. For example, if ‘P’ was in original dataframe, then ‘P_cumulative’ now exists. If ‘Q_mm’ was in dataframe, then ‘Q_mm_cumulative’ now exists.
+df_total: dataframe with one row for each wateryear with columns such as wateryear, ET, P, D_wy_max, ET_summer, Q_mm, etc, which represent the total (or maximum, for D_wy_max) wateryear sum.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>df_wide</p>
+</dd>
+</dl>
+</dd></dl>
+
 </div>
-<div class="section" id="waterpyk-analyze-massbalance-module">
-<h2>waterpyk.analyze.massbalance module<a class="headerlink" href="#waterpyk-analyze-massbalance-module" title="Permalink to this headline"></a></h2>
+<div class="section" id="module-waterpyk.analyze.classes">
+<span id="waterpyk-analyze-classes-module"></span><h2>waterpyk.analyze.classes module<a class="headerlink" href="#module-waterpyk.analyze.classes" title="Permalink to this headline"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="waterpyk.analyze.classes.StudyArea">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">waterpyk.analyze.classes.</span></span><span class="sig-name descname"><span class="pre">StudyArea</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">coords</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">layers</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">saving_dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'data/output'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#waterpyk.analyze.classes.StudyArea" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="waterpyk.analyze.classes.StudyArea.describe">
+<span class="sig-name descname"><span class="pre">describe</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#waterpyk.analyze.classes.StudyArea.describe" title="Permalink to this definition"></a></dt>
+<dd><p>Print statements describing StudyArea attributes and deficit parameters, if deficit was calculated.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>self</strong> – </p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>printed statement</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="waterpyk.analyze.classes.StudyArea.get_data">
+<span class="sig-name descname"><span class="pre">get_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">layers</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#waterpyk.analyze.classes.StudyArea.get_data" title="Permalink to this definition"></a></dt>
+<dd><p>Updates self with attributes containing dataframes for the site. If data already exists in saving_dir, data is simply loaded. Otherwise, data from layers is extracted from GEE and the USGS.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>layers</strong> (<code class="xref py py-obj docutils literal notranslate"><span class="pre">df</span></code>) – dataframe with list and details of GEE assets to extract.</p></li>
+<li><p><strong>**kwargs</strong> (<em>optional</em>) – see init.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="waterpyk.analyze.classes.StudyArea.get_kind">
+<span class="sig-name descname"><span class="pre">get_kind</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#waterpyk.analyze.classes.StudyArea.get_kind" title="Permalink to this definition"></a></dt>
+<dd><p>Adds attribute of point or watershed to object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>self</strong> – </p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>self with added attribute self.kind</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>self</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="waterpyk.analyze.classes.StudyArea.get_location">
+<span class="sig-name descname"><span class="pre">get_location</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#waterpyk.analyze.classes.StudyArea.get_location" title="Permalink to this definition"></a></dt>
+<dd><p>Convert coordinates to GEE feature. For a USGS watershed, coordinates are extracted from website using gage ID.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>self</strong> – </p></li>
+<li><p><strong>site_name</strong> (<em>str</em>) – (optional) (for lat/long sites; default is blank and watersheds are already named)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>self
+gee_feature</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="waterpyk.analyze.classes.StudyArea.plot">
+<span class="sig-name descname"><span class="pre">plot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">kind</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#waterpyk.analyze.classes.StudyArea.plot" title="Permalink to this definition"></a></dt>
+<dd><p>Make common plots of the data specifying what ‘kind’ of plot.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>kind</strong> (<em>str</em>) – timeseries, spearman, wateryear, and RWS.</p></li>
+<li><p><strong>**kwargs</strong> (<em>optional</em>) – Plotting kwargs. See wateryear.plot for defaults and options.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
 </div>
-<div class="section" id="waterpyk-analyze-plot-module">
-<h2>waterpyk.analyze.plot module<a class="headerlink" href="#waterpyk-analyze-plot-module" title="Permalink to this headline"></a></h2>
+<div class="section" id="module-waterpyk.analyze.plots">
+<span id="waterpyk-analyze-plots-module"></span><h2>waterpyk.analyze.plots module<a class="headerlink" href="#module-waterpyk.analyze.plots" title="Permalink to this headline"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="waterpyk.analyze.plots.plot_RWS">
+<span class="sig-prename descclassname"><span class="pre">waterpyk.analyze.plots.</span></span><span class="sig-name descname"><span class="pre">plot_RWS</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">studyareaobject</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">df_deficit</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">plot_kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#waterpyk.analyze.plots.plot_RWS" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="waterpyk.analyze.plots.plot_p_distribution">
+<span class="sig-prename descclassname"><span class="pre">waterpyk.analyze.plots.</span></span><span class="sig-name descname"><span class="pre">plot_p_distribution</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">studyareaobject</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">df_wateryear_totals</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">smax</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">plot_kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#waterpyk.analyze.plots.plot_p_distribution" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="waterpyk.analyze.plots.plot_spearman">
+<span class="sig-prename descclassname"><span class="pre">waterpyk.analyze.plots.</span></span><span class="sig-name descname"><span class="pre">plot_spearman</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">studyareaobject</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">df_wateryear_totals</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">plot_kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#waterpyk.analyze.plots.plot_spearman" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="waterpyk.analyze.plots.plot_timeseries">
+<span class="sig-prename descclassname"><span class="pre">waterpyk.analyze.plots.</span></span><span class="sig-name descname"><span class="pre">plot_timeseries</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">studyareaobject</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">df_daily_wide</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">df_timeseries</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">plot_kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#waterpyk.analyze.plots.plot_timeseries" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="waterpyk.analyze.plots.plot_wateryear_totals">
+<span class="sig-prename descclassname"><span class="pre">waterpyk.analyze.plots.</span></span><span class="sig-name descname"><span class="pre">plot_wateryear_totals</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">studyareaobject</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">df_wateryear_totals</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">plot_kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#waterpyk.analyze.plots.plot_wateryear_totals" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
 </div>
-<div class="section" id="waterpyk-analyze-unused-module">
-<h2>waterpyk.analyze.unused module<a class="headerlink" href="#waterpyk-analyze-unused-module" title="Permalink to this headline"></a></h2>
-</div>
-<div class="section" id="module-contents">
-<h2>Module contents<a class="headerlink" href="#module-contents" title="Permalink to this headline"></a></h2>
+<div class="section" id="module-waterpyk.analyze">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-waterpyk.analyze" title="Permalink to this headline"></a></h2>
 </div>
 </div>
 

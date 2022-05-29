@@ -35,20 +35,24 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="api.html">API</a></li>
-<li class="toctree-l1 current"><a class="reference internal" href="modules.html">waterpyk</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="run.html">run module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="setup.html">setup module</a></li>
-<li class="toctree-l2 current"><a class="reference internal" href="waterpyk.html">waterpyk package</a><ul class="current">
-<li class="toctree-l3 current"><a class="reference internal" href="waterpyk.html#subpackages">Subpackages</a><ul class="current">
-<li class="toctree-l4"><a class="reference internal" href="waterpyk.analyze.html">waterpyk.analyze package</a></li>
-<li class="toctree-l4 current"><a class="current reference internal" href="#">waterpyk.extract package</a></li>
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="readme.html">ReadMe</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="waterpyk.html">waterpyk package</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="waterpyk.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="waterpyk.analyze.html">waterpyk.analyze package</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">waterpyk.extract package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-waterpyk.extract.gee">waterpyk.extract.gee module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-waterpyk.extract.watershed">waterpyk.extract.watershed module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-waterpyk.extract">Module contents</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="waterpyk.html#module-contents">Module contents</a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="waterpyk.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="waterpyk.html#waterpyk-run-module">waterpyk.run module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="waterpyk.html#module-waterpyk">Module contents</a></li>
 </ul>
 </li>
 </ul>
@@ -67,7 +71,6 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="modules.html">waterpyk</a> &raquo;</li>
           <li><a href="waterpyk.html">waterpyk package</a> &raquo;</li>
       <li>waterpyk.extract package</li>
       <li class="wy-breadcrumbs-aside">
@@ -84,14 +87,220 @@
 <div class="section" id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline"></a></h2>
 </div>
-<div class="section" id="waterpyk-extract-gee-module">
-<h2>waterpyk.extract.gee module<a class="headerlink" href="#waterpyk-extract-gee-module" title="Permalink to this headline"></a></h2>
+<div class="section" id="module-waterpyk.extract.gee">
+<span id="waterpyk-extract-gee-module"></span><h2>waterpyk.extract.gee module<a class="headerlink" href="#module-waterpyk.extract.gee" title="Permalink to this headline"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="waterpyk.extract.gee.combine_bands">
+<span class="sig-prename descclassname"><span class="pre">waterpyk.extract.gee.</span></span><span class="sig-name descname"><span class="pre">combine_bands</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bands_to_combine</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">band_name_final</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#waterpyk.extract.gee.combine_bands" title="Permalink to this definition"></a></dt>
+<dd><p>Defaults to add together soil and vegetation ET bands (Es and Ec) for PML to create ET band.
+Can be customized to add any bands together to create a new band.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>bands_to_combine</strong> (<em>list of str</em>) – list of strings of band names (example: [‘Es’, ‘Ec’]) to combine into a single band</p></li>
+<li><p><strong>band_name_final</strong> (<em>str</em>) – the final band name to be stored in the ‘band’ column of the final dataframe, where the ‘value’ column will contain the added values from bands_to_combine</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>input long-form dataframe with appended section which contains date, asset_name, value, band, and value_raw (set to np.nan) columns with data from combined</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>df</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="waterpyk.extract.gee.extract_assets_at_site">
+<span class="sig-prename descclassname"><span class="pre">waterpyk.extract.gee.</span></span><span class="sig-name descname"><span class="pre">extract_assets_at_site</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">layers</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gee_feature</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kind</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reducer_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#waterpyk.extract.gee.extract_assets_at_site" title="Permalink to this definition"></a></dt>
+<dd><p>Extract data at site for several assets at once. Uses extract_single_asset_for_site().</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>layers</strong> – pandas df with the following columns, which are the same as the arguments for extract_single_asset_for_site():
+asset_id: GEE asset identification string
+start_date: format mm/dd/yyy or similiar date format
+end_date: format mm/dd/yyyy or similiar date format
+scale (int): scale in meters for GEE reducer function
+bands (list of str): bands of GEE asset to extract
+bands_to_scale (list of str, optional): bands for which each value will be multiplied by scaling_factor.
+scaling_factor (float, optional): scaling factor to apply to all values in bands_to_scale</p></li>
+<li><p><strong>gee_feature</strong> – GEE feature for region geometry</p></li>
+<li><p><strong>kind</strong> (<em>str</em>) – ‘point’ or ‘watershed’</p></li>
+<li><p><strong>reducer_type</strong> – defaults to None, in which case GEE reduceRegion reducer function is first() and mean() for points and watersheds, respectively. See GEE documentation for more available types.</p></li>
+<li><p><strong>**kwargs</strong> (<em>optional</em>) – interp (bool): (default: True), currently no option to change to False.
+combine_ET_bands (bool): (default True) add ET bands to make one ET band.
+bands_to_combine (list of str): (default [Es, Ec]) ET bands to combine
+band_names_combined (str): (default ‘ET’) name of combined ET band</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>with added attribute self.extracted_data (i.e. df), self.available_data, self.layers_info, self.start_date, self.end_date
+df: long-style pandas df of extracted df.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>self</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="waterpyk.extract.gee.extract_single_asset_at_site">
+<span class="sig-prename descclassname"><span class="pre">waterpyk.extract.gee.</span></span><span class="sig-name descname"><span class="pre">extract_single_asset_at_site</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">gee_feature</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kind</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">asset_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start_date</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">end_date</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scale</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bands</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bands_to_scale</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scaling_factor</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reducer_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#waterpyk.extract.gee.extract_single_asset_at_site" title="Permalink to this definition"></a></dt>
+<dd><p>Extract data from start_date to end_date for an asset_id.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>gee_feature</strong> – GEE feature for region geometry</p></li>
+<li><p><strong>kind</strong> (<em>str</em>) – ‘point’ or ‘watershed’</p></li>
+<li><p><strong>asset_id</strong> (<em>str</em>) – GEE asset identification string</p></li>
+<li><p><strong>start_date</strong> (<em>str</em>) – format mm/dd/yyy or similiar date format</p></li>
+<li><p><strong>end_date</strong> (<em>str</em>) – format mm/dd/yyyy or similiar date format</p></li>
+<li><p><strong>scale</strong> (<em>int</em>) – scale in meters for GEE reducer function</p></li>
+<li><p><strong>bands</strong> (<em>list of str</em>) – bands of GEE asset to extract</p></li>
+<li><p><strong>bands_to_scale</strong> (<em>list of str</em><em>, </em><em>optional</em>) – bands for which each value will be multiplied by scaling_factor.</p></li>
+<li><p><strong>scaling_factor</strong> (<em>float</em><em>, </em><em>optional</em>) – scaling factor to apply to all values in bands_to_scale</p></li>
+<li><p><strong>reducer_type</strong> (<em>function</em><em>, </em><em>optional</em>) – reducer_type defaults to first() for points and mean() for watersheds. See available gee ReduceRegion options online for other possible inputs.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>pandas dataframe of all extracted data</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>df</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="waterpyk.extract.gee.interp_columns_daily">
+<span class="sig-prename descclassname"><span class="pre">waterpyk.extract.gee.</span></span><span class="sig-name descname"><span class="pre">interp_columns_daily</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#waterpyk.extract.gee.interp_columns_daily" title="Permalink to this definition"></a></dt>
+<dd><p>Interpolate all data to daily.
+:param df: initial long-form dataframe for a single asset (may contain multiple bands) with column ‘value’ for interpolating</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>pandas dataframe with ‘value’ column containing daily interpolated daily</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>df_interp</p>
+</dd>
+</dl>
+</dd></dl>
+
 </div>
-<div class="section" id="waterpyk-extract-watershed-module">
-<h2>waterpyk.extract.watershed module<a class="headerlink" href="#waterpyk-extract-watershed-module" title="Permalink to this headline"></a></h2>
+<div class="section" id="module-waterpyk.extract.watershed">
+<span id="waterpyk-extract-watershed-module"></span><h2>waterpyk.extract.watershed module<a class="headerlink" href="#module-waterpyk.extract.watershed" title="Permalink to this headline"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="waterpyk.extract.watershed.flowline_geometry">
+<span class="sig-prename descclassname"><span class="pre">waterpyk.extract.watershed.</span></span><span class="sig-name descname"><span class="pre">flowline_geometry</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">gage</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#waterpyk.extract.watershed.flowline_geometry" title="Permalink to this definition"></a></dt>
+<dd><p>Get geopandas dataframe of USGS basin flowline geometry for plotting.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>gage</strong> (<em>str</em><em> or </em><em>int</em>) – USGS 8-number gage ID. If int, leading 0s will automatically be added.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>geopandas dataframe with geometry of flowlines (rivers) for plotting.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">df</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="waterpyk.extract.watershed.geometry">
+<span class="sig-prename descclassname"><span class="pre">waterpyk.extract.watershed.</span></span><span class="sig-name descname"><span class="pre">geometry</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">gage</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#waterpyk.extract.watershed.geometry" title="Permalink to this definition"></a></dt>
+<dd><p>Get the geometry of a USGS gage in Google Earth Engine (GEE) form and as a geopandas dataframe.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>gage</strong> (<em>str</em><em> or </em><em>int</em>) – USGS 8-number gage ID. If int, leading 0s will automatically be added.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>GEE feature containing the basin’s exterior polygon coordinates and geopandas dataframe containing the basin’s coordinates.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">feature</span></code> and  <code class="xref py py-obj docutils literal notranslate"><span class="pre">gdf</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="waterpyk.extract.watershed.latitude">
+<span class="sig-prename descclassname"><span class="pre">waterpyk.extract.watershed.</span></span><span class="sig-name descname"><span class="pre">latitude</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">gage</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#waterpyk.extract.watershed.latitude" title="Permalink to this definition"></a></dt>
+<dd><p>Get the latitude of the centroid of the USGS gage for calculating PET.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>gage</strong> (<em>str</em><em> or </em><em>int</em>) – USGS 8-number gage ID. If int, leading 0s will automatically be added.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>latitude</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="waterpyk.extract.watershed.metadata">
+<span class="sig-prename descclassname"><span class="pre">waterpyk.extract.watershed.</span></span><span class="sig-name descname"><span class="pre">metadata</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">gage</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#waterpyk.extract.watershed.metadata" title="Permalink to this definition"></a></dt>
+<dd><p>Get metadata for a USGS gage.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>gage</strong> (<em>str</em><em> or </em><em>int</em>) – USGS 8-number gage ID. If int, leading 0s will automatically be added.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>2 strings: (1) USGS long-name of gage. (2) description of the form ‘USGS Basin + gage ID + imported at + site_name + CRS: + coordinate system</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="waterpyk.extract.watershed.streamflow">
+<span class="sig-prename descclassname"><span class="pre">waterpyk.extract.watershed.</span></span><span class="sig-name descname"><span class="pre">streamflow</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">gage</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#waterpyk.extract.watershed.streamflow" title="Permalink to this definition"></a></dt>
+<dd><p>Get a dataframe with streamflow (i.e. discharge) for a USGS gage. Units are converted to mm using the area of the basin, calculated from the exterior geometry.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>gage</strong> (<em>str</em><em> or </em><em>int</em>) – USGS 8-number gage ID. If int, leading 0s will automatically be added.</p></li>
+<li><p><strong>**kwargs</strong> – flow_start_date (default: ‘1980-10-01’) and flow_end_date (default: ‘2021-10-01’).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>dataframe with daiy discharge (Q) in units of cfs, m3/day, m, and mm.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">df</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="waterpyk.extract.watershed.urls">
+<span class="sig-prename descclassname"><span class="pre">waterpyk.extract.watershed.</span></span><span class="sig-name descname"><span class="pre">urls</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">gage</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#waterpyk.extract.watershed.urls" title="Permalink to this definition"></a></dt>
+<dd><p>Return relevant urls for a USGS gage.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>gage</strong> (<em>str</em><em> or </em><em>int</em>) – USGS 8-number gage ID. If int, leading 0s will automatically be added.</p></li>
+<li><p><strong>**kwargs</strong> – flow_start_date (default: ‘1980-10-01’) and flow_end_date (default: ‘2021-10-01’).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>4 URLS, (1) to access basin lat/long geometry. (2) to access geometry of flowline (i.e. rivers) lat/long geometry. (3) to access basin metadata. (4) to access basin discharge timeseries (between the dates of <a href="#id1"><span class="problematic" id="id2">**</span></a>kwargs).</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
 </div>
-<div class="section" id="module-contents">
-<h2>Module contents<a class="headerlink" href="#module-contents" title="Permalink to this headline"></a></h2>
+<div class="section" id="module-waterpyk.extract">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-waterpyk.extract" title="Permalink to this headline"></a></h2>
 </div>
 </div>
 

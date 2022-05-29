@@ -128,7 +128,9 @@ def wateryear(df_wide):
         
     return df_wide, df_total
     
-    
+
+
+
 def calculate_deficit(df_long, df_wide = None, **kwargs):
     """
     Calculate D(t) after McCormick et al., 2021 and Dralle et al., 2020.

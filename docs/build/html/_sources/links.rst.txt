@@ -1,0 +1,5 @@
+.. _Dralle et al., 2021: https://ericamccormick.com/pdfs/Dralle2021_HESS.pdf
+.. _Rempe, McCormick et al. (in prep): https://eartharxiv.org/repository/view/3356/
+.. _McCormick et al., 2021: https://ericamccormick.com/pdfs/McCormick_Nature2021.pdf
+.. _USGS gauge ID: https://waterdata.usgs.gov/nwis/rt
+.. _Google Earth Engine: https://developers.google.com/earth-engine/guides/getstarted

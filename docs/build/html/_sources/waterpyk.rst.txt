@@ -4,26 +4,18 @@ waterpyk package
 Submodules
 ----------
 
-waterpyk.analyses module
-------------------------
+waterpyk.calcs module
+---------------------
 
-.. automodule:: waterpyk.analyses
+.. automodule:: waterpyk.calcs
    :members:
    :undoc-members:
    :show-inheritance:
 
-waterpyk.extract\_gee module
-----------------------------
+waterpyk.extract module
+-----------------------
 
-.. automodule:: waterpyk.extract_gee
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-waterpyk.extract\_watershed module
-----------------------------------
-
-.. automodule:: waterpyk.extract_watershed
+.. automodule:: waterpyk.extract
    :members:
    :undoc-members:
    :show-inheritance:

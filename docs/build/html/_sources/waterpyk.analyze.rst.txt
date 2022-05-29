@@ -4,6 +4,14 @@ waterpyk.analyze package
 Submodules
 ----------
 
+waterpyk.analyze.analyses module
+--------------------------------
+
+.. automodule:: waterpyk.analyze.analyses
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 waterpyk.analyze.classes module
 -------------------------------
 
@@ -12,26 +20,10 @@ waterpyk.analyze.classes module
    :undoc-members:
    :show-inheritance:
 
-waterpyk.analyze.massbalance module
------------------------------------
+waterpyk.analyze.plots module
+-----------------------------
 
-.. automodule:: waterpyk.analyze.massbalance
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-waterpyk.analyze.plot module
-----------------------------
-
-.. automodule:: waterpyk.analyze.plot
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-waterpyk.analyze.unused module
-------------------------------
-
-.. automodule:: waterpyk.analyze.unused
+.. automodule:: waterpyk.analyze.plots
    :members:
    :undoc-members:
    :show-inheritance:

@@ -1,13 +1,8 @@
 
 import pandas as pd
-import seaborn as sns
 import matplotlib.pyplot as plt
-import matplotlib
-from scipy import stats
 
-#from __init__ import default_saving_dir
-from waterpyk import main, analyses
-from waterpyk.main import default_saving_dir
+from waterpyk import main
 
 if __name__ == "__main__":
         
@@ -43,7 +38,7 @@ if __name__ == "__main__":
     #print('MAP:', rivendell.MAP)
     make_all_plots(studyareaobject = rivendell, figname = 'Rivendell')
     
-    
+    """
     #### Working on the bursts ###
     df = rivendell.daily_df_wide
     print(df)
@@ -87,6 +82,6 @@ if __name__ == "__main__":
     burstdf = burstdf.set_index(burstdf['end'])
     burstdf['end_wateryear'] = np.where(~burstdf.index.month.isin([10,11,12]),burstdf.index.year,burstdf.index.year+1)
     burstdf = burstdf.reset_index(drop=True)
-
+    """
     
 
