@@ -1,0 +1,8 @@
+name: pyk
+channels:
+  - defaults
+  - conda-forge
+dependencies:
+  - python=3.8
+  - geopandas=0.10.2
+prefix: /Applications/anaconda3/envs/pyk
