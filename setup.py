@@ -23,7 +23,8 @@ setup(
         "Programming Language :: Python :: 3",
         "Programming Language :: Python :: 3.7",
     ],
-    packages= find_packages(),
+    package_dir={"": "waterpyk"},  # Optional
+    packages=find_packages(where="waterpyk"),  # Required
     include_package_data= True,
     #install_requires=['<geopandas>'],
     #entry_points={
