@@ -25,7 +25,7 @@ setup(
     ],
     packages= find_packages(),
     include_package_data= True,
-    install_requires=['<geopandas>'],
+    #install_requires=['<geopandas>'],
     #entry_points={
     #    "console_scripts": [
     #        "realpython=reader.__main__:main",
