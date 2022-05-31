@@ -5,5 +5,5 @@ channels:
 dependencies:
   - python=3.8
   - geopandas=0.10.2
-  
+  - earthengine-api==0.1.311
 prefix: /Applications/anaconda3/envs/pyk
