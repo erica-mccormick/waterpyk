@@ -1,0 +1,16 @@
+LICENSE
+MANIFEST.in
+README.rst
+setup.py
+waterpyk/__init__.py
+waterpyk/calcs.py
+waterpyk/gee.py
+waterpyk/main.py
+waterpyk/plots.py
+waterpyk/watershed.py
+waterpyk.egg-info/PKG-INFO
+waterpyk.egg-info/SOURCES.txt
+waterpyk.egg-info/dependency_links.txt
+waterpyk.egg-info/top_level.txt
+waterpyk/layers_data/all.csv
+waterpyk/layers_data/minimal.csv

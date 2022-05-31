@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>waterpyk package &mdash; WaterPyk 0.1.0 documentation</title>
+  <title>waterpyk package &mdash; WaterPyk 0.2.0 documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -39,14 +39,19 @@
               <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="readme.html">ReadMe</a></li>
+<li class="toctree-l1"><a class="reference internal" href="readme.html#waterpyk">waterpyk</a></li>
+<li class="toctree-l1"><a class="reference internal" href="readme.html#get-started">Get started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="readme.html#read-the-docs">Read the docs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="readme.html#what-waterpyk-can-do">What waterpyk can do</a></li>
+<li class="toctree-l1"><a class="reference internal" href="readme.html#contact">Contact</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">waterpyk package</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#submodules">Submodules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#module-waterpyk.calcs">waterpyk.calcs module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#module-waterpyk.gee">waterpyk.gee module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#module-waterpyk.main">waterpyk.main module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#module-waterpyk.plots">waterpyk.plots module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#module-waterpyk.watershed">waterpyk.watershed module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#module-waterpyk">Module contents</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-waterpyk.main">waterpyk.main</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-waterpyk.gee">waterpyk.gee</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-waterpyk.watershed">waterpyk.watershed</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-waterpyk.calcs">waterpyk.calcs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-waterpyk.plots">waterpyk.plots</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-waterpyk">waterpyk</a></li>
 </ul>
 </li>
 </ul>
@@ -80,222 +85,11 @@
 <section id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline"></a></h2>
 </section>
-<section id="module-waterpyk.calcs">
-<span id="waterpyk-calcs-module"></span><h2>waterpyk.calcs module<a class="headerlink" href="#module-waterpyk.calcs" title="Permalink to this headline"></a></h2>
-<dl class="py function">
-<dt class="sig sig-object py" id="waterpyk.calcs.combine_bands">
-<span class="sig-prename descclassname"><span class="pre">waterpyk.calcs.</span></span><span class="sig-name descname"><span class="pre">combine_bands</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bands_to_combine</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">band_name_final</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#waterpyk.calcs.combine_bands" title="Permalink to this definition"></a></dt>
-<dd><p>Defaults to add together soil and vegetation ET bands (Es and Ec) for PML to create ET band.
-Can be customized to add any bands together to create a new band.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>bands_to_combine</strong> (<em>list of str</em>) – list of strings of band names (example: [‘Es’, ‘Ec’]) to combine into a single band</p></li>
-<li><p><strong>band_name_final</strong> (<em>str</em>) – the final band name to be stored in the ‘band’ column of the final dataframe, where the ‘value’ column will contain the added values from bands_to_combine</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>long-form dataframe from input with appended section which contains date, asset_name, value, band, and value_raw (set to np.nan) columns with data from combined</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">df</span></code></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="waterpyk.calcs.deficit">
-<span class="sig-prename descclassname"><span class="pre">waterpyk.calcs.</span></span><span class="sig-name descname"><span class="pre">deficit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df_long</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">df_wide</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#waterpyk.calcs.deficit" title="Permalink to this definition"></a></dt>
-<dd><p>Calculate D(t) after McCormick et al., 2021 and Dralle et al., 2020.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>df_long</strong> (<code class="xref py py-obj docutils literal notranslate"><span class="pre">df</span></code>) – original long-style dataframe with snow, P, and ET data at a minimum</p></li>
-<li><p><strong>df_wide</strong> (<code class="xref py py-obj docutils literal notranslate"><span class="pre">df</span></code>) – dataframe created from make_wide_df(). (default = None, in which case new df_wide is created from df_long using default args). This dataframe must have ET, P, and wateryear columns.</p></li>
-<li><p><strong>**interp</strong> – (bool, optional): default: True. Currently no option to change to False.</p></li>
-<li><p><strong>**combine_ET_bands</strong> (<em>bool</em><em>, </em><em>optional</em>) – (default True) add ET bands to make one ET band.</p></li>
-<li><p><strong>**bands_to_combine</strong> (<em>list of str</em><em>, </em><em>optional</em>) – (default [Es, Ec]) ET bands to combine</p></li>
-<li><p><strong>**band_names_combined</strong> (<em>str</em><em>, </em><em>optional</em>) – (default ET) name of combined ET band</p></li>
-<li><p><strong>**et_asset</strong> (<em>str</em><em>, </em><em>optional</em>) – (default pml) ET dataset to use for deficit calculation, if multiple are given</p></li>
-<li><p><strong>**et_band</strong> (<em>str</em><em>, </em><em>optional</em>) – (default ET) band from ET dataset to use for deficit calculation, if multiple are given</p></li>
-<li><p><strong>**ppt_asset</strong> (<em>str</em><em>, </em><em>optional</em>) – (default prism) precipitation dataset to use for deficit calculation, if multiple are given</p></li>
-<li><p><strong>**ppt_band</strong> (<em>str</em><em>, </em><em>optional</em>) – (default ppt) precipitation dataset to use for deficit calculation, if multiple are given</p></li>
-<li><p><strong>**snow_band</strong> (<em>str</em><em>, </em><em>optional</em>) – defaults to ‘snow’. Note: You will need to change this if you don’t specify to change the default name of this asset upon extraction.</p></li>
-<li><p><strong>**snow_correction</strong> (<em>bool</em><em>, </em><em>optional</em>) – (default True) use snow correction factor when calculating deficit</p></li>
-<li><p><strong>**snow_correction</strong> – (default True) use snow correction factor when calculating deficit</p></li>
-<li><p><strong>**snow_frac</strong> (<em>int</em><em>, </em><em>optional</em>) – (default 10) set all ET when snow is greater than this (%) to 0 if snow_correction = True</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>dataframe with root-zone water storage deficit data where deficit is column ‘D’ and wateryear deficit is ‘D_wy’.</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">df</span></code></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="waterpyk.calcs.deficit_bursts">
-<span class="sig-prename descclassname"><span class="pre">waterpyk.calcs.</span></span><span class="sig-name descname"><span class="pre">deficit_bursts</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#waterpyk.calcs.deficit_bursts" title="Permalink to this definition"></a></dt>
-<dd><p>Still under development!! Get a dataframe with the length and maximum deficit of each “burst” (i.e. deficits that are continuously above zero).</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>df</strong> (<code class="xref py py-obj docutils literal notranslate"><span class="pre">df</span></code>) – dataframe with columns for date and D (for deficit), at minimum.</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>dataframe with columns for start and end dates, and max_D [mm], duration [days] and start and end wateryear of each burst.</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">df</span></code></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="waterpyk.calcs.interp_daily">
-<span class="sig-prename descclassname"><span class="pre">waterpyk.calcs.</span></span><span class="sig-name descname"><span class="pre">interp_daily</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#waterpyk.calcs.interp_daily" title="Permalink to this definition"></a></dt>
-<dd><p>Interpolate all data to daily.</p>
-<p>:param <code class="xref py py-obj docutils literal notranslate"><span class="pre">df</span></code>: initial long-form dataframe for a single asset (may contain multiple bands) with column ‘value’ for interpolating</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>dataframe with ‘value’ column containing daily interpolated daily</p>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">df</span></code></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="waterpyk.calcs.make_wide_df">
-<span class="sig-prename descclassname"><span class="pre">waterpyk.calcs.</span></span><span class="sig-name descname"><span class="pre">make_wide_df</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df_long</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#waterpyk.calcs.make_wide_df" title="Permalink to this definition"></a></dt>
-<dd><p>Uses ET and P asset and band names (designated in <a href="#id1"><span class="problematic" id="id2">**</span></a>kwargs) to return a wide-form dataframe with columns:
-date, ET, Ei, P, and P-Ei (where Ei is the interception band from PML and is only extracted if it exists). merge_wide_streamflow() can then be used to merge with streamflow df.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>df_long</strong> – dataframe such as that produced by extract_assets_at_site() where columns contain asset_name, band, and value.</p></li>
-<li><p><strong>**et_asset</strong> (<em>str</em><em>, </em><em>optional</em>) – asset to be used for creation of ET column (default ‘pml’).</p></li>
-<li><p><strong>**et_band</strong> (<em>str</em><em>, </em><em>optional</em>) – band name to be used for creation of ET column (default ‘ET’).</p></li>
-<li><p><strong>**ppt_asset</strong> (<em>str</em><em>, </em><em>optional</em>) – asset name for precipitation column (default ‘prism’).</p></li>
-<li><p><strong>**ppt_band</strong> (<em>str</em><em>, </em><em>optional</em>) – band name for precipitation colum (default ‘ppt’)</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>wide-form dataframe with columns for date, ET, Ei, P, and P-Ei (where Ei is the interception band from PML and is only included if it exists.)</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">df</span></code></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="waterpyk.calcs.merge">
-<span class="sig-prename descclassname"><span class="pre">waterpyk.calcs.</span></span><span class="sig-name descname"><span class="pre">merge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df_wide</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">df_merge</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">merge_with</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">column_names</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#waterpyk.calcs.merge" title="Permalink to this definition"></a></dt>
-<dd><p>Merge df_wide (dataframe with columns representing variable names) with streamflow dataframe.</p>
-<p>:param df_wide <code class="xref py py-obj docutils literal notranslate"><span class="pre">df</span></code>): wide-form dataframe with ‘date’ column and other columns with variable names (ie ET, P, etc)
-:param df_merge: dataframe with stuff to merge (streamflow or deficit). Must contain columns for ‘date’ and column_names if given.
-:type df_merge: <code class="xref py py-obj docutils literal notranslate"><span class="pre">df</span></code>
-:param merge_with: choice of ‘streamflow’ or ‘deficit’ to merge with df_wide.
-:type merge_with: str
-:param column_names: Names of the column in df_merge that you wish to merge (default for streamflow: [‘Q_mm’], default for deficit: [‘D’, and ‘D_wy’]). ‘date’ is automatically included.
-:type column_names: list of str</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>merged dataframes.</p>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">df</span></code></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="waterpyk.calcs.wateryear">
-<span class="sig-prename descclassname"><span class="pre">waterpyk.calcs.</span></span><span class="sig-name descname"><span class="pre">wateryear</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df_wide</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#waterpyk.calcs.wateryear" title="Permalink to this definition"></a></dt>
-<dd><p>Create total and cumulative wateryear dataframes for all variables (ie columns) given in df_wide.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>df_wide</strong> (<code class="xref py py-obj docutils literal notranslate"><span class="pre">df</span></code>) – wide-form dataframe with ‘date’ column and other columns with variable names (i.e. ET, P, Q_mm, etc.) This dataframe can also have D, D_wy, Q_mm, etc merged into it.</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>2 datafrmes: (1) the  original wide-form dataframe with added columns (in the naming form of ORIGINALNAME_cumulative) with cumulative wateryear values. For example, if ‘P’ was in original dataframe, then ‘P_cumulative’ now exists. If ‘Q_mm’ was in dataframe, then ‘Q_mm_cumulative’ now exists. (2) dataframe with one row for each wateryear with columns such as wateryear, ET, P, D_wy_max, ET_summer, Q_mm, etc, which represent the total (or maximum, for D_wy_max) wateryear sum.</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">df</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">df</span></code></p>
-</dd>
-</dl>
-</dd></dl>
-
-</section>
-<section id="module-waterpyk.gee">
-<span id="waterpyk-gee-module"></span><h2>waterpyk.gee module<a class="headerlink" href="#module-waterpyk.gee" title="Permalink to this headline"></a></h2>
-<dl class="py function">
-<dt class="sig sig-object py" id="waterpyk.gee.extract">
-<span class="sig-prename descclassname"><span class="pre">waterpyk.gee.</span></span><span class="sig-name descname"><span class="pre">extract</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">layers</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gee_feature</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kind</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reducer_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#waterpyk.gee.extract" title="Permalink to this definition"></a></dt>
-<dd><p>Extract data at site for several assets at once. Uses extract_basic().</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>layers</strong> (str or <code class="xref py py-obj docutils literal notranslate"><span class="pre">df</span></code>, optional) – If str, specify ‘minimal’ or ‘all’ to extract default set of assets. If df, columns that must be present include: asset_id, start_date, end_date, relative_date, scale, bands, bands_to_scale, new_bandnames, scaling factor. These are the same parameters required for extract_basic().</p></li>
-<li><p><strong>gee_feature</strong> (<code class="xref py py-obj docutils literal notranslate"><span class="pre">gee</span> <span class="pre">feature</span></code>) – GEE feature for region geometry</p></li>
-<li><p><strong>kind</strong> (<em>str</em>) – ‘point’ or ‘watershed’</p></li>
-<li><p><strong>reducer_type</strong> (<code class="xref py py-obj docutils literal notranslate"><span class="pre">GEE</span> <span class="pre">reducer</span> <span class="pre">function</span></code>) – defaults to None, in which case GEE reduceRegion reducer function is first() and mean() for points and watersheds, respectively. See GEE documentation for more available types.</p></li>
-<li><p><strong>**interp</strong> (<em>bool</em><em>, </em><em>optional</em>) – (default: True), currently no option to change to False.</p></li>
-<li><p><strong>**combine_ET_bands</strong> (<em>bool</em><em>, </em><em>optional</em>) – (default True) add ET bands to make one ET band.</p></li>
-<li><p><strong>**bands_to_combine</strong> (<em>list of str</em><em>, </em><em>optional</em>) – (default [Es, Ec]) ET bands to combine</p></li>
-<li><p><strong>**band_names_combined</strong> (<em>str</em><em>, </em><em>optional</em>) – (default ‘ET’) name of combined ET band</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>2 long-style pandas dataframes, the first containing all of the daily data and the second containing all of the non-daily data (i.e. extractions from images or from single-timestep ImageCollections).</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">df</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">df</span></code></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="waterpyk.gee.extract_basic">
-<span class="sig-prename descclassname"><span class="pre">waterpyk.gee.</span></span><span class="sig-name descname"><span class="pre">extract_basic</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">gee_feature</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kind</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">asset_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scale</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bands</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start_date</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">end_date</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">relative_date</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bands_to_scale</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scaling_factor</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reducer_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">new_bandnames</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#waterpyk.gee.extract_basic" title="Permalink to this definition"></a></dt>
-<dd><p>Extract data from a single asset. For timeseries, specify start_date  and end_date for an asset_id.
-For an image or to get an image from an imagecollection (ie one date), specify relative_date as either ‘first’, ‘most_recent’, or ‘image’.
-Either start_date and end_date must be specified or relative_date must be specified or error will be raised.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>gee_feature</strong> (<code class="xref py py-obj docutils literal notranslate"><span class="pre">gee</span> <span class="pre">feature</span></code>) – GEE feature for region geometry</p></li>
-<li><p><strong>kind</strong> (<em>str</em>) – ‘point’ or ‘watershed’</p></li>
-<li><p><strong>asset_id</strong> (<em>str</em>) – GEE asset identification string</p></li>
-<li><p><strong>start_date</strong> (<em>str</em><em>, </em><em>optional</em>) – format mm/dd/yyy or similiar date format</p></li>
-<li><p><strong>end_date</strong> (<em>str</em><em>, </em><em>optional</em>) – format mm/dd/yyyy or similiar date format</p></li>
-<li><p><strong>relative_date</strong> (<em>str</em><em>, </em><em>optional</em>) – If not using start and end date, specify ‘first’, ‘most_recent’, or ‘image’ to extract a single date from an ImageCollection or to extract datea from an Image.</p></li>
-<li><p><strong>scale</strong> (<em>str</em>) – scale in meters for GEE reducer function</p></li>
-<li><p><strong>bands</strong> (<em>list of str</em>) – bands of GEE asset to extract</p></li>
-<li><p><strong>new_bandnames</strong> (<em>list of str</em><em>, </em><em>optional</em>) – rename bands. Default is to not rename bands, where final band name is the original band name before underscore, for example pml stays pml but LC_Type1 becomes LC by default. This param must be the same length as <a href="#id3"><span class="problematic" id="id4">**</span></a>bands or exception will be thrown.</p></li>
-<li><p><strong>bands_to_scale</strong> (<em>list of str</em><em>, </em><em>optional</em>) – (default = None) bands for which each value will be multiplied by scaling_factor.</p></li>
-<li><p><strong>scaling_factor</strong> (<em>float</em><em>, </em><em>optional</em>) – (default = 1) scaling factor to apply to all values in bands_to_scale</p></li>
-<li><p><strong>reducer_type</strong> (<code class="xref py py-obj docutils literal notranslate"><span class="pre">gee</span> <span class="pre">reducer</span> <span class="pre">function</span></code>, optional) – reducer_type defaults to first() for points and mean() for watersheds. See available gee ReduceRegion options online for other possible inputs.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>dataframe of all extracted data</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">df</span></code></p>
-</dd>
-</dl>
-</dd></dl>
-
-</section>
 <section id="module-waterpyk.main">
-<span id="waterpyk-main-module"></span><h2>waterpyk.main module<a class="headerlink" href="#module-waterpyk.main" title="Permalink to this headline"></a></h2>
+<span id="waterpyk-main"></span><h2>waterpyk.main<a class="headerlink" href="#module-waterpyk.main" title="Permalink to this headline"></a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="waterpyk.main.StudyArea">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">waterpyk.main.</span></span><span class="sig-name descname"><span class="pre">StudyArea</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">coords</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">layers</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">saving_dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'data/output'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#waterpyk.main.StudyArea" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">waterpyk.main.</span></span><span class="sig-name descname"><span class="pre">StudyArea</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">coords</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">layers</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">saving_dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'/Users/ericamccormick/Documents/GITHUB/WaterPyk/docs/source/data/output'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#waterpyk.main.StudyArea" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <dl class="py method">
 <dt class="sig sig-object py" id="waterpyk.main.StudyArea.describe">
@@ -317,8 +111,6 @@ Otherwise, data from layers is extracted from GEE and the USGS.</p>
 <li><p><strong>**combine_ET_bands</strong> (<em>bool</em><em>, </em><em>optional</em>) – (default True) add ET bands to make one ET band.</p></li>
 <li><p><strong>**bands_to_combine</strong> (<em>list of str</em><em>, </em><em>optional</em>) – (default [Es, Ec]) ET bands to combine</p></li>
 <li><p><strong>**band_names_combined</strong> (<em>str</em><em>, </em><em>optional</em>) – (default ‘ET’) name of combined ET band</p></li>
-<li><p><strong>method</strong> (<em>**reducer_type is not supported as class</em>) – </p></li>
-<li><p><strong>gee.extract</strong><strong>(</strong><strong>)</strong> (<em>but is supported with</em>) – </p></li>
 <li><p><strong>**et_asset</strong> (<em>str</em><em>, </em><em>optional</em>) – asset to be used for creation of ET column (default ‘pml’).</p></li>
 <li><p><strong>**et_band</strong> (<em>str</em><em>, </em><em>optional</em>) – band name to be used for creation of ET column (default ‘ET’).</p></li>
 <li><p><strong>**ppt_asset</strong> (<em>str</em><em>, </em><em>optional</em>) – asset name for precipitation column (default ‘prism’).</p></li>
@@ -403,184 +195,69 @@ In general, updating kwargs should not be necessary except for small details lik
 </dd></dl>
 
 </section>
-<section id="module-waterpyk.plots">
-<span id="waterpyk-plots-module"></span><h2>waterpyk.plots module<a class="headerlink" href="#module-waterpyk.plots" title="Permalink to this headline"></a></h2>
+<section id="module-waterpyk.gee">
+<span id="waterpyk-gee"></span><h2>waterpyk.gee<a class="headerlink" href="#module-waterpyk.gee" title="Permalink to this headline"></a></h2>
 <dl class="py function">
-<dt class="sig sig-object py" id="waterpyk.plots.plot_RWS">
-<span class="sig-prename descclassname"><span class="pre">waterpyk.plots.</span></span><span class="sig-name descname"><span class="pre">plot_RWS</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">studyareaobject</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">df_deficit</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">smax</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">plot_kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#waterpyk.plots.plot_RWS" title="Permalink to this definition"></a></dt>
-<dd><p>Plot root-zone water storage (RWS) timeseries, following Rempe-McCormick et al. (in prep) SI Fig 1.
-Either studyarea object must be supplied OR the df_deficit and smax params with the necessary data for plotting (ie columns for ‘D’ and ‘date’ and smax value)</p>
+<dt class="sig sig-object py" id="waterpyk.gee.extract">
+<span class="sig-prename descclassname"><span class="pre">waterpyk.gee.</span></span><span class="sig-name descname"><span class="pre">extract</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">layers</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gee_feature</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kind</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reducer_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#waterpyk.gee.extract" title="Permalink to this definition"></a></dt>
+<dd><p>Extract data at site for several assets at once. Uses extract_basic().</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>studyareaobject</strong> (<em>object from studyarea class</em><em>, </em><em>optional</em>) – </p></li>
-<li><p><strong>deficit_timeseries</strong> (<code class="xref py py-obj docutils literal notranslate"><span class="pre">df</span></code>, optional) – dataframe with deficit timeseries and columns ‘D’, and ‘date’ at minimum.</p></li>
-<li><p><strong>smax</strong> (<em>int</em><em> or </em><em>float</em><em>, </em><em>optional</em>) – root-zone water storage capacity (Smax) in mm</p></li>
-<li><p><strong>**xmin</strong> (<em>str</em><em>, </em><em>optional</em>) – default = ‘2003-10-01’</p></li>
-<li><p><strong>**xmax</strong> (<em>str</em><em>, </em><em>optional</em>) – default = ‘2020-10-01’</p></li>
-<li><p><strong>**xlabel</strong> (<em>str</em><em>, </em><em>optional</em>) – default = ‘Date’</p></li>
-<li><p><strong>**ylabel</strong> (<em>str</em><em>, </em><em>optional</em>) – default = ‘RWS (mm)’</p></li>
-<li><p><strong>**dpi</strong> (<em>int</em><em>, </em><em>optional</em>) – default = 300</p></li>
-<li><p><strong>**figsize</strong> (<em>tuple</em><em>, </em><em>optional</em>) – default = (6,4)</p></li>
-<li><p><strong>**legend</strong> (<em>bool</em><em>, </em><em>optional</em>) – default = False</p></li>
-<li><p><strong>**title</strong> (<em>str</em><em>, </em><em>optional</em>) – default = None</p></li>
-<li><p><strong>**color_D</strong> (<em>str</em><em>, </em><em>optional</em>) – default = ‘black’</p></li>
-<li><p><strong>**linestyle_D</strong> (<em>str</em><em>, </em><em>optional</em>) – default = ‘-’</p></li>
-<li><p><strong>**lw</strong> (<em>float</em><em>, </em><em>optional</em>) – lineweight, default = 1</p></li>
+<li><p><strong>layers</strong> (str or <code class="xref py py-obj docutils literal notranslate"><span class="pre">df</span></code>, optional) – If str, specify ‘minimal’ or ‘all’ to extract default set of assets. If df, columns that must be present include: asset_id, start_date, end_date, relative_date, scale, bands, bands_to_scale, new_bandnames, scaling factor. These are the same parameters required for extract_basic().</p></li>
+<li><p><strong>gee_feature</strong> (<code class="xref py py-obj docutils literal notranslate"><span class="pre">gee</span> <span class="pre">feature</span></code>) – GEE feature for region geometry</p></li>
+<li><p><strong>kind</strong> (<em>str</em>) – ‘point’ or ‘watershed’</p></li>
+<li><p><strong>reducer_type</strong> (<code class="xref py py-obj docutils literal notranslate"><span class="pre">GEE</span> <span class="pre">reducer</span> <span class="pre">function</span></code>) – defaults to None, in which case GEE reduceRegion reducer function is first() and mean() for points and watersheds, respectively. See GEE documentation for more available types.</p></li>
+<li><p><strong>**interp</strong> (<em>bool</em><em>, </em><em>optional</em>) – (default: True), currently no option to change to False.</p></li>
+<li><p><strong>**combine_ET_bands</strong> (<em>bool</em><em>, </em><em>optional</em>) – (default True) add ET bands to make one ET band.</p></li>
+<li><p><strong>**bands_to_combine</strong> (<em>list of str</em><em>, </em><em>optional</em>) – (default [Es, Ec]) ET bands to combine</p></li>
+<li><p><strong>**band_names_combined</strong> (<em>str</em><em>, </em><em>optional</em>) – (default ‘ET’) name of combined ET band</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">fig</span></code></p>
+<dd class="field-even"><p>2 long-style pandas dataframes, the first containing all of the daily data and the second containing all of the non-daily data (i.e. extractions from images or from single-timestep ImageCollections).</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">df</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">df</span></code></p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="waterpyk.plots.plot_p_distribution">
-<span class="sig-prename descclassname"><span class="pre">waterpyk.plots.</span></span><span class="sig-name descname"><span class="pre">plot_p_distribution</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">studyareaobject</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">df_wateryear_totals</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">smax</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">plot_kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#waterpyk.plots.plot_p_distribution" title="Permalink to this definition"></a></dt>
-<dd><p>Plot distribution of wateryear precipitation (P) and root-zone water storage capacity (Smax) in the form of
-Rempe-McCormick et al. (in prep) Fig 1c,f.
-Either studyarea object must be supplied OR the df_wateryear_totals and smax param with the necessary data for plotting.</p>
+<dt class="sig sig-object py" id="waterpyk.gee.extract_basic">
+<span class="sig-prename descclassname"><span class="pre">waterpyk.gee.</span></span><span class="sig-name descname"><span class="pre">extract_basic</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">gee_feature</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kind</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">asset_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scale</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bands</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start_date</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">end_date</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">relative_date</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bands_to_scale</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scaling_factor</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reducer_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">new_bandnames</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#waterpyk.gee.extract_basic" title="Permalink to this definition"></a></dt>
+<dd><p>Extract data from a single asset. For timeseries, specify start_date  and end_date for an asset_id.
+For an image or to get an image from an imagecollection (ie one date), specify relative_date as either ‘first’, ‘most_recent’, or ‘image’.
+Either start_date and end_date must be specified or relative_date must be specified or error will be raised.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>studyareaobject</strong> (<em>object from studyarea class</em><em>, </em><em>optional</em>) – </p></li>
-<li><p><strong>df_wateryear_totals</strong> (<code class="xref py py-obj docutils literal notranslate"><span class="pre">df</span></code>, optional) – dataframe with wateryear cumulative P and a column named ‘P’ at minimum.</p></li>
-<li><p><strong>smax</strong> (<em>int</em><em> or </em><em>float</em><em>, </em><em>optional</em>) – value for root-zone water storage capacity (Smax) in mm</p></li>
-<li><p><strong>**xmin</strong> (<em>int</em><em>, </em><em>optional</em>) – default = 0</p></li>
-<li><p><strong>**xmax</strong> (<em>int</em><em>, </em><em>optional</em>) – default = 4000</p></li>
-<li><p><strong>**xlabel</strong> (<em>str</em><em>, </em><em>optional</em>) – default = ‘mm’</p></li>
-<li><p><strong>**ylabel</strong> (<em>str</em><em>, </em><em>optional</em>) – default = ‘Density’</p></li>
-<li><p><strong>**dpi</strong> (<em>int</em><em>, </em><em>optional</em>) – default = 300</p></li>
-<li><p><strong>**figsize</strong> (<em>tuple</em><em>, </em><em>optional</em>) – default = (6,4)</p></li>
-<li><p><strong>**legend</strong> (<em>bool</em><em>, </em><em>optional</em>) – default = True</p></li>
-<li><p><strong>**title</strong> (<em>str</em><em>, </em><em>optional</em>) – default = None</p></li>
+<li><p><strong>gee_feature</strong> (<code class="xref py py-obj docutils literal notranslate"><span class="pre">gee</span> <span class="pre">feature</span></code>) – GEE feature for region geometry</p></li>
+<li><p><strong>kind</strong> (<em>str</em>) – ‘point’ or ‘watershed’</p></li>
+<li><p><strong>asset_id</strong> (<em>str</em>) – GEE asset identification string</p></li>
+<li><p><strong>start_date</strong> (<em>str</em><em>, </em><em>optional</em>) – format mm/dd/yyy or similiar date format</p></li>
+<li><p><strong>end_date</strong> (<em>str</em><em>, </em><em>optional</em>) – format mm/dd/yyyy or similiar date format</p></li>
+<li><p><strong>relative_date</strong> (<em>str</em><em>, </em><em>optional</em>) – If not using start and end date, specify ‘first’, ‘most_recent’, or ‘image’ to extract a single date from an ImageCollection or to extract datea from an Image.</p></li>
+<li><p><strong>scale</strong> (<em>str</em>) – scale in meters for GEE reducer function</p></li>
+<li><p><strong>bands</strong> (<em>list of str</em>) – bands of GEE asset to extract</p></li>
+<li><p><strong>new_bandnames</strong> (<em>list of str</em><em>, </em><em>optional</em>) – rename bands. Default is to not rename bands, where final band name is the original band name before underscore, for example pml stays pml but LC_Type1 becomes LC by default. This param must be the same length as <a href="#id1"><span class="problematic" id="id2">**</span></a>bands or exception will be thrown.</p></li>
+<li><p><strong>bands_to_scale</strong> (<em>list of str</em><em>, </em><em>optional</em>) – (default = None) bands for which each value will be multiplied by scaling_factor.</p></li>
+<li><p><strong>scaling_factor</strong> (<em>float</em><em>, </em><em>optional</em>) – (default = 1) scaling factor to apply to all values in bands_to_scale</p></li>
+<li><p><strong>reducer_type</strong> (<code class="xref py py-obj docutils literal notranslate"><span class="pre">gee</span> <span class="pre">reducer</span> <span class="pre">function</span></code>, optional) – reducer_type defaults to first() for points and mean() for watersheds. See available gee ReduceRegion options online for other possible inputs.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">fig</span></code></p>
+<dd class="field-even"><p>dataframe of all extracted data</p>
 </dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="waterpyk.plots.plot_spearman">
-<span class="sig-prename descclassname"><span class="pre">waterpyk.plots.</span></span><span class="sig-name descname"><span class="pre">plot_spearman</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">studyareaobject</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">df_wateryear_totals</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">plot_kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#waterpyk.plots.plot_spearman" title="Permalink to this definition"></a></dt>
-<dd><p>Scatter plot of wateryear precipitation and summer (ie dry season) ET, following Rempe-McCormick et al. (in prep) Fig 1b,e.
-Spearman correlation coefficient (rho) and p-value is given in upper right corner of plot.
-Either studyarea object must be supplied OR the df_wateryear_totals param with the necessary data for plotting (ie wateryear, P, and ET_summer columns).</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>studyareaobject</strong> (<em>object from studyarea class</em><em>, </em><em>optional</em>) – </p></li>
-<li><p><strong>df_wateryear_totals</strong> (<code class="xref py py-obj docutils literal notranslate"><span class="pre">df</span></code>, optional) – dataframe with columns ‘P’, ‘ET_summer’, and ‘wateryear’</p></li>
-<li><p><strong>deficit_timeseries</strong> (<code class="xref py py-obj docutils literal notranslate"><span class="pre">df</span></code>, optional) – dataframe with deficit timeseries and columns ‘D’, ‘D_wy’ and ‘date’ at minimum.</p></li>
-<li><p><strong>**xmin</strong> (<em>int</em><em>, </em><em>optional</em>) – default = 0</p></li>
-<li><p><strong>**xmax</strong> (<em>int</em><em>, </em><em>optional</em>) – default = 3000</p></li>
-<li><p><strong>**dpi</strong> (<em>int</em><em>, </em><em>optional</em>) – default = 300</p></li>
-<li><p><strong>**figsize</strong> (<em>tuple</em><em>, </em><em>optional</em>) – default = (6,4)</p></li>
-<li><p><strong>**color_WY</strong> (<em>bool</em><em>, </em><em>optional</em>) – This puts a wateryear legend and colors the dots by wateryear. default = True</p></li>
-<li><p><strong>**title</strong> (<em>str</em><em>, </em><em>optional</em>) – default = None</p></li>
-<li><p><strong>**markeredgecolor</strong> (<em>str</em><em>, </em><em>optional</em>) – default = ‘black’</p></li>
-<li><p><strong>**lw</strong> (<em>float</em><em>, </em><em>optional</em>) – lineweight, default = 1.5</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">fig</span></code></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="waterpyk.plots.plot_timeseries">
-<span class="sig-prename descclassname"><span class="pre">waterpyk.plots.</span></span><span class="sig-name descname"><span class="pre">plot_timeseries</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">studyareaobject</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">df_daily_wide</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">deficit_timeseries</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">plot_kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#waterpyk.plots.plot_timeseries" title="Permalink to this definition"></a></dt>
-<dd><p>Plot daily (wateryear cumulative) timeseries, following Rempe-McCormick et al. (in prep) Fig 1b,e.
-Either studyarea object must be supplied OR the df_daily_wide and df_timeseries params with the necessary data for plotting.
-Use <a href="#id5"><span class="problematic" id="id6">**</span></a>kwargs to choose which datasets to plot, from the options of P, ET, deficit, deficit_wateryear, and streamflow (Q) if available.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>studyareaobject</strong> (<em>object from studyarea class</em><em>, </em><em>optional</em>) – </p></li>
-<li><p><strong>df_daily_wide</strong> (<code class="xref py py-obj docutils literal notranslate"><span class="pre">df</span></code>, optional) – dataframe with daily cumulative wateryear timeseries and columns corresponding to the chosen data (from <a href="#id7"><span class="problematic" id="id8">**</span></a>kwargs), at minimum, such as ‘ET_cumulative’, ‘P_cumulative’, and ‘Q_mm_cumulative’, and ‘date’ columns.</p></li>
-<li><p><strong>deficit_timeseries</strong> (<code class="xref py py-obj docutils literal notranslate"><span class="pre">df</span></code>, optional) – dataframe with deficit timeseries and columns ‘D’, ‘D_wy’ and ‘date’ at minimum.</p></li>
-<li><p><strong>**xmin</strong> (<em>str</em><em>, </em><em>optional</em>) – default = ‘2003-10-01’</p></li>
-<li><p><strong>**xmax</strong> (<em>str</em><em>, </em><em>optional</em>) – default = ‘2020-10-01’</p></li>
-<li><p><strong>**xlabel</strong> (<em>str</em><em>, </em><em>optional</em>) – default = ‘Date’</p></li>
-<li><p><strong>**ylabel</strong> (<em>str</em><em>, </em><em>optional</em>) – default = ‘[mm]’</p></li>
-<li><p><strong>**dpi</strong> (<em>int</em><em>, </em><em>optional</em>) – default = 300</p></li>
-<li><p><strong>**figsize</strong> (<em>tuple</em><em>, </em><em>optional</em>) – default = (6,4)</p></li>
-<li><p><strong>**legend</strong> (<em>bool</em><em>, </em><em>optional</em>) – default = True</p></li>
-<li><p><strong>**title</strong> (<em>str</em><em>, </em><em>optional</em>) – default = None</p></li>
-<li><p><strong>**plot_Q</strong> (<em>bool</em><em>, </em><em>optional</em>) – default = False</p></li>
-<li><p><strong>**plot_P</strong> (<em>bool</em><em>, </em><em>optional</em>) – default = True</p></li>
-<li><p><strong>**plot_D</strong> (<em>bool</em><em>, </em><em>optional</em>) – default = True</p></li>
-<li><p><strong>**plot_Dwy</strong> (<em>bool</em><em>, </em><em>optional</em>) – default = True</p></li>
-<li><p><strong>**plot_ET</strong> (<em>bool</em><em>, </em><em>optional</em>) – default = False</p></li>
-<li><p><strong>**plot_ET_dry</strong> (<em>bool</em><em>, </em><em>optional</em>) – default = False</p></li>
-<li><p><strong>**color_Q</strong> (<em>str</em><em>, </em><em>optional</em>) – default = ‘blue’</p></li>
-<li><p><strong>**color_P</strong> (<em>str</em><em>, </em><em>optional</em>) – default = ‘#b1d6f0’</p></li>
-<li><p><strong>**color_D</strong> (<em>str</em><em>, </em><em>optional</em>) – default = ‘black’</p></li>
-<li><p><strong>**color_Dwy</strong> (<em>str</em><em>, </em><em>optional</em>) – default = ‘black’</p></li>
-<li><p><strong>**color_ET</strong> (<em>str</em><em>, </em><em>optional</em>) – default = ‘purple’</p></li>
-<li><p><strong>**linestyle_Q</strong> (<em>str</em><em>, </em><em>optional</em>) – default = ‘-’</p></li>
-<li><p><strong>**linestyle_P</strong> (<em>str</em><em>, </em><em>optional</em>) – default = ‘-’</p></li>
-<li><p><strong>**linestyle_D</strong> (<em>str</em><em>, </em><em>optional</em>) – default = ‘-’</p></li>
-<li><p><strong>**linestyle_Dwy</strong> (<em>str</em><em>, </em><em>optional</em>) – default = ‘–’</p></li>
-<li><p><strong>**linestyle_ET</strong> (<em>str</em><em>, </em><em>optional</em>) – default = ‘-’</p></li>
-<li><p><strong>**lw</strong> (<em>float</em><em>, </em><em>optional</em>) – lineweight, default = 1.5</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">fig</span></code></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="waterpyk.plots.plot_wateryear_totals">
-<span class="sig-prename descclassname"><span class="pre">waterpyk.plots.</span></span><span class="sig-name descname"><span class="pre">plot_wateryear_totals</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">studyareaobject</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">df_wateryear_totals</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">plot_kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#waterpyk.plots.plot_wateryear_totals" title="Permalink to this definition"></a></dt>
-<dd><p>Plot summed wateryear timeseries.
-Either studyarea object must be supplied OR the df_wateryear_totals param with the necessary data for plotting.
-Use <a href="#id9"><span class="problematic" id="id10">**</span></a>kwargs to choose which datasets to plot, from the options of P, ET, ET_summer, deficit, and streamflow (Q) if available.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>studyareaobject</strong> (<em>object from studyarea class</em><em>, </em><em>optional</em>) – </p></li>
-<li><p><strong>df_wateryear_totals</strong> (<code class="xref py py-obj docutils literal notranslate"><span class="pre">df</span></code>, optional) – dataframe with cumulative wateryear timeseries and columns corresponding to the chosen data (from <a href="#id11"><span class="problematic" id="id12">**</span></a>kwargs), at minimum, such as ‘P’, ‘D’, ‘ET’, ‘ET_summer’, and ‘Q_mm’, and ‘wateryear’ columns.</p></li>
-<li><p><strong>**xmin</strong> (<em>int</em><em>, </em><em>optional</em>) – default = 2003</p></li>
-<li><p><strong>**xmax</strong> (<em>int</em><em>, </em><em>optional</em>) – default = 2020</p></li>
-<li><p><strong>**xlabel</strong> (<em>str</em><em>, </em><em>optional</em>) – default = ‘Wateryear’</p></li>
-<li><p><strong>**ylabel</strong> (<em>str</em><em>, </em><em>optional</em>) – default = ‘[mm]’</p></li>
-<li><p><strong>**dpi</strong> (<em>int</em><em>, </em><em>optional</em>) – default = 300</p></li>
-<li><p><strong>**figsize</strong> (<em>tuple</em><em>, </em><em>optional</em>) – default = (6,4)</p></li>
-<li><p><strong>**legend</strong> (<em>bool</em><em>, </em><em>optional</em>) – default = True</p></li>
-<li><p><strong>**title</strong> (<em>str</em><em>, </em><em>optional</em>) – default = None</p></li>
-<li><p><strong>**plot_Q</strong> (<em>bool</em><em>, </em><em>optional</em>) – default = True</p></li>
-<li><p><strong>**plot_P</strong> (<em>bool</em><em>, </em><em>optional</em>) – default = True</p></li>
-<li><p><strong>**plot_D</strong> (<em>bool</em><em>, </em><em>optional</em>) – default = True</p></li>
-<li><p><strong>**plot_ET</strong> (<em>bool</em><em>, </em><em>optional</em>) – default = True</p></li>
-<li><p><strong>**plot_ET_dry</strong> (<em>bool</em><em>, </em><em>optional</em>) – default = False</p></li>
-<li><p><strong>**color_Q</strong> (<em>str</em><em>, </em><em>optional</em>) – default = ‘blue’</p></li>
-<li><p><strong>**color_P</strong> (<em>str</em><em>, </em><em>optional</em>) – default = ‘#b1d6f0’</p></li>
-<li><p><strong>**color_D</strong> (<em>str</em><em>, </em><em>optional</em>) – default = ‘black’</p></li>
-<li><p><strong>**color_ET</strong> (<em>str</em><em>, </em><em>optional</em>) – default = ‘purple’</p></li>
-<li><p><strong>**linestyle_Q</strong> (<em>str</em><em>, </em><em>optional</em>) – default = ‘-o’</p></li>
-<li><p><strong>**linestyle_P</strong> (<em>str</em><em>, </em><em>optional</em>) – default = ‘-o’</p></li>
-<li><p><strong>**linestyle_D</strong> (<em>str</em><em>, </em><em>optional</em>) – default = ‘-’</p></li>
-<li><p><strong>**linestyle_ET</strong> (<em>str</em><em>, </em><em>optional</em>) – default = ‘-o’</p></li>
-<li><p><strong>**lw</strong> (<em>float</em><em>, </em><em>optional</em>) – lineweight, default = 1.5</p></li>
-<li><p><strong>**twinx</strong> (<em>bool</em><em>, </em><em>optional</em>) – Put ET data on twin x-axis to P data. default = True</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">fig</span></code></p>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">df</span></code></p>
 </dd>
 </dl>
 </dd></dl>
 
 </section>
 <section id="module-waterpyk.watershed">
-<span id="waterpyk-watershed-module"></span><h2>waterpyk.watershed module<a class="headerlink" href="#module-waterpyk.watershed" title="Permalink to this headline"></a></h2>
+<span id="waterpyk-watershed"></span><h2>waterpyk.watershed<a class="headerlink" href="#module-waterpyk.watershed" title="Permalink to this headline"></a></h2>
 <dl class="py function">
 <dt class="sig sig-object py" id="waterpyk.watershed.extract_geometry">
 <span class="sig-prename descclassname"><span class="pre">waterpyk.watershed.</span></span><span class="sig-name descname"><span class="pre">extract_geometry</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">gage</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#waterpyk.watershed.extract_geometry" title="Permalink to this definition"></a></dt>
@@ -683,7 +360,7 @@ Use <a href="#id9"><span class="problematic" id="id10">**</span></a>kwargs to ch
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>4 strings with urls which (1) access basin lat/long geometry. (2) access geometry of flowline (i.e. rivers) lat/long geometry. (3) access basin metadata. (4) access basin discharge timeseries (between the dates of <a href="#id13"><span class="problematic" id="id14">**</span></a>kwargs).</p>
+<dd class="field-even"><p>4 strings with urls which (1) access basin lat/long geometry. (2) access geometry of flowline (i.e. rivers) lat/long geometry. (3) access basin metadata. (4) access basin discharge timeseries (between the dates of <a href="#id3"><span class="problematic" id="id4">**</span></a>kwargs).</p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>str, str, str, str</p>
@@ -692,8 +369,334 @@ Use <a href="#id9"><span class="problematic" id="id10">**</span></a>kwargs to ch
 </dd></dl>
 
 </section>
+<section id="module-waterpyk.calcs">
+<span id="waterpyk-calcs"></span><h2>waterpyk.calcs<a class="headerlink" href="#module-waterpyk.calcs" title="Permalink to this headline"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="waterpyk.calcs.combine_bands">
+<span class="sig-prename descclassname"><span class="pre">waterpyk.calcs.</span></span><span class="sig-name descname"><span class="pre">combine_bands</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bands_to_combine</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">band_name_final</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#waterpyk.calcs.combine_bands" title="Permalink to this definition"></a></dt>
+<dd><p>Defaults to add together soil and vegetation ET bands (Es and Ec) for PML to create ET band.
+Can be customized to add any bands together to create a new band.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>bands_to_combine</strong> (<em>list of str</em>) – list of strings of band names (example: [‘Es’, ‘Ec’]) to combine into a single band</p></li>
+<li><p><strong>band_name_final</strong> (<em>str</em>) – the final band name to be stored in the ‘band’ column of the final dataframe, where the ‘value’ column will contain the added values from bands_to_combine</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>long-form dataframe from input with appended section which contains date, asset_name, value, band, and value_raw (set to np.nan) columns with data from combined</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">df</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="waterpyk.calcs.deficit">
+<span class="sig-prename descclassname"><span class="pre">waterpyk.calcs.</span></span><span class="sig-name descname"><span class="pre">deficit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df_long</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">df_wide</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#waterpyk.calcs.deficit" title="Permalink to this definition"></a></dt>
+<dd><p>Calculate D(t) after McCormick et al., 2021 and Dralle et al., 2020.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>df_long</strong> (<code class="xref py py-obj docutils literal notranslate"><span class="pre">df</span></code>) – original long-style dataframe with snow, P, and ET data at a minimum</p></li>
+<li><p><strong>df_wide</strong> (<code class="xref py py-obj docutils literal notranslate"><span class="pre">df</span></code>) – dataframe created from make_wide_df(). (default = None, in which case new df_wide is created from df_long using default args). This dataframe must have ET, P, and wateryear columns.</p></li>
+<li><p><strong>**interp</strong> – (bool, optional): default: True. Currently no option to change to False.</p></li>
+<li><p><strong>**combine_ET_bands</strong> (<em>bool</em><em>, </em><em>optional</em>) – (default True) add ET bands to make one ET band.</p></li>
+<li><p><strong>**bands_to_combine</strong> (<em>list of str</em><em>, </em><em>optional</em>) – (default [Es, Ec]) ET bands to combine</p></li>
+<li><p><strong>**band_names_combined</strong> (<em>str</em><em>, </em><em>optional</em>) – (default ET) name of combined ET band</p></li>
+<li><p><strong>**et_asset</strong> (<em>str</em><em>, </em><em>optional</em>) – (default pml) ET dataset to use for deficit calculation, if multiple are given</p></li>
+<li><p><strong>**et_band</strong> (<em>str</em><em>, </em><em>optional</em>) – (default ET) band from ET dataset to use for deficit calculation, if multiple are given</p></li>
+<li><p><strong>**ppt_asset</strong> (<em>str</em><em>, </em><em>optional</em>) – (default prism) precipitation dataset to use for deficit calculation, if multiple are given</p></li>
+<li><p><strong>**ppt_band</strong> (<em>str</em><em>, </em><em>optional</em>) – (default ppt) precipitation dataset to use for deficit calculation, if multiple are given</p></li>
+<li><p><strong>**snow_band</strong> (<em>str</em><em>, </em><em>optional</em>) – defaults to ‘snow’. Note: You will need to change this if you don’t specify to change the default name of this asset upon extraction.</p></li>
+<li><p><strong>**snow_correction</strong> (<em>bool</em><em>, </em><em>optional</em>) – (default True) use snow correction factor when calculating deficit</p></li>
+<li><p><strong>**snow_correction</strong> – (default True) use snow correction factor when calculating deficit</p></li>
+<li><p><strong>**snow_frac</strong> (<em>int</em><em>, </em><em>optional</em>) – (default 10) set all ET when snow is greater than this (%) to 0 if snow_correction = True</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>dataframe with root-zone water storage deficit data where deficit is column ‘D’ and wateryear deficit is ‘D_wy’.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">df</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="waterpyk.calcs.deficit_bursts">
+<span class="sig-prename descclassname"><span class="pre">waterpyk.calcs.</span></span><span class="sig-name descname"><span class="pre">deficit_bursts</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#waterpyk.calcs.deficit_bursts" title="Permalink to this definition"></a></dt>
+<dd><p>Still under development!! Get a dataframe with the length and maximum deficit of each “burst” (i.e. deficits that are continuously above zero).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>df</strong> (<code class="xref py py-obj docutils literal notranslate"><span class="pre">df</span></code>) – dataframe with columns for date and D (for deficit), at minimum.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>dataframe with columns for start and end dates, and max_D [mm], duration [days] and start and end wateryear of each burst.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">df</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="waterpyk.calcs.interp_daily">
+<span class="sig-prename descclassname"><span class="pre">waterpyk.calcs.</span></span><span class="sig-name descname"><span class="pre">interp_daily</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#waterpyk.calcs.interp_daily" title="Permalink to this definition"></a></dt>
+<dd><p>Interpolate all data to daily.</p>
+<p>:param <code class="xref py py-obj docutils literal notranslate"><span class="pre">df</span></code>: initial long-form dataframe for a single asset (may contain multiple bands) with column ‘value’ for interpolating</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>dataframe with ‘value’ column containing daily interpolated daily</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">df</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="waterpyk.calcs.make_wide_df">
+<span class="sig-prename descclassname"><span class="pre">waterpyk.calcs.</span></span><span class="sig-name descname"><span class="pre">make_wide_df</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df_long</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#waterpyk.calcs.make_wide_df" title="Permalink to this definition"></a></dt>
+<dd><p>Uses ET and P asset and band names (designated in <a href="#id5"><span class="problematic" id="id6">**</span></a>kwargs) to return a wide-form dataframe with columns:
+date, ET, Ei, P, and P-Ei (where Ei is the interception band from PML and is only extracted if it exists). merge_wide_streamflow() can then be used to merge with streamflow df.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>df_long</strong> – dataframe such as that produced by extract_assets_at_site() where columns contain asset_name, band, and value.</p></li>
+<li><p><strong>**et_asset</strong> (<em>str</em><em>, </em><em>optional</em>) – asset to be used for creation of ET column (default ‘pml’).</p></li>
+<li><p><strong>**et_band</strong> (<em>str</em><em>, </em><em>optional</em>) – band name to be used for creation of ET column (default ‘ET’).</p></li>
+<li><p><strong>**ppt_asset</strong> (<em>str</em><em>, </em><em>optional</em>) – asset name for precipitation column (default ‘prism’).</p></li>
+<li><p><strong>**ppt_band</strong> (<em>str</em><em>, </em><em>optional</em>) – band name for precipitation colum (default ‘ppt’)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>wide-form dataframe with columns for date, ET, Ei, P, and P-Ei (where Ei is the interception band from PML and is only included if it exists.)</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">df</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="waterpyk.calcs.merge">
+<span class="sig-prename descclassname"><span class="pre">waterpyk.calcs.</span></span><span class="sig-name descname"><span class="pre">merge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df_wide</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">df_merge</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">merge_with</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">column_names</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#waterpyk.calcs.merge" title="Permalink to this definition"></a></dt>
+<dd><p>Merge df_wide (dataframe with columns representing variable names) with streamflow dataframe.</p>
+<p>:param df_wide <code class="xref py py-obj docutils literal notranslate"><span class="pre">df</span></code>): wide-form dataframe with ‘date’ column and other columns with variable names (ie ET, P, etc)
+:param df_merge: dataframe with stuff to merge (streamflow or deficit). Must contain columns for ‘date’ and column_names if given.
+:type df_merge: <code class="xref py py-obj docutils literal notranslate"><span class="pre">df</span></code>
+:param merge_with: choice of ‘streamflow’ or ‘deficit’ to merge with df_wide.
+:type merge_with: str
+:param column_names: Names of the column in df_merge that you wish to merge (default for streamflow: [‘Q_mm’], default for deficit: [‘D’, and ‘D_wy’]). ‘date’ is automatically included.
+:type column_names: list of str</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>merged dataframes.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">df</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="waterpyk.calcs.wateryear">
+<span class="sig-prename descclassname"><span class="pre">waterpyk.calcs.</span></span><span class="sig-name descname"><span class="pre">wateryear</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df_wide</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#waterpyk.calcs.wateryear" title="Permalink to this definition"></a></dt>
+<dd><p>Create total and cumulative wateryear dataframes for all variables (ie columns) given in df_wide.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>df_wide</strong> (<code class="xref py py-obj docutils literal notranslate"><span class="pre">df</span></code>) – wide-form dataframe with ‘date’ column and other columns with variable names (i.e. ET, P, Q_mm, etc.) This dataframe can also have D, D_wy, Q_mm, etc merged into it.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>2 datafrmes: (1) the  original wide-form dataframe with added columns (in the naming form of ORIGINALNAME_cumulative) with cumulative wateryear values. For example, if ‘P’ was in original dataframe, then ‘P_cumulative’ now exists. If ‘Q_mm’ was in dataframe, then ‘Q_mm_cumulative’ now exists. (2) dataframe with one row for each wateryear with columns such as wateryear, ET, P, D_wy_max, ET_summer, Q_mm, etc, which represent the total (or maximum, for D_wy_max) wateryear sum.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">df</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">df</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-waterpyk.plots">
+<span id="waterpyk-plots"></span><h2>waterpyk.plots<a class="headerlink" href="#module-waterpyk.plots" title="Permalink to this headline"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="waterpyk.plots.plot_RWS">
+<span class="sig-prename descclassname"><span class="pre">waterpyk.plots.</span></span><span class="sig-name descname"><span class="pre">plot_RWS</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">studyareaobject</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">df_deficit</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">smax</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">plot_kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#waterpyk.plots.plot_RWS" title="Permalink to this definition"></a></dt>
+<dd><p>Plot root-zone water storage (RWS) timeseries, following Rempe-McCormick et al. (in prep) SI Fig 1.
+Either studyarea object must be supplied OR the df_deficit and smax params with the necessary data for plotting (ie columns for ‘D’ and ‘date’ and smax value)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>studyareaobject</strong> (<em>object from studyarea class</em><em>, </em><em>optional</em>) – </p></li>
+<li><p><strong>deficit_timeseries</strong> (<code class="xref py py-obj docutils literal notranslate"><span class="pre">df</span></code>, optional) – dataframe with deficit timeseries and columns ‘D’, and ‘date’ at minimum.</p></li>
+<li><p><strong>smax</strong> (<em>int</em><em> or </em><em>float</em><em>, </em><em>optional</em>) – root-zone water storage capacity (Smax) in mm</p></li>
+<li><p><strong>**xmin</strong> (<em>str</em><em>, </em><em>optional</em>) – default = ‘2003-10-01’</p></li>
+<li><p><strong>**xmax</strong> (<em>str</em><em>, </em><em>optional</em>) – default = ‘2020-10-01’</p></li>
+<li><p><strong>**xlabel</strong> (<em>str</em><em>, </em><em>optional</em>) – default = ‘Date’</p></li>
+<li><p><strong>**ylabel</strong> (<em>str</em><em>, </em><em>optional</em>) – default = ‘RWS (mm)’</p></li>
+<li><p><strong>**dpi</strong> (<em>int</em><em>, </em><em>optional</em>) – default = 300</p></li>
+<li><p><strong>**figsize</strong> (<em>tuple</em><em>, </em><em>optional</em>) – default = (6,4)</p></li>
+<li><p><strong>**legend</strong> (<em>bool</em><em>, </em><em>optional</em>) – default = False</p></li>
+<li><p><strong>**title</strong> (<em>str</em><em>, </em><em>optional</em>) – default = None</p></li>
+<li><p><strong>**color_D</strong> (<em>str</em><em>, </em><em>optional</em>) – default = ‘black’</p></li>
+<li><p><strong>**linestyle_D</strong> (<em>str</em><em>, </em><em>optional</em>) – default = ‘-’</p></li>
+<li><p><strong>**lw</strong> (<em>float</em><em>, </em><em>optional</em>) – lineweight, default = 1</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">fig</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="waterpyk.plots.plot_p_distribution">
+<span class="sig-prename descclassname"><span class="pre">waterpyk.plots.</span></span><span class="sig-name descname"><span class="pre">plot_p_distribution</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">studyareaobject</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">df_wateryear_totals</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">smax</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">plot_kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#waterpyk.plots.plot_p_distribution" title="Permalink to this definition"></a></dt>
+<dd><p>Plot distribution of wateryear precipitation (P) and root-zone water storage capacity (Smax) in the form of
+Rempe-McCormick et al. (in prep) Fig 1c,f.
+Either studyarea object must be supplied OR the df_wateryear_totals and smax param with the necessary data for plotting.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>studyareaobject</strong> (<em>object from studyarea class</em><em>, </em><em>optional</em>) – </p></li>
+<li><p><strong>df_wateryear_totals</strong> (<code class="xref py py-obj docutils literal notranslate"><span class="pre">df</span></code>, optional) – dataframe with wateryear cumulative P and a column named ‘P’ at minimum.</p></li>
+<li><p><strong>smax</strong> (<em>int</em><em> or </em><em>float</em><em>, </em><em>optional</em>) – value for root-zone water storage capacity (Smax) in mm</p></li>
+<li><p><strong>**xmin</strong> (<em>int</em><em>, </em><em>optional</em>) – default = 0</p></li>
+<li><p><strong>**xmax</strong> (<em>int</em><em>, </em><em>optional</em>) – default = 4000</p></li>
+<li><p><strong>**xlabel</strong> (<em>str</em><em>, </em><em>optional</em>) – default = ‘mm’</p></li>
+<li><p><strong>**ylabel</strong> (<em>str</em><em>, </em><em>optional</em>) – default = ‘Density’</p></li>
+<li><p><strong>**dpi</strong> (<em>int</em><em>, </em><em>optional</em>) – default = 300</p></li>
+<li><p><strong>**figsize</strong> (<em>tuple</em><em>, </em><em>optional</em>) – default = (6,4)</p></li>
+<li><p><strong>**legend</strong> (<em>bool</em><em>, </em><em>optional</em>) – default = True</p></li>
+<li><p><strong>**title</strong> (<em>str</em><em>, </em><em>optional</em>) – default = None</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">fig</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="waterpyk.plots.plot_spearman">
+<span class="sig-prename descclassname"><span class="pre">waterpyk.plots.</span></span><span class="sig-name descname"><span class="pre">plot_spearman</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">studyareaobject</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">df_wateryear_totals</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">plot_kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#waterpyk.plots.plot_spearman" title="Permalink to this definition"></a></dt>
+<dd><p>Scatter plot of wateryear precipitation and summer (ie dry season) ET, following Rempe-McCormick et al. (in prep) Fig 1b,e.
+Spearman correlation coefficient (rho) and p-value is given in upper right corner of plot.
+Either studyarea object must be supplied OR the df_wateryear_totals param with the necessary data for plotting (ie wateryear, P, and ET_summer columns).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>studyareaobject</strong> (<em>object from studyarea class</em><em>, </em><em>optional</em>) – </p></li>
+<li><p><strong>df_wateryear_totals</strong> (<code class="xref py py-obj docutils literal notranslate"><span class="pre">df</span></code>, optional) – dataframe with columns ‘P’, ‘ET_summer’, and ‘wateryear’</p></li>
+<li><p><strong>deficit_timeseries</strong> (<code class="xref py py-obj docutils literal notranslate"><span class="pre">df</span></code>, optional) – dataframe with deficit timeseries and columns ‘D’, ‘D_wy’ and ‘date’ at minimum.</p></li>
+<li><p><strong>**xmin</strong> (<em>int</em><em>, </em><em>optional</em>) – default = 0</p></li>
+<li><p><strong>**xmax</strong> (<em>int</em><em>, </em><em>optional</em>) – default = 3000</p></li>
+<li><p><strong>**dpi</strong> (<em>int</em><em>, </em><em>optional</em>) – default = 300</p></li>
+<li><p><strong>**figsize</strong> (<em>tuple</em><em>, </em><em>optional</em>) – default = (6,4)</p></li>
+<li><p><strong>**color_WY</strong> (<em>bool</em><em>, </em><em>optional</em>) – This puts a wateryear legend and colors the dots by wateryear. default = True</p></li>
+<li><p><strong>**title</strong> (<em>str</em><em>, </em><em>optional</em>) – default = None</p></li>
+<li><p><strong>**markeredgecolor</strong> (<em>str</em><em>, </em><em>optional</em>) – default = ‘black’</p></li>
+<li><p><strong>**lw</strong> (<em>float</em><em>, </em><em>optional</em>) – lineweight, default = 1.5</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">fig</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="waterpyk.plots.plot_timeseries">
+<span class="sig-prename descclassname"><span class="pre">waterpyk.plots.</span></span><span class="sig-name descname"><span class="pre">plot_timeseries</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">studyareaobject</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">df_daily_wide</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">deficit_timeseries</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">plot_kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#waterpyk.plots.plot_timeseries" title="Permalink to this definition"></a></dt>
+<dd><p>Plot daily (wateryear cumulative) timeseries, following Rempe-McCormick et al. (in prep) Fig 1b,e.
+Either studyarea object must be supplied OR the df_daily_wide and df_timeseries params with the necessary data for plotting.
+Use <a href="#id7"><span class="problematic" id="id8">**</span></a>kwargs to choose which datasets to plot, from the options of P, ET, deficit, deficit_wateryear, and streamflow (Q) if available.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>studyareaobject</strong> (<em>object from studyarea class</em><em>, </em><em>optional</em>) – </p></li>
+<li><p><strong>df_daily_wide</strong> (<code class="xref py py-obj docutils literal notranslate"><span class="pre">df</span></code>, optional) – dataframe with daily cumulative wateryear timeseries and columns corresponding to the chosen data (from <a href="#id9"><span class="problematic" id="id10">**</span></a>kwargs), at minimum, such as ‘ET_cumulative’, ‘P_cumulative’, and ‘Q_mm_cumulative’, and ‘date’ columns.</p></li>
+<li><p><strong>deficit_timeseries</strong> (<code class="xref py py-obj docutils literal notranslate"><span class="pre">df</span></code>, optional) – dataframe with deficit timeseries and columns ‘D’, ‘D_wy’ and ‘date’ at minimum.</p></li>
+<li><p><strong>**xmin</strong> (<em>str</em><em>, </em><em>optional</em>) – default = ‘2003-10-01’</p></li>
+<li><p><strong>**xmax</strong> (<em>str</em><em>, </em><em>optional</em>) – default = ‘2020-10-01’</p></li>
+<li><p><strong>**xlabel</strong> (<em>str</em><em>, </em><em>optional</em>) – default = ‘Date’</p></li>
+<li><p><strong>**ylabel</strong> (<em>str</em><em>, </em><em>optional</em>) – default = ‘[mm]’</p></li>
+<li><p><strong>**dpi</strong> (<em>int</em><em>, </em><em>optional</em>) – default = 300</p></li>
+<li><p><strong>**figsize</strong> (<em>tuple</em><em>, </em><em>optional</em>) – default = (6,4)</p></li>
+<li><p><strong>**legend</strong> (<em>bool</em><em>, </em><em>optional</em>) – default = True</p></li>
+<li><p><strong>**title</strong> (<em>str</em><em>, </em><em>optional</em>) – default = None</p></li>
+<li><p><strong>**plot_Q</strong> (<em>bool</em><em>, </em><em>optional</em>) – default = False</p></li>
+<li><p><strong>**plot_P</strong> (<em>bool</em><em>, </em><em>optional</em>) – default = True</p></li>
+<li><p><strong>**plot_D</strong> (<em>bool</em><em>, </em><em>optional</em>) – default = True</p></li>
+<li><p><strong>**plot_Dwy</strong> (<em>bool</em><em>, </em><em>optional</em>) – default = True</p></li>
+<li><p><strong>**plot_ET</strong> (<em>bool</em><em>, </em><em>optional</em>) – default = False</p></li>
+<li><p><strong>**plot_ET_dry</strong> (<em>bool</em><em>, </em><em>optional</em>) – default = False</p></li>
+<li><p><strong>**color_Q</strong> (<em>str</em><em>, </em><em>optional</em>) – default = ‘blue’</p></li>
+<li><p><strong>**color_P</strong> (<em>str</em><em>, </em><em>optional</em>) – default = ‘#b1d6f0’</p></li>
+<li><p><strong>**color_D</strong> (<em>str</em><em>, </em><em>optional</em>) – default = ‘black’</p></li>
+<li><p><strong>**color_Dwy</strong> (<em>str</em><em>, </em><em>optional</em>) – default = ‘black’</p></li>
+<li><p><strong>**color_ET</strong> (<em>str</em><em>, </em><em>optional</em>) – default = ‘purple’</p></li>
+<li><p><strong>**linestyle_Q</strong> (<em>str</em><em>, </em><em>optional</em>) – default = ‘-’</p></li>
+<li><p><strong>**linestyle_P</strong> (<em>str</em><em>, </em><em>optional</em>) – default = ‘-’</p></li>
+<li><p><strong>**linestyle_D</strong> (<em>str</em><em>, </em><em>optional</em>) – default = ‘-’</p></li>
+<li><p><strong>**linestyle_Dwy</strong> (<em>str</em><em>, </em><em>optional</em>) – default = ‘–’</p></li>
+<li><p><strong>**linestyle_ET</strong> (<em>str</em><em>, </em><em>optional</em>) – default = ‘-’</p></li>
+<li><p><strong>**lw</strong> (<em>float</em><em>, </em><em>optional</em>) – lineweight, default = 1.5</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">fig</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="waterpyk.plots.plot_wateryear_totals">
+<span class="sig-prename descclassname"><span class="pre">waterpyk.plots.</span></span><span class="sig-name descname"><span class="pre">plot_wateryear_totals</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">studyareaobject</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">df_wateryear_totals</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">plot_kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#waterpyk.plots.plot_wateryear_totals" title="Permalink to this definition"></a></dt>
+<dd><p>Plot summed wateryear timeseries.
+Either studyarea object must be supplied OR the df_wateryear_totals param with the necessary data for plotting.
+Use <a href="#id11"><span class="problematic" id="id12">**</span></a>kwargs to choose which datasets to plot, from the options of P, ET, ET_summer, deficit, and streamflow (Q) if available.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>studyareaobject</strong> (<em>object from studyarea class</em><em>, </em><em>optional</em>) – </p></li>
+<li><p><strong>df_wateryear_totals</strong> (<code class="xref py py-obj docutils literal notranslate"><span class="pre">df</span></code>, optional) – dataframe with cumulative wateryear timeseries and columns corresponding to the chosen data (from <a href="#id13"><span class="problematic" id="id14">**</span></a>kwargs), at minimum, such as ‘P’, ‘D’, ‘ET’, ‘ET_summer’, and ‘Q_mm’, and ‘wateryear’ columns.</p></li>
+<li><p><strong>**xmin</strong> (<em>int</em><em>, </em><em>optional</em>) – default = 2003</p></li>
+<li><p><strong>**xmax</strong> (<em>int</em><em>, </em><em>optional</em>) – default = 2020</p></li>
+<li><p><strong>**xlabel</strong> (<em>str</em><em>, </em><em>optional</em>) – default = ‘Wateryear’</p></li>
+<li><p><strong>**ylabel</strong> (<em>str</em><em>, </em><em>optional</em>) – default = ‘[mm]’</p></li>
+<li><p><strong>**dpi</strong> (<em>int</em><em>, </em><em>optional</em>) – default = 300</p></li>
+<li><p><strong>**figsize</strong> (<em>tuple</em><em>, </em><em>optional</em>) – default = (6,4)</p></li>
+<li><p><strong>**legend</strong> (<em>bool</em><em>, </em><em>optional</em>) – default = True</p></li>
+<li><p><strong>**title</strong> (<em>str</em><em>, </em><em>optional</em>) – default = None</p></li>
+<li><p><strong>**plot_Q</strong> (<em>bool</em><em>, </em><em>optional</em>) – default = True</p></li>
+<li><p><strong>**plot_P</strong> (<em>bool</em><em>, </em><em>optional</em>) – default = True</p></li>
+<li><p><strong>**plot_D</strong> (<em>bool</em><em>, </em><em>optional</em>) – default = True</p></li>
+<li><p><strong>**plot_ET</strong> (<em>bool</em><em>, </em><em>optional</em>) – default = True</p></li>
+<li><p><strong>**plot_ET_dry</strong> (<em>bool</em><em>, </em><em>optional</em>) – default = False</p></li>
+<li><p><strong>**color_Q</strong> (<em>str</em><em>, </em><em>optional</em>) – default = ‘blue’</p></li>
+<li><p><strong>**color_P</strong> (<em>str</em><em>, </em><em>optional</em>) – default = ‘#b1d6f0’</p></li>
+<li><p><strong>**color_D</strong> (<em>str</em><em>, </em><em>optional</em>) – default = ‘black’</p></li>
+<li><p><strong>**color_ET</strong> (<em>str</em><em>, </em><em>optional</em>) – default = ‘purple’</p></li>
+<li><p><strong>**linestyle_Q</strong> (<em>str</em><em>, </em><em>optional</em>) – default = ‘-o’</p></li>
+<li><p><strong>**linestyle_P</strong> (<em>str</em><em>, </em><em>optional</em>) – default = ‘-o’</p></li>
+<li><p><strong>**linestyle_D</strong> (<em>str</em><em>, </em><em>optional</em>) – default = ‘-’</p></li>
+<li><p><strong>**linestyle_ET</strong> (<em>str</em><em>, </em><em>optional</em>) – default = ‘-o’</p></li>
+<li><p><strong>**lw</strong> (<em>float</em><em>, </em><em>optional</em>) – lineweight, default = 1.5</p></li>
+<li><p><strong>**twinx</strong> (<em>bool</em><em>, </em><em>optional</em>) – Put ET data on twin x-axis to P data. default = True</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">fig</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
 <section id="module-waterpyk">
-<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-waterpyk" title="Permalink to this headline"></a></h2>
+<span id="waterpyk"></span><h2>waterpyk<a class="headerlink" href="#module-waterpyk" title="Permalink to this headline"></a></h2>
 <p>Top-level package for waterpyk.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="waterpyk.in_colab_shell">
@@ -703,6 +706,23 @@ Function from geemap by Qiusheng Wu</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="waterpyk.load_data">
+<span class="sig-prename descclassname"><span class="pre">waterpyk.</span></span><span class="sig-name descname"><span class="pre">load_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">layers</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#waterpyk.load_data" title="Permalink to this definition"></a></dt>
+<dd><p>Finds the import data (either all.csv or minimal.csv corresponding to layers input) and loads it.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>layers</strong> (<em>str</em><em>, </em><em>optional</em>) – the GEE input layers to be extracted. Options if string are ‘minimal’ or ‘all’.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>dataframe of read csv from layers.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">df</span></code></p>
 </dd>
 </dl>
 </dd></dl>

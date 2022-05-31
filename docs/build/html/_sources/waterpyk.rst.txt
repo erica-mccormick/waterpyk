@@ -4,23 +4,7 @@ waterpyk package
 Submodules
 ----------
 
-waterpyk.calcs module
----------------------
-
-.. automodule:: waterpyk.calcs
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-waterpyk.gee module
--------------------
-
-.. automodule:: waterpyk.gee
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-waterpyk.main module
+waterpyk.main
 --------------------
 
 .. automodule:: waterpyk.main
@@ -28,15 +12,15 @@ waterpyk.main module
    :undoc-members:
    :show-inheritance:
 
-waterpyk.plots module
----------------------
+waterpyk.gee
+-------------------
 
-.. automodule:: waterpyk.plots
+.. automodule:: waterpyk.gee
    :members:
    :undoc-members:
    :show-inheritance:
 
-waterpyk.watershed module
+waterpyk.watershed
 -------------------------
 
 .. automodule:: waterpyk.watershed
@@ -44,8 +28,26 @@ waterpyk.watershed module
    :undoc-members:
    :show-inheritance:
 
-Module contents
----------------
+waterpyk.calcs
+---------------------
+
+.. automodule:: waterpyk.calcs
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+
+waterpyk.plots
+---------------------
+
+.. automodule:: waterpyk.plots
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+
+waterpyk
+--------
 
 .. automodule:: waterpyk
    :members:

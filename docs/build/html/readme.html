@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ReadMe &mdash; WaterPyk 0.1.0 documentation</title>
+  <title>ReadMe &mdash; WaterPyk 0.2.0 documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -39,13 +39,12 @@
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul class="current">
-<li class="toctree-l1 current"><a class="current reference internal" href="#">ReadMe</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#get-started">Get started</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#read-the-docs">Read the docs</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#what-waterpyk-can-do">What waterpyk can do</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#contact">Contact</a></li>
-</ul>
-</li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">ReadMe</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#waterpyk">waterpyk</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#get-started">Get Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#docs">Docs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#what-waterpyk-can-do">What Waterpyk Can Do</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#contact">Contact</a></li>
 <li class="toctree-l1"><a class="reference internal" href="waterpyk.html">waterpyk package</a></li>
 </ul>
 
@@ -75,32 +74,79 @@
              
   <section id="readme">
 <h1>ReadMe<a class="headerlink" href="#readme" title="Permalink to this headline"></a></h1>
+</section>
+<section id="waterpyk">
+<h1>waterpyk<a class="headerlink" href="#waterpyk" title="Permalink to this headline"></a></h1>
+<a class="reference external image-reference" href="https://colab.research.google.com/github/erica-mccormick/waterpyk/blob/main/waterpyk_tutorialL.ipynb"><img alt="open in colab" src="https://colab.research.google.com/assets/colab-badge.svg" /></a>
+<a class="reference external image-reference" href="https://waterpyk.readthedocs.io"><img alt="readthedocs badge" src="https://readthedocs.org/projects/pip/badge/" /></a>
+<a class="reference external image-reference" href="https://pypi.python.org/pypi/waterpyk"><img alt="PyPi badge" src="https://img.shields.io/pypi/v/waterpyk.svg" /></a>
+<a class="reference external image-reference" href="https://twitter.com/McCormickEricaL"><img alt="Follow me on Twitter badge" src="https://img.shields.io/twitter/follow/McCormickEricaL?style=social" /></a>
+<a class="reference external image-reference" href="https://opensource.org/licenses/MIT"><img alt="MIT license badge" src="https://img.shields.io/badge/License-MIT-yellow.svg" /></a>
+<p><strong>A python package to analyze hydrological timeseries for a site or watershed using the Google Earth Engine and USGS APIs.</strong></p>
+<ul class="simple">
+<li><p>GitHub repo: <a class="reference external" href="https://github.com/erica-mccormick/waterpyk">https://github.com/erica-mccormick/waterpyk</a></p></li>
+<li><p>Documentation: <a class="reference external" href="https://waterpyk.readthedocs.io/en/latest/">https://waterpyk.readthedocs.io/en/latest/</a></p></li>
+<li><p>PyPI: <a class="reference external" href="https://pypi.org/project/waterpyk/">https://pypi.org/project/waterpyk/</a></p></li>
+<li><p>Report bugs: <a class="reference external" href="https://github.com/erica-mccormick/waterpyk/issues">https://github.com/erica-mccormick/waterpyk/issues</a></p></li>
+</ul>
 <p>waterpyk is a simple package for extracting data from the <a class="reference external" href="https://developers.google.com/earth-engine/guides/getstarted">Google Earth Engine</a> (GEE) and USGS APIs and performing simple water-balance analyses.
 All you need to begin is a lat/long or a <a class="reference external" href="https://waterdata.usgs.gov/nwis/rt">USGS gauge ID</a> to start.</p>
 <p>For more information on the root-zone water storage capacity and deficit, see <a class="reference external" href="https://ericamccormick.com/pdfs/Dralle2021_HESS.pdf">Dralle et al., 2021</a>, <a class="reference external" href="https://ericamccormick.com/pdfs/McCormick_Nature2021.pdf">McCormick et al., 2021</a>, and <a class="reference external" href="https://eartharxiv.org/repository/view/3356/">Rempe, McCormick et al. (in prep)</a>.</p>
-<section id="get-started">
-<h2>Get started<a class="headerlink" href="#get-started" title="Permalink to this headline"></a></h2>
-<p>Install waterpyk:
-TBD.</p>
-<p>To get all of the available data and plots for a site, simply supply a list of coordinates (such as <code class="docutils literal notranslate"><span class="pre">[lat,</span> <span class="pre">long]</span></code> or [<code class="docutils literal notranslate"><span class="pre">gaugeID</span></code>]):</p>
-<p><code class="docutils literal notranslate"><span class="pre">from</span> <span class="pre">waterpyk</span> <span class="pre">install</span> <span class="pre">main</span></code></p>
-<p><code class="docutils literal notranslate"><span class="pre">yoursitename</span> <span class="pre">=</span> <span class="pre">main.StudyArea(COORDS)</span></code></p>
-<p>All of the dataframes will now be available in the form of:</p>
-<ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">yoursitename.deficit_timeseries</span></code></p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">yoursitename.daily_df_wide</span></code></p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">yoursitename.streamflow</span></code></p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">yoursitename.wateryear_totals</span></code></p></li>
-</ul>
-<p>You can also use <code class="docutils literal notranslate"><span class="pre">yoursite.describe</span></code> to see more information, or <code class="docutils literal notranslate"><span class="pre">yoursite.smax</span></code> to see Smax.</p>
-<p>To plot, simply use <code class="docutils literal notranslate"><span class="pre">yoursite.plot(kind</span> <span class="pre">=</span> <span class="pre">###)</span></code> and supply a string for which kind (see below).</p>
+<p><a class="reference external" href="https://colab.research.google.com/github/erica-mccormick/waterpyk/blob/main/waterpyk_tutorialL.ipynb">Check out the tutorial</a> for basic waterpyk usage in GoogleColab here.</p>
 </section>
-<section id="read-the-docs">
-<h2>Read the docs<a class="headerlink" href="#read-the-docs" title="Permalink to this headline"></a></h2>
-<p>For full documentation, see <a class="reference external" href="https://waterpyk.readthedocs.io/en/latest/">full documentation</a></p>
+<section id="get-started">
+<h1>Get Started<a class="headerlink" href="#get-started" title="Permalink to this headline"></a></h1>
+<p>waterpyk requires <a class="reference external" href="https://geopandas.org/">geopandas</a> and ee.
+Read the <a class="reference external" href="https://developers.google.com/earth-engine/guides/python_install">workflow to install and authenticate ee</a> (GEE) for Google Colab, pip, or conda.
+You will need to <a class="reference external" href="https://earthengine.google.com/new_signup/">sign up for a GEE account</a> if it is your first time.</p>
+<p>Install waterpyk:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">install</span> <span class="n">waterpyk</span>
+</pre></div>
+</div>
+<p>To get all of the available data and plots for a site, simply supply a list of coordinates (such as <code class="docutils literal notranslate"><span class="pre">[lat,</span> <span class="pre">long]</span></code> or [<code class="docutils literal notranslate"><span class="pre">gaugeID</span></code>]).:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">waterpyk</span> <span class="n">install</span> <span class="n">main</span>
+
+<span class="n">coords</span> <span class="o">=</span> <span class="p">[</span><span class="n">LAT</span><span class="o">/</span><span class="n">LONG</span><span class="p">]</span> <span class="c1"># or</span>
+<span class="n">gage</span> <span class="o">=</span> <span class="p">[</span><span class="n">USGS_gage_ID</span><span class="p">]</span>
+<span class="n">yoursitename</span> <span class="o">=</span> <span class="n">main</span><span class="o">.</span><span class="n">StudyArea</span><span class="p">(</span><span class="n">COORDS_or_GAGE</span><span class="p">,</span> <span class="n">layers</span> <span class="o">=</span> <span class="s1">&#39;all&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>A note on the <code class="docutils literal notranslate"><span class="pre">layers</span></code> parameter:
+Two default options are available for extracting data.:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">layers</span> <span class="o">=</span> <span class="s1">&#39;all&#39;</span>
+<span class="n">layers</span> <span class="o">=</span> <span class="s1">&#39;minimal&#39;</span>
+</pre></div>
+</div>
+<p>‘All’ will extract precipitation (P), evapotranspiration (ET) from MODIS and PML, MODIS snow cover, MODIS landcover class, and SRTM elevation, including all relevant bands.</p>
+<p>‘Minimal’ is the fastest option and extracts only the necessary data for the deficit (P, ET, and snow without extra MODIS products).</p>
+<p>Alternatively, <code class="docutils literal notranslate"><span class="pre">layers</span></code> can also take a dataframe containing a row for each desired GEE asset. See the main and/or gee module docs for more information.</p>
+<p>Note that most GEE assets should be extracted with no errors, however not all date formats have been tested, so new assets may throw errors and require manual extraction outside of waterpyk.
+For these cases, I suggest using the <a class="reference external" href="https://github.com/giswqs/geemap">geemap</a> package, which has many fantastic GEE tools and inspired some of this code as well!</p>
+<p>Now that you’ve initialized your StudyArea object, all of the dataframes of extracted data will now be available in the form of:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">yoursitename</span><span class="o">.</span><span class="n">daily_df_wide</span> <span class="c1"># includes deficit, wateryear deficit, and cumulative wateryear timeseries</span>
+<span class="n">yoursitename</span><span class="o">.</span><span class="n">streamflow</span>
+<span class="n">yoursitename</span><span class="o">.</span><span class="n">wateryear_totals</span>
+<span class="n">yoursitename</span><span class="o">.</span><span class="n">stats</span>
+</pre></div>
+</div>
+<p>Some single values are also available as attributes in this way,
+such as root-zone water storage capacity (Smax, mm) and and mean annual precipitation (MAP, mm):</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">yoursite</span><span class="o">.</span><span class="n">smax</span>
+<span class="n">yoursite</span><span class="o">.</span><span class="n">MAP</span>
+</pre></div>
+</div>
+<p>To plot, supply a string for which kind of plot (see below for the 5 options), such as:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">yoursitename</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">kind</span> <span class="o">=</span> <span class="s1">&#39;timeseries&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Extra keyword arguments are available for the plots to change the color, line types, or included data for each kind. See the plots module for default kwargs.</p>
+</section>
+<section id="docs">
+<h1>Docs<a class="headerlink" href="#docs" title="Permalink to this headline"></a></h1>
+<p>For full documentation, see <a class="reference external" href="https://waterpyk.readthedocs.io/en/latest/">full documentation</a>.</p>
 </section>
 <section id="what-waterpyk-can-do">
-<h2>What waterpyk can do<a class="headerlink" href="#what-waterpyk-can-do" title="Permalink to this headline"></a></h2>
+<h1>What Waterpyk Can Do<a class="headerlink" href="#what-waterpyk-can-do" title="Permalink to this headline"></a></h1>
 <ul class="simple">
 <li><p>Download timeseries of GEE assets and:</p>
 <ul>
@@ -133,14 +179,10 @@ TBD.</p>
 </ul>
 </section>
 <section id="contact">
-<h2>Contact<a class="headerlink" href="#contact" title="Permalink to this headline"></a></h2>
+<h1>Contact<a class="headerlink" href="#contact" title="Permalink to this headline"></a></h1>
 <p>This is a work in progress and is primarily intended for the Rempe Lab Group and co-authors.
-For more information, contact Erica McCormick at <a class="reference external" href="mailto:erica&#46;mccormick&#37;&#52;&#48;utexas&#46;edu">erica<span>&#46;</span>mccormick<span>&#64;</span>utexas<span>&#46;</span>edu</a> or the email address given on her <a class="reference external" href="https://www.ericamccormick.com">homepage</a>.</p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>This project is under active development.</p>
-</div>
-</section>
+Feel free to report bugs, and note that major version updates may not be backwards compatible.
+For more information, contact Erica McCormick at <a class="reference external" href="mailto:erica&#46;elmstead&#37;&#52;&#48;gmail&#46;com">erica<span>&#46;</span>elmstead<span>&#64;</span>gmail<span>&#46;</span>com</a> or the email address given on her <a class="reference external" href="https://www.ericamccormick.com">homepage</a>.</p>
 </section>
 
 

@@ -1,12 +1,7 @@
 WaterPyk: Choose a place and get some data!
 ===========================================
 
-**WaterPyk** (/wAW-tuhr-pIk/) is a Python library for extracting Google Earth Engine data at single sites given a latitude/longitude or a USGS gage ID. 
-
-.. note::
-
-   This project is under active development.
-
+**WaterPyk** (/wAW-tuhr-pIk/): A python package to analyze hydrological timeseries for a site or watershed using the Google Earth Engine and USGS APIs.
 
 .. toctree::
    :maxdepth: 2
