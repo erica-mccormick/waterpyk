@@ -9,7 +9,7 @@ README = (HERE / "README.rst").read_text()
 
 setup(
     name="waterpyk",
-    version="1.1.1",
+    version="1.1.6",
     description="Extract hydrological data for a lat/long or USGS gauge ID and make simple plots.",
     long_description=README,
     long_description_content_type="text/x-rst",
@@ -22,7 +22,7 @@ setup(
         "Programming Language :: Python :: 3",
         "Programming Language :: Python :: 3.7",
     ],
-    package_dir={"": "waterpyk"},  # Optional
-    packages=find_packages(where="waterpyk"),  # Required
+    packages=find_packages(),  # Required
     include_package_data= True,
+    package_data={'': ['data/*.csv']}
 )

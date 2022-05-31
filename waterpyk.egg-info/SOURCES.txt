@@ -4,9 +4,10 @@ README.rst
 setup.py
 waterpyk/__init__.py
 waterpyk/calcs.py
-waterpyk/extract.py
+waterpyk/gee.py
 waterpyk/main.py
 waterpyk/plots.py
+waterpyk/watershed.py
 waterpyk.egg-info/PKG-INFO
 waterpyk.egg-info/SOURCES.txt
 waterpyk.egg-info/dependency_links.txt

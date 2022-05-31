@@ -21,7 +21,6 @@ def load_data(layers):
     """
     
     file_path = 'layers_data/' + layers + '.csv'
-    print('load_data file path', file_path)
     stream = pkg_resources.resource_stream(__name__, file_path)
     return pd.read_csv(stream, encoding='latin-1')
 

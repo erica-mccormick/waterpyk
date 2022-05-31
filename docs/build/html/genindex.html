@@ -37,7 +37,7 @@
               <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="readme.html">ReadMe</a></li>
-<li class="toctree-l1"><a class="reference internal" href="waterpyk.html">waterpyk modules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="waterpyk.html">waterpyk package</a></li>
 </ul>
 
         </div>
@@ -69,6 +69,7 @@
 <div class="genindex-jumpbox">
  <a href="#C"><strong>C</strong></a>
  | <a href="#D"><strong>D</strong></a>
+ | <a href="#E"><strong>E</strong></a>
  | <a href="#G"><strong>G</strong></a>
  | <a href="#I"><strong>I</strong></a>
  | <a href="#M"><strong>M</strong></a>
@@ -99,17 +100,37 @@
   </ul></td>
 </tr></table>
 
-<h2 id="G">G</h2>
+<h2 id="E">E</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="waterpyk.html#waterpyk.extract.gee_extract">gee_extract() (in module waterpyk.extract)</a>
+      <li><a href="waterpyk.html#waterpyk.gee.extract">extract() (in module waterpyk.gee)</a>
 </li>
-      <li><a href="waterpyk.html#waterpyk.extract.gee_extract_basic">gee_extract_basic() (in module waterpyk.extract)</a>
+      <li><a href="waterpyk.html#waterpyk.gee.extract_basic">extract_basic() (in module waterpyk.gee)</a>
+</li>
+      <li><a href="waterpyk.html#waterpyk.watershed.extract_geometry">extract_geometry() (in module waterpyk.watershed)</a>
+</li>
+      <li><a href="waterpyk.html#waterpyk.watershed.extract_geometry_flowline">extract_geometry_flowline() (in module waterpyk.watershed)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="waterpyk.html#waterpyk.watershed.extract_latitude">extract_latitude() (in module waterpyk.watershed)</a>
+</li>
+      <li><a href="waterpyk.html#waterpyk.watershed.extract_metadata">extract_metadata() (in module waterpyk.watershed)</a>
+</li>
+      <li><a href="waterpyk.html#waterpyk.watershed.extract_streamflow">extract_streamflow() (in module waterpyk.watershed)</a>
+</li>
+      <li><a href="waterpyk.html#waterpyk.watershed.extract_urls">extract_urls() (in module waterpyk.watershed)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="G">G</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="waterpyk.html#waterpyk.main.StudyArea.get_data">get_data() (waterpyk.main.StudyArea method)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="waterpyk.html#waterpyk.main.StudyArea.get_kind">get_kind() (waterpyk.main.StudyArea method)</a>
 </li>
       <li><a href="waterpyk.html#waterpyk.main.StudyArea.get_location">get_location() (waterpyk.main.StudyArea method)</a>
@@ -119,6 +140,10 @@
 
 <h2 id="I">I</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="waterpyk.html#waterpyk.in_colab_shell">in_colab_shell() (in module waterpyk)</a>
+</li>
+  </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="waterpyk.html#waterpyk.calcs.interp_daily">interp_daily() (in module waterpyk.calcs)</a>
 </li>
@@ -136,15 +161,17 @@
     module
 
       <ul>
-        <li><a href="generated/waterpyk.html#module-waterpyk">waterpyk</a>
+        <li><a href="generated/waterpyk.html#module-waterpyk">waterpyk</a>, <a href="waterpyk.html#module-waterpyk">[1]</a>
 </li>
         <li><a href="waterpyk.html#module-waterpyk.calcs">waterpyk.calcs</a>
 </li>
-        <li><a href="waterpyk.html#module-waterpyk.extract">waterpyk.extract</a>
+        <li><a href="waterpyk.html#module-waterpyk.gee">waterpyk.gee</a>
 </li>
         <li><a href="waterpyk.html#module-waterpyk.main">waterpyk.main</a>
 </li>
         <li><a href="waterpyk.html#module-waterpyk.plots">waterpyk.plots</a>
+</li>
+        <li><a href="waterpyk.html#module-waterpyk.watershed">waterpyk.watershed</a>
 </li>
       </ul></li>
   </ul></td>
@@ -185,7 +212,7 @@
     waterpyk
 
       <ul>
-        <li><a href="generated/waterpyk.html#module-waterpyk">module</a>
+        <li><a href="generated/waterpyk.html#module-waterpyk">module</a>, <a href="waterpyk.html#module-waterpyk">[1]</a>
 </li>
       </ul></li>
       <li>
@@ -196,12 +223,14 @@
 </li>
       </ul></li>
       <li>
-    waterpyk.extract
+    waterpyk.gee
 
       <ul>
-        <li><a href="waterpyk.html#module-waterpyk.extract">module</a>
+        <li><a href="waterpyk.html#module-waterpyk.gee">module</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li>
     waterpyk.main
 
@@ -209,8 +238,6 @@
         <li><a href="waterpyk.html#module-waterpyk.main">module</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li>
     waterpyk.plots
 
@@ -218,18 +245,13 @@
         <li><a href="waterpyk.html#module-waterpyk.plots">module</a>
 </li>
       </ul></li>
-      <li><a href="waterpyk.html#waterpyk.extract.watershed_geometry">watershed_geometry() (in module waterpyk.extract)</a>
+      <li>
+    waterpyk.watershed
+
+      <ul>
+        <li><a href="waterpyk.html#module-waterpyk.watershed">module</a>
 </li>
-      <li><a href="waterpyk.html#waterpyk.extract.watershed_geometry_flowline">watershed_geometry_flowline() (in module waterpyk.extract)</a>
-</li>
-      <li><a href="waterpyk.html#waterpyk.extract.watershed_latitude">watershed_latitude() (in module waterpyk.extract)</a>
-</li>
-      <li><a href="waterpyk.html#waterpyk.extract.watershed_metadata">watershed_metadata() (in module waterpyk.extract)</a>
-</li>
-      <li><a href="waterpyk.html#waterpyk.extract.watershed_streamflow">watershed_streamflow() (in module waterpyk.extract)</a>
-</li>
-      <li><a href="waterpyk.html#waterpyk.extract.watershed_urls">watershed_urls() (in module waterpyk.extract)</a>
-</li>
+      </ul></li>
       <li><a href="waterpyk.html#waterpyk.calcs.wateryear">wateryear() (in module waterpyk.calcs)</a>
 </li>
   </ul></td>

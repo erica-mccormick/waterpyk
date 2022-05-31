@@ -112,7 +112,6 @@ def extract(layers, gee_feature, kind, reducer_type = None, **kwargs):
     """
     # Read in existing csv for typical inputs
     if layers == 'all' or layers == 'minimal':
-      print('Getting layers from load_data')
       layers = load_data(layers)
         
     # Otherewise take in dataframe as layers and continue cleaning
