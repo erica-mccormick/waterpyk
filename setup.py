@@ -7,7 +7,6 @@ HERE = pathlib.Path(__file__).parent
 # The text of the README file
 README = (HERE / "README.rst").read_text()
 
-# This call to setup() does all the work
 setup(
     name="waterpyk",
     version="1.1.1",
@@ -26,10 +25,4 @@ setup(
     package_dir={"": "waterpyk"},  # Optional
     packages=find_packages(where="waterpyk"),  # Required
     include_package_data= True,
-    #install_requires=['<geopandas>'],
-    #entry_points={
-    #    "console_scripts": [
-    #        "realpython=reader.__main__:main",
-    #    ]
-    # },
 )

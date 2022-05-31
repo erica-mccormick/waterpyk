@@ -28,6 +28,10 @@ You can also use ``yoursite.describe`` to see more information, or ``yoursite.sm
 
 To plot, simply use ``yoursite.plot(kind = ###)`` and supply a string for which kind (see below).
 
+Read the docs
+*************
+
+For full documentation, see `full documentation`_
 
 What waterpyk can do
 *********************
@@ -88,3 +92,5 @@ For more information, contact Erica McCormick at erica.mccormick@utexas.edu or t
 .. _USGS gauge ID: https://waterdata.usgs.gov/nwis/rt
 .. _Google Earth Engine: https://developers.google.com/earth-engine/guides/getstarted
 .. _homepage: https://www.ericamccormick.com
+.. _full documentation: https://waterpyk.readthedocs.io/en/latest/
+

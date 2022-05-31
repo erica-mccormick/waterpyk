@@ -5,9 +5,17 @@ import matplotlib.pyplot as plt
 from waterpyk import main
 
 if __name__ == "__main__":
-        
-    layers_path = '/Users/ericamccormick/Documents/GITHUB/WaterPyk/data/production/layers_minimal.csv'
-    layers = pd.read_csv(layers_path)
+    #gee_feature, gpd_feature = watershed.extract_geometry(11475560)
+    #kwargs = {'combine_ET_bands': True, 'bands_to_combine': ['Es', 'Ec'], 'band_name_final':'ET'}
+    #test_extract_daily, test_extract_single = gee.extract('all', gee_feature, 'watershed', **kwargs)
+    #print(test_extract_daily)
+    #print(test_extract_single)
+   
+    #df_wide = calcs.make_wide_df(test_extract_daily)
+    
+    #print(df_wide)
+    #layers_path = '/Users/ericamccormick/Documents/GITHUB/WaterPyk/data/production/layers_minimal.csv'
+    #layers = pd.read_csv(layers_path)
     
     def make_all_plots(studyareaobject, figname):
         kwargs = {'title': figname}
@@ -33,9 +41,11 @@ if __name__ == "__main__":
     #coords = [40.007, -105.493] #gordon gulch
 
     ### Generic Setup ###
-    rivendell = main.StudyArea(coords, layers)
+    kwargs = {'snow_band':'snow'}
+    rivendell = main.StudyArea(coords, layers = 'all', **kwargs)
     #print('Smax:', rivendell.smax)
     #print('MAP:', rivendell.MAP)
+    print(rivendell.stats)
     make_all_plots(studyareaobject = rivendell, figname = 'Rivendell')
     
     """

@@ -1,6 +1,6 @@
 import pandas as pd
 import numpy as np
-from datetime import datetime
+import datetime
 
 
 def interp_daily(df):
@@ -19,7 +19,7 @@ def interp_daily(df):
         df_temp = df_temp.merge(temp, how = 'right', on = 'date')
         df_temp['value'] = df_temp['value'].interpolate(method = "linear")
         df_temp['band'] = i
-        df_interp = df_interp.append(df_temp)
+        df_interp = pd.concat([df_interp,df_temp])
     return df_interp
 
 def combine_bands(df, bands_to_combine, band_name_final):
@@ -38,7 +38,7 @@ def combine_bands(df, bands_to_combine, band_name_final):
     for i in bands_to_combine:
         if i == bands_to_combine[0]:
             to_store = df[df['band'] == i]
-            to_store['value_raw'] = np.nan
+            to_store.loc[:,'value_raw'] = np.nan
         else:
             subset = df[df['band']==i][['date', 'value']]
             to_store = to_store.merge(subset, how = 'inner', on = 'date')
@@ -46,20 +46,20 @@ def combine_bands(df, bands_to_combine, band_name_final):
     to_store['value'] = val_cols.sum(axis=1)
     to_store['band'] = band_name_final
     to_store = to_store[['date', 'asset_name', 'value', 'band', 'value_raw']]
-    df = df.append(to_store)
+    df = pd.concat([df, to_store])
+    #df = df.append(to_store)
     df = df.reset_index(drop=True)
     return df
 
 
 
-def make_wide_df(df_long, pivot_all = False, **kwargs):
+def make_wide_df(df_long, **kwargs):
     """
     Uses ET and P asset and band names (designated in **kwargs) to return a wide-form dataframe with columns:
     date, ET, Ei, P, and P-Ei (where Ei is the interception band from PML and is only extracted if it exists). merge_wide_streamflow() can then be used to merge with streamflow df. 
     
     Args:
         df_long: dataframe such as that produced by extract_assets_at_site() where columns contain asset_name, band, and value.
-        pivot_all (:obj:`bool`): NOT FUNCTIONAL YET (default = False). Eventually will skip the **kwargs and pivot al data to wide format.
     Kwargs:
         et_asset (:obj:`str`): asset to be used for creation of ET column (default 'pml').
         et_band (:obj:`str`): band name to be used for creation of ET column (default 'ET').
@@ -73,49 +73,44 @@ def make_wide_df(df_long, pivot_all = False, **kwargs):
         :obj:`df`: wide-form dataframe with columns for date, ET, Ei, P, and P-Ei (where Ei is the interception band from PML and is only included if it exists.)
     """
 
-    if pivot_all == True:
-        print('pivot_all = True is not yet implemented. Returning input df...')
-        return df_long
+    default_kwargs = {
+        'et_asset': 'pml',
+        'et_band': 'ET',
+        'ppt_asset': 'prism',
+        'ppt_band': 'ppt',
+    }
+    kwargs = {**default_kwargs, **kwargs} 
+        
+    # Isolate ET dataset
+    et_df = df_long[df_long['asset_name'] == kwargs['et_asset']]
+    et_df = et_df[et_df['band'] == kwargs['et_band']]
+    et_df['ET'] = et_df['value']
+    
+    # Isolate P dataset
+    ppt_df = df_long[df_long['asset_name'] == kwargs['ppt_asset']]
+    ppt_df = ppt_df[ppt_df['band'] == kwargs['ppt_band']]
+    ppt_df['P'] = ppt_df['value']
+    
+    # Merge P + Ei (interception) if Ei band exists
+    if 'Ei' in et_df.band.unique():
+        ei_df = et_df[et_df['band'] == 'Ei']
+        ei_df['Ei'] = ei_df['value']
+        ppt_df = ppt_df.merge(ei_df[['date','Ei']], how = 'left', on = 'date')
+        ppt_df['P_min_Ei'] = ppt_df['P'] - ppt_df['Ei']
+    
+        # Merge ET and P
+        df_wide = et_df.merge(ppt_df, how = 'inner', on = 'date')[['date', 'ET', 'P', 'P_min_Ei', 'Ei']]
     
     else:
-        default_kwargs = {
-            'et_asset': 'pml',
-            'et_band': 'ET',
-            'ppt_asset': 'prism',
-            'ppt_band': 'ppt',
-        }
-        kwargs = {**default_kwargs, **kwargs} 
+        # Merge ET and P
+        df_wide = et_df.merge(ppt_df, how = 'inner', on = 'date')[['date', 'ET', 'P']]
         
-        # Isolate ET dataset
-        et_df = df_long[df_long['asset_name'] == kwargs['et_asset']]
-        et_df = et_df[et_df['band'] == kwargs['et_band']]
-        et_df['ET'] = et_df['value']
-        
-        # Isolate P dataset
-        ppt_df = df_long[df_long['asset_name'] == kwargs['ppt_asset']]
-        ppt_df = ppt_df[ppt_df['band'] == kwargs['ppt_band']]
-        ppt_df['P'] = ppt_df['value']
-        
-        # Merge P + Ei (interception) if Ei band exists
-        if 'Ei' in et_df.band.unique():
-            ei_df = et_df[et_df['band'] == 'Ei']
-            ei_df['Ei'] = ei_df['value']
-            ppt_df = ppt_df.merge(ei_df[['date','Ei']], how = 'left', on = 'date')
-            ppt_df['P_min_Ei'] = ppt_df['P'] - ppt_df['Ei']
-        
-            # Merge ET and P
-            df_wide = et_df.merge(ppt_df, how = 'inner', on = 'date')[['date', 'ET', 'P', 'P_min_Ei', 'Ei']]
-        
-        else:
-            # Merge ET and P
-            df_wide = et_df.merge(ppt_df, how = 'inner', on = 'date')[['date', 'ET', 'P']]
-           
-        # Add wateryear column
-        df_wide = df_wide.set_index(pd.to_datetime(df_wide['date']))
-        df_wide['wateryear'] = np.where(~df_wide.index.month.isin([10,11,12]),df_wide.index.year,df_wide.index.year+1)
-        df_wide = df_wide.reset_index(drop=True)
-        
-        return df_wide
+    # Add wateryear column
+    df_wide = df_wide.set_index(pd.to_datetime(df_wide['date']))
+    df_wide['wateryear'] = np.where(~df_wide.index.month.isin([10,11,12]),df_wide.index.year,df_wide.index.year+1)
+    df_wide = df_wide.reset_index(drop=True)
+    
+    return df_wide
 
 
 def merge(df_wide, df_merge, merge_with, column_names = None):
@@ -132,13 +127,13 @@ def merge(df_wide, df_merge, merge_with, column_names = None):
     """
     if column_names is None: 
         if merge_with == 'streamflow':
-            column_names = ['Q_mm']
+            column_names = ['date','Q_mm']
         elif merge_with == 'deficit':
-            column_names = ['D', 'D_wy']
+            column_names = ['date', 'D', 'D_wy']
         else:
             print('merge() works for deficit or streamflow dataframes only.')
     elif 'date' in column_names: pass
-    else: column_names + ['date']
+    else: column_names = column_names + ['date']
     df_wide = df_wide.merge(df_merge[column_names], how = 'left', on = 'date')
     return df_wide
 
@@ -210,7 +205,7 @@ def deficit(df_long, df_wide = None, **kwargs):
             'ppt_asset': 'prism',
             'ppt_band': 'ppt',
             'snow_asset':'modis_snow',
-            'snow_band':'Cover',
+            'snow_band':'snow',
             'snow_correction': True,
             'snow_frac': 10,
         }
@@ -239,7 +234,7 @@ def deficit(df_long, df_wide = None, **kwargs):
             df_deficit = df_deficit.merge(snow_df, how = 'inner', on = 'date')
             df_deficit.loc[df_deficit['Snow'] > kwargs['snow_frac'], 'ET'] = 0
         except:
-            print('snow_correction = TRUE but no snow data (or incorrect snow_asset and snow_band kwargs) are provided. Snow correction was not applied.')
+            raise Exception("Snow correction can't be applied. Either no snow data presented or snow_band or asset wrong. Given snow_band: {}, snow_asset: {}".format(kwargs['snow_band'], kwargs['snow_asset']))
    
     # Calculate A and D
     df_deficit['A'] = df_deficit['ET'] - df_deficit['P']
@@ -256,7 +251,7 @@ def deficit(df_long, df_wide = None, **kwargs):
         temp = temp.reset_index()
         for _i in range(temp.shape[0]-1):
             temp.loc[_i+1, 'D_wy'] = max((temp.loc[_i+1, 'A'] + temp.loc[_i, 'D_wy']), 0)
-        df_deficit_wy = df_deficit_wy.append(temp)
+        df_deficit_wy = pd.concat([df_deficit_wy, temp])
     df_deficit_wy = df_deficit_wy[['date','D_wy']]
     df_deficit = df_deficit.merge(df_deficit_wy, how = 'left', on = 'date')
     #self.deficit_timeseries = df_deficit

@@ -7,7 +7,7 @@ from time import time
 import os
 
 from waterpyk import default_saving_dir, in_colab_shell # Determine default saving behavior
-from waterpyk import extract, calcs, plots
+from waterpyk import plots, watershed, gee, calcs
 
 class StudyArea:
         
@@ -54,8 +54,8 @@ class StudyArea:
         # Use the watershed package to get the geometries and metadata for a USGS gauged watershed
         elif self.kind == 'watershed':
             gage = str(self.coords[0])
-            site_name, description = extract.watershed_metadata(gage)
-            gee_feature, gpd_geometry = extract.watershed_geometry(gage)
+            site_name, description = watershed.watershed_metadata(gage)
+            gee_feature, gpd_geometry = watershed.watershed_geometry(gage)
         
         self.site_name = site_name
         self.description = description
@@ -80,6 +80,7 @@ class StudyArea:
             print('\nRetrieving site data from ' + os.path.abspath(self.saving_path))
             self.daily_df_long = pd.read_csv(self.saving_path + path_format + 'daily_df_long.csv')
             self.daily_df_wide = pd.read_csv(self.saving_path + path_format + 'daily_df_wide.csv')
+            self.stats = pd.read_csv(self.saving_path + path_format + 'stats.csv')
             self.streamflow = pd.read_csv(self.saving_path + path_format + 'streamflow.csv')
             self.deficit_timeseries = pd.read_csv(self.saving_path + path_format + 'deficit_timeseries.csv')
             self.wateryear_totals = pd.read_csv(self.saving_path + path_format + 'wateryear_totals.csv')         
@@ -92,25 +93,24 @@ class StudyArea:
             if layers is None:
                 print('No layers were specified for extraction and data is not already available.')
             try:
-                df_long = extract.gee_extract(layers, self.gee_feature, self.kind, **kwargs)
+                df_long, df_image = gee.extract(layers, self.gee_feature, self.kind, **kwargs)
             except AttributeError:
                 StudyArea.get_location(self, **kwargs)
-                df_long = extract.gee_extract(layers, self.gee_feature, self.kind, **kwargs)
+                df_long, df_image = gee.extract(layers, self.gee_feature, self.kind, **kwargs)
         
             ### Convert dataframe to wide format using **kwargs
             df_wide = calcs.make_wide_df(df_long, **kwargs)
-            
+                        
             ### If deficit data types are given, merge deficit data
             df_deficit = calcs.deficit(df_long, df_wide, **kwargs)
             df_deficit_min = df_deficit.date.min()
             df_deficit_max = df_deficit.date.max()
-            
             df_wide = calcs.merge(df_wide, df_deficit, 'deficit')
-            
+
             ### If kind = watershed, get and merge streamflow data
             if self.kind == 'watershed':
                 gage = self.coords[0]
-                df_streamflow = extract.streamflow(gage, **kwargs)
+                df_streamflow = watershed.streamflow(gage, **kwargs)
                 df_wide = calcs.merge(df_wide, df_streamflow, 'streamflow')
             else: df_streamflow = pd.DataFrame()
             
@@ -130,10 +130,13 @@ class StudyArea:
                 df_deficit.to_csv(f)    
             with open(self.saving_path + path_format + 'wateryear_totals.csv', 'w') as f:
                 df_total.to_csv(f)    
+            with open(self.saving_path + path_format + 'stats.csv', 'w') as f:
+                df_image.to_csv(f)    
                     
             ### Add all attributes to self
             self.daily_df_long = df_long
             self.daily_df_wide = df_wide
+            self.stats = df_image
             self.streamflow = df_streamflow
             self.deficit_timeseries = df_deficit
             self.wateryear_totals = df_total

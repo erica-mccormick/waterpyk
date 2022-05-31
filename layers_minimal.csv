@@ -1,4 +1,0 @@
-name,asset_id,date_format,scale,start_date,end_date,bands,bands_to_scale,scaling_factor,Notes
-prism,OREGONSTATE/PRISM/AN81d,%Y%m%d,500,10/1/03,10/1/20,ppt,,,
-pml,projects/pml_evapotranspiration/PML/OUTPUT/PML_V2_8day_v016,%Y-%m-%d,500,10/1/03,10/1/20,"Es, Ec, Ei","Es, Ec, Ei",0.01,
-modis_snow,MODIS/006/MOD10A1,%Y_%m_%d,500,10/1/03,10/1/20,NDSI_Snow_Cover,,,
