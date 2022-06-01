@@ -18,7 +18,7 @@ setup(
     author_email= "erica.elmstead@gmail.com",
     license="MIT",
     classifiers=[
-        "License :: OSI Approved :: MIT License",
+        "License :: OSI Approved :: GNU GPLv3",
         "Programming Language :: Python :: 3",
         "Programming Language :: Python :: 3.7",
         "Intended Audience :: Science/Research",
@@ -30,3 +30,4 @@ setup(
     include_package_data= True,
     package_data={'': ['layers_data/*.csv']}
 )
+
