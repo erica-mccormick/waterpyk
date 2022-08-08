@@ -9,7 +9,7 @@ README = (HERE / "README.rst").read_text()
 
 setup(
     name="waterpyk",
-    version="0.1.0",
+    version="1.0.0",
     description= "Extract, analyze, and plot hydrological timeseries for a site or watershed using the Google Earth Engine and USGS APIs",
     long_description=README,
     long_description_content_type="text/x-rst",
@@ -18,7 +18,6 @@ setup(
     author_email= "erica.elmstead@gmail.com",
     license="MIT",
     classifiers=[
-        "License :: OSI Approved :: GNU GPLv3",
         "Programming Language :: Python :: 3",
         "Programming Language :: Python :: 3.7",
         "Intended Audience :: Science/Research",

@@ -7,7 +7,40 @@ import pandas as pd
 import numpy as np
 from waterpyk.calcs import interp_daily, combine_bands
 from waterpyk import load_data
+from waterpyk import errors as err
 
+
+def gdf_to_feat(gdf, target_epsg = '4326'):
+  """
+  Convert geodataframe with multipolygon geometry to GEE feature.
+  This has been tested with simple shapefiles of government lands, etc,
+  but it may not work for all places.
+  
+  Args:
+    gdf (geopandas geodataframe)
+    target_epsg (str, optional): target reprojection. defaults to EPSG4326.
+    
+  Returns:
+    GEE feature
+    
+  """
+  # Reproject to target_epsg
+  gdf = gdf.to_crs(epsg = target_epsg)
+  
+  # Get lists of x, y coordinates
+  coord_geom = gdf['geometry'][0]
+  all_coords = []
+  for i in range(len(coord_geom)):
+    x,y = coord_geom[i].exterior.coords.xy
+    coords = np.dstack((x,y)).tolist()
+    all_coords.append(coords)
+  
+  # Convert to feature collection
+  gee_feat = ee.Feature(ee.Geometry.MultiPolygon(coords = all_coords))
+  return gee_feat
+
+  
+  
 def extract_basic(gee_feature, kind, asset_id, scale, bands, start_date = None, end_date = None, relative_date = None, bands_to_scale = None, scaling_factor = 1, reducer_type = None, new_bandnames = None):
         """
         Extract data from a single asset. For timeseries, specify start_date  and end_date for an asset_id.
@@ -37,6 +70,10 @@ def extract_basic(gee_feature, kind, asset_id, scale, bands, start_date = None, 
                 reducer_type = ee.Reducer.first()
             elif kind == 'watershed':
                 reducer_type = ee.Reducer.mean()
+            elif kind == 'shape':
+                reducer_type = ee.Reducer.mean()
+            else:
+                reducer_type = ee.Reducer.mean()
         else: pass
 
         # Get asset
@@ -49,7 +86,7 @@ def extract_basic(gee_feature, kind, asset_id, scale, bands, start_date = None, 
         elif relative_date == 'first':
           asset = ee.ImageCollection(asset_id).first().select(bands)
         else: 
-            raise Exception("Specify start and end date or set relative_date argument to be 'most_recent' or 'first'. relative_date was: {}".format(relative_date))
+            raise err.NoDateSpecifiedError("Specify start and end date or set relative_date argument to be 'most_recent' or 'first'. relative_date was: {}".format(relative_date))
   
         # Perform reduceRegion
         reducer_dict = asset.reduceRegion(reducer = reducer_type, geometry = gee_feature.geometry(), scale = scale).getInfo()
@@ -82,7 +119,7 @@ def extract_basic(gee_feature, kind, asset_id, scale, bands, start_date = None, 
             name_dict = {k: v for k, v in zip(old_bandnames, new_bandnames)}
             df['band'] = df['band'].map(name_dict) 
           else:
-            raise Exception("Make sure bands and new_bandnames are same length or leave new_bandnames as None. bands:{},  new_bandnames:{}".format(bands, new_bandnames))
+            raise err.MissingBandsError("Make sure bands and new_bandnames are same length or leave new_bandnames as None. bands:{},  new_bandnames:{}".format(bands, new_bandnames))
 
         # Apply scaling factor to specified bands
         if bands_to_scale is not None:

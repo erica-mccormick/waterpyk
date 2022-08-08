@@ -4,6 +4,7 @@ README.rst
 setup.py
 waterpyk/__init__.py
 waterpyk/calcs.py
+waterpyk/errors.py
 waterpyk/gee.py
 waterpyk/main.py
 waterpyk/plots.py
