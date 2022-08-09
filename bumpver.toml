@@ -1,19 +1,13 @@
-[tool.bumpver]
+[bumpver]
 current_version = "1.0.0"
 version_pattern = "MAJOR.MINOR.PATCH"
 commit_message  = "Bump version {old_version} -> {new_version}"
 commit = true
 tag = true
-push = true
+push = false
 
 [bumpver.file_patterns]
-"setup.py" = [
-    "{version}",
-]
-"bumpver.toml" = [
-    'current_version = "{version}"',
-]
-"docs/source/conf.py" = [
-    'release = "{version}"',
-]
+"bumpver.toml" = ['current_version = "{version}"']
+"setup.py" = ["{version}"]
+"docs/source/conf.py" = ['release = "{version}"']
 

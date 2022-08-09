@@ -287,8 +287,8 @@ class StudyArea:
         self.layers = layers
         self.saving_dir = saving_dir
         self.get_kind()
-        self._path()
         self.get_location(**kwargs)
+        self._path()
         t1 = time()
         self.get_data(layers, **kwargs)
         t2 = time()
