@@ -1,9 +1,9 @@
 [bumpver]
-current_version = "1.0.0"
+current_version = "2.1.0"
 version_pattern = "MAJOR.MINOR.PATCH"
 commit_message  = "Bump version {old_version} -> {new_version}"
-commit = true
-tag = true
+commit = false
+tag = false
 push = false
 
 [bumpver.file_patterns]
