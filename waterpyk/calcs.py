@@ -1,6 +1,7 @@
 import pandas as pd
 import numpy as np
 import datetime
+import waterpyk.errors as err
 
 def interp_daily(df):
     """Interpolate all data to daily.
@@ -220,7 +221,7 @@ def deficit(df_long, df_wide = None, **kwargs):
     necessary_columns = ['date', 'ET', 'P', 'wateryear'] 
     for col in necessary_columns:
         if col not in df_deficit:
-            raise Exception(col + ' missing. Deficit cannot be calculated. Check assets specified in layers.')
+            raise err.MissingBandsError(col + ' missing. Deficit cannot be calculated. Check assets specified in layers.')
     
     df_deficit = df_deficit[necessary_columns]
 
@@ -234,7 +235,7 @@ def deficit(df_long, df_wide = None, **kwargs):
             df_deficit = df_deficit.merge(snow_df, how = 'inner', on = 'date')
             df_deficit.loc[df_deficit['Snow'] > kwargs['snow_frac'], 'ET'] = 0
         except:
-            raise Exception("Snow correction can't be applied. Either no snow data presented or snow_band or asset wrong. Given snow_band: {}, snow_asset: {}".format(kwargs['snow_band'], kwargs['snow_asset']))
+            raise err.MissingBandsError("Snow correction can't be applied. Either no snow data presented or snow_band or asset wrong. Given snow_band: {}, snow_asset: {}".format(kwargs['snow_band'], kwargs['snow_asset']))
    
     # Calculate A and D
     df_deficit['A'] = df_deficit['ET'] - df_deficit['P']
