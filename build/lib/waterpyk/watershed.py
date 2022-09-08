@@ -6,7 +6,8 @@ ee.Initialize()
 import pandas as pd
 import numpy as np
 from waterpyk.calcs import interp_daily, combine_bands
-
+import waterpyk.errors as err
+import warnings
 
 def extract_urls(gage, **kwargs):
     """
@@ -20,6 +21,18 @@ def extract_urls(gage, **kwargs):
     Returns:
         str, str, str, str: 4 strings with urls which (1) access basin lat/long geometry. (2) access geometry of flowline (i.e. rivers) lat/long geometry. (3) access basin metadata. (4) access basin discharge timeseries (between the dates of **kwargs).
     """
+    gage = str(gage)
+    
+    # Raise errors
+    if len(gage) > 8:
+        raise err.GageTooLongError(f'Gage ID length is {len(gage)} and cannot be greater than 8.')
+
+    # Make sure gage ID is in correct format without missing starting 0s
+    if (len(gage) < 8):
+        warnings.warn(f'WARNING: Gage ID length is {len(gage)}. Zeros will be added to begginning until length = 8.')
+        num = 8 - len(gage)
+        gage = '0' * num + gage
+
     # Default start_date and end_date kwargs
     default_kwargs = {
         'flow_start_date':'1980-10-01',
@@ -27,11 +40,6 @@ def extract_urls(gage, **kwargs):
     }
     kwargs = {**default_kwargs, **kwargs}
 
-    # Make sure gage ID is in correct format without missing starting 0s
-    gage = str(gage)
-    if (len(gage) < 8):
-        num = 8 - len(gage)
-        gage = '0' * num + gage
 
     # Data URLs
     url_basin_geometry = 'https://labs.waterdata.usgs.gov/api/nldi/linked-data/nwissite/USGS-%s/basin?f=json'%gage

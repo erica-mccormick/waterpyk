@@ -1,5 +1,5 @@
-
 import os
+import random
 import warnings
 from time import time
 
@@ -8,8 +8,7 @@ import geopandas as gpd
 import pandas as pd
 
 from waterpyk import calcs  # Determine default saving behavior
-from waterpyk import (default_saving_dir, gee, in_colab_shell, load_data,
-                      plots, watershed)
+from waterpyk import default_saving_dir, gee, in_colab_shell, plots, watershed
 
 ee.Initialize()
 
@@ -19,15 +18,26 @@ warnings.filterwarnings("ignore")
 
 class StudyArea:
 
+    def get_layers(self, layers):
+        """
+        Return a df with the layers (ie asset list and metadata) being used.
+        """
+        if layers == 'all' or layers == 'minimal':
+            layers = gee.load_data(layers)
+        return layers
+
     def get_kind(self):
         """
         Adds attribute of point or watershed to object.
 
         """
-        if len(self.coords) > 1:
-            self.kind = 'point'
+        if type(self.coords) == list:
+            if len(self.coords) > 1:
+                self.kind = 'point'
+            else:
+                self.kind = 'watershed'
         else:
-            self.kind = 'watershed'
+            self.kind = 'shape'
         return self
 
     def get_location(self, **kwargs):
@@ -61,6 +71,17 @@ class StudyArea:
             gage = str(self.coords[0])
             site_name, description = watershed.extract_metadata(gage)
             gee_feature, gpd_geometry = watershed.extract_geometry(gage)
+
+        # Get the GEE and geopandas geometries and metadata for a point
+        elif self.kind == 'shape':
+            gpd_geometry = self.coords
+            gee_feature = gee.gdf_to_feat(self.coords)
+            site_name = kwargs['site_name']
+            description = 'Geopandas geometry extracted at: Name = ' + \
+                site_name + '. CRS = EPSG:4326.'
+
+        else:
+            raise ValueError(f'self.kind not recognized. Got {self.kind}.')
 
         self.site_name = site_name
         self.description = description
@@ -245,6 +266,8 @@ class StudyArea:
             fig = plots.plot_RWS(self, **kwargs)
         elif kind == 'distribution':
             fig = plots.plot_p_distribution(self, **kwargs)
+        else:
+            raise ValueError(f"Plot kind not recognized. Got {kind}.")
         return fig
 
     def _path(self):
@@ -253,10 +276,25 @@ class StudyArea:
             folder_name = str(self.coords[0])
         elif self.kind == 'point':
             folder_name = str(self.coords[0]) + '_' + str(self.coords[1])
+        elif self.kind == 'shape':
+            # If you give it a name, it will save under that name
+            # Otherwise, it will save under a random folder name.
+            if self.site_name != '':
+                folder_name = str(self.site_name)
+            else:
+                folder_name = 'shape_' + str(random.randint(10, 99))
+        else:
+            raise ValueError(f'self.kind not recognized. Got {self.kind}.')
         saving_path = os.path.abspath(
             os.path.join(self.saving_dir, folder_name))
         self.saving_path = saving_path
         return saving_path
+
+    def __str__(self):
+        return f'StudyArea({self.kind}), named {self.site_name}'
+
+    def __repr__(self):
+        return f"StudyArea(kind='{self.kind}', name={self.site_name})"
 
     def __init__(self, coords, layers=None, saving_dir=default_saving_dir, **kwargs):
         default_kwargs = {
@@ -280,15 +318,10 @@ class StudyArea:
         self.settings = kwargs
         self.coords = coords
         self.layers = layers
-        if layers == 'all' or layers == 'minimal':
-            extracted_df = load_data(layers)
-            self.extracted_df = extracted_df
-        else:
-            self.extracted_df = layers
         self.saving_dir = saving_dir
         self.get_kind()
-        self._path()
         self.get_location(**kwargs)
+        self._path()
         t1 = time()
         self.get_data(layers, **kwargs)
         t2 = time()

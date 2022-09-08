@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: waterpyk
-Version: 0.2.2
+Version: 2.1.0
 Summary: Extract, analyze, and plot hydrological timeseries for a site or watershed using the Google Earth Engine and USGS APIs
 Home-page: https://github.com/erica-mccormick/waterpyk
 Author: Erica L. McCormick

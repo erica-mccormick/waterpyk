@@ -4,9 +4,13 @@ README.rst
 setup.py
 waterpyk/__init__.py
 waterpyk/calcs.py
+waterpyk/errors.py
 waterpyk/gee.py
 waterpyk/main.py
+waterpyk/mapping_tools.py
 waterpyk/plots.py
+waterpyk/raster.py
+waterpyk/shapefile.py
 waterpyk/watershed.py
 waterpyk.egg-info/PKG-INFO
 waterpyk.egg-info/SOURCES.txt
