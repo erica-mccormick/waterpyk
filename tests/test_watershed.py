@@ -1,7 +1,7 @@
-import warnings
-
 import geopandas as gpd
+import pandas as pd
 import pytest
+from pandas.testing import assert_frame_equal
 from waterpyk import errors, watershed
 
 # python3 -m pytest tests -v --disable-warnings
@@ -10,9 +10,8 @@ from waterpyk import errors, watershed
 def test_should_always_pass():
     assert 2 + 2 == 4, "This is just a dummy test"
 
-
-def test_should_always_fail():
-    assert 2 + 2 == 6, "This is just a dummy test"
+# def test_should_always_fail():
+#    assert 2 + 2 == 6, "This is just a dummy test"
 
 ############### TESTING EXTRACT_URLS() ###############
 
@@ -66,11 +65,38 @@ def test_preceding_zeros_added_for_gaugeid_too_short():
     assert expected_gauge_id in urls_str_gauge[0]
 
 
-def test_if_kwargs_changes_work():
+def test_if_kwargs_changes_work_throughout():
     begin_date = '1985-10-01'
-    end_date = '2015-10-01'
+    end_date = '1986-10-01'
     urls = watershed.extract_urls(11475560,
                                   flow_start_date=begin_date,
                                   flow_end_date=end_date)
-    assert begin_date in urls[3]
-    assert end_date in urls[3]
+    # Check that begin_date is in the urls
+    assert begin_date in urls[3], "begin date is not in flow URL"
+    assert end_date in urls[3], "end date is not in flow URL"
+    df = watershed.extract_streamflow(11475560,
+                                      flow_start_date=begin_date,
+                                      flow_end_date=end_date)
+    assert df.iloc[0]['date'].strftime(
+        '%Y-%m-%d') >= begin_date, "data exists before begin_date"
+    assert df.iloc[-1]['date'].strftime(
+        '%Y-%m-%d') <= end_date, "data exists after end_date"
+
+
+def test_checks_if_usgs_api_streamflow_has_changed():
+    # Get new discharge csv using the same (default) dates
+    kwargs = {'flow_start_date': '1980-10-01',
+              'flow_end_date': '2021-10-01'}
+    df_new = watershed.extract_streamflow(11475560, **kwargs)
+    df_new.to_csv('new_gauge.csv')
+    # Pull in csv of old version
+    df_old = pd.read_csv('tests/testing_data/flow_11475560.csv')
+    df_new = df_new[['Q_cfs', 'Q_mm']]
+    df_old = df_old[['Q_cfs', 'Q_mm']]
+    assert_frame_equal(
+        df_old, df_new, check_dtype=False), "expected Elder Q has changed or other error has occured"
+
+
+def test_checks_if_latitude_changed():
+    lat = watershed.extract_latitude(11475560)
+    assert round(lat, 5) == 39.71395

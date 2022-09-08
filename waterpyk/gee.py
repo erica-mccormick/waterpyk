@@ -41,7 +41,7 @@ def gdf_to_feat(gdf, target_epsg='4326'):
     return gee_feat
 
 
-def extract_basic(gee_feature, kind, asset_id, scale, bands, start_date=None, end_date=None, relative_date=None, bands_to_scale=None, scaling_factor=1, reducer_type=None, new_bandnames=None):
+def extract_basic(gee_feature, kind, asset_id, scale, bands, start_date=None, end_date=None, relative_date=None, bands_to_scale=None, scaling_factor=1, reducer_type=None, new_bandnames=None, interp=True):
     """
     Extract data from a single asset. For timeseries, specify start_date  and end_date for an asset_id.
     For an image or to get an image from an imagecollection (ie one date), specify relative_date as either 'first', 'most_recent', or 'image'.
@@ -67,13 +67,13 @@ def extract_basic(gee_feature, kind, asset_id, scale, bands, start_date=None, en
     # Set reducer type based on kind (watershed or point)
     if reducer_type is None:
         if kind == 'point':
-            reducer_type = ee.Reducer.first()
+            reducer_type = ee.Reducer.first()  # type:ignore
         elif kind == 'watershed':
-            reducer_type = ee.Reducer.mean()
+            reducer_type = ee.Reducer.mean()  # type:ignore
         elif kind == 'shape':
-            reducer_type = ee.Reducer.mean()
+            reducer_type = ee.Reducer.mean()  # type:ignore
         else:
-            reducer_type = ee.Reducer.mean()
+            reducer_type = ee.Reducer.mean()  # type:ignore
     else:
         pass
 
@@ -115,9 +115,13 @@ def extract_basic(gee_feature, kind, asset_id, scale, bands, start_date=None, en
         date1 = df[df['band'] == df.band.unique(
         )[0]]['date'][len(df.band.unique())]
         date_range = date1-date0
-        df = interp_daily(df)
-        print('\tOriginal timestep of ' + str(date_range.days) +
-              ' day(s) was interpolated to daily.')
+        if interp == True:
+            df = interp_daily(df)
+            print('\tOriginal timestep of ' + str(date_range.days) +
+                  ' day(s) was interpolated to daily.')
+        else:
+            print('\tNo interpolation because interp = False. Timestep is' +
+                  str(date_range.days))
 
     else:
         df = pd.DataFrame(list(reducer_dict.items()),
