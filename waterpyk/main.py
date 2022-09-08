@@ -8,7 +8,8 @@ import geopandas as gpd
 import pandas as pd
 
 from waterpyk import calcs  # Determine default saving behavior
-from waterpyk import default_saving_dir, gee, in_colab_shell, plots, watershed
+from waterpyk import (default_saving_dir, gee, in_colab_shell, load_data,
+                      plots, watershed)
 
 ee.Initialize()
 
@@ -319,6 +320,11 @@ class StudyArea:
         self.coords = coords
         self.layers = layers
         self.saving_dir = saving_dir
+        if layers == 'all' or layers == 'minimal':
+            extracted_df = load_data(layers)
+            self.extracted_df = extracted_df
+        else:
+            self.extracted_df = layers
         self.get_kind()
         self.get_location(**kwargs)
         self._path()
